@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<!-- -->
+	<sql name="queryXhTzsqList" common="true">
+		<sqlString><![CDATA[
+		    select * from (
+			select 
+		        a.TZSQBH,/*协议编号*/
+		        a.JHTZRQ,/*计划投资日期*/
+		        a.JHTZJE,/*计划投资金额*/
+		        a.TZFS,/*投资方式*/
+		        a.HSFS,/*回收方式*/
+		        a.FKFS,/*付款方式*/
+		        a.SFFXJBC,/*是否风险金补偿*/
+		        a.JHHKRQ,/*计划划扣日期*/
+		        a.SQRQ,/*申请日期*/
+		        a.BMZG,/*部门主管*/
+		        a.XYBB,/*协议版本*/
+		        a.XSZKLY,/*销售折扣率*/
+		        a.XSZKLYXQX,/*销售折扣率有效期限*/
+		        a.REMARK,/*备注*/
+		        a.SQDYJ,/*申请单原件*/
+		        a.TZFKKHH,/*投资付款开户行*/
+		        a.TZFKKHZ,/*投资付款卡或折*/
+		        a.TZFKYHMC,/*投资付款银行名称*/
+		        a.TZFKKHMC,/*投资付款开户名称*/
+		        a.TZFKYHZH,/*投资付款银行帐号*/
+		        a.HSZJKHH,/*回收资金开户行*/
+		        a.HSZJKHZ,/*回收资金卡或折*/
+		        a.HSZJYHMC,/*回收资金银行名称*/
+		        a.HSZJKHMC,/*回收资金开户名称*/
+		        a.HSZJYHZH,/*回收资金银行帐号*/
+		        a.CREATE_BY,/*创建人员*/
+		        to_char(a.create_time,'yyyy-MM-dd hh24:mi:ss') as CREATE_TIME,/*创建时间*/
+		        to_char(ADD_MONTHS(to_date(a.JHTZRQ,'yyyy-MM-dd'),a.CJZQ),'yyyy-MM-dd') as moqi,
+		        a.SQZT,/*申请状态*/
+		        a.SQTYPE,/*出借类型*/
+		        a.CJZQ,/*出借周期*/
+		        a.TZJGR,/*交割日*/
+		        a.SGHKRQ,/*首个还款日期*/
+		        a.ZDR,/*账单日*/
+		        a.TZZJZT,/*投资资金状态*/
+		        a.SYQS,/*使用期数*/
+		        a.PPZT,/*匹配状态*/
+		        a.LAST_CJZQ,/*剩余出借周期*/
+		        a.STATE,/*状态0暂存,1待审批，2审批通过，3审批不通过，9删除， */
+		        a.AUDIT_PERSON,/*审核人*/
+		        a.AUDIT_IDEA,/*审核意见*/
+		        a.AUDIT_TIME,/*审核时间*/
+		        a.UPSTATE,/*变更状态-1，无修改，0暂存, 1待审批，3审批不通过*/
+		        a.FIRSTDATE,/*首期天数*/
+		        a.OVERSTATE,/*完结状态0，未完结，2，已完结*/
+		        a.CREDITSTATE,
+		        a.hkstate,/*划扣状态0，未划扣，1，划扣失败，2，已划扣*/
+		        a.ID,b.cjrxm,b.khbm,a.TZCP_ID,a.ZQTJ_ID,b.KFTD,
+		        b.EMPLOYEE_CRM,
+		        crm.name as EMPLOYEE_CRM_name,
+		        b.EMPLOYEE_CCA,
+		        cca.name as EMPLOYEE_CCA_name,
+		        
+		        (
+		               select x.RGANI_NAME from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+		                where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+		              where z.id = b.EMPLOYEE_CRM))
+		            ) as yyb,
+		        ( select y.PARENT_ID from BASE_ZZJG y
+		                  where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+		                  where z.id = b.EMPLOYEE_CRM)
+		              ) as yybid,
+		        
+		        b.province,
+		         (
+		         select name from base_city z
+		         where z.id=b.province
+		         ) as proname,
+		         b.city,
+		         (
+		         select name from base_city z
+		         where z.id=b.city
+		         ) as cityname,
+		         b.area,
+		         (
+		         select name from base_city z
+		         where z.id=b.area
+		         ) as areaname,
+		         b.crmprovince,
+		         (
+		         select name from base_city z
+		         where z.id=b.crmprovince
+		         ) as crmprovincename,
+		         b.crmcity,
+		         (
+		         select name from base_city z
+		         where z.id=b.crmcity
+		         ) as crmcityname,
+		         /*
+		         (select count(*) from XH_LENTMONEYWATER z,xh_zqtj y
+		         where z.tzsq_id=a.id
+		         and z.zqtj_id = y.id
+		             and z.state = '1'
+		             and y.state = '2'
+		             and y.lent_state = '0'
+		             and y.statedg in ('1','2','3')) as jiaogecount,划扣记录数*/
+		         (select count(*) from XH_LENTMONEYWATER z
+		         where z.tzsq_id=a.id) as lentcount,/*资金流水记录数*/
+		         (select count(*) from XH_LENTMONEYWATER z
+		         where z.tzsq_id=a.id and z.state = '2') as backcount,/*回款记录数*/
+		         (select sum(z.money) from XH_LENTMONEYWATER z
+		             where z.tzsq_id=a.id and (a.zqtj_id is null or (z.zqtj_id is null or z.ZQTJ_ID != a.zqtj_id))) as money,  /*资金流水金额总和（当前可推荐金额）*/
+		             /*(select abs(sum(z.money)) from XH_LENTMONEYWATER z
+		              where z.tzsq_id=a.id and z.state = '1') as lentmoney,已推荐金额总和*/
+		             (select max(z.JHTZRQ) from XH_LENTMONEYWATER z
+		             where z.tzsq_id=a.id and z.state != '1') as LENJHTZRQ,/*资金流水入账记录最大日期（出借日期）*/
+		         (select TZCP_MC from XH_TZCP z
+		         where z.ID=a.TZCP_ID) as TZCP_MC,
+		         (
+		              select sum(z.money) from xh_zqtj_details z
+		                 where  z.zqtj_id = a.zqtj_id
+		             ) as ZQTJSMONEY,
+		             ADD_MONTHS(to_date(a.JHTZRQ,'yyyy-MM-dd'),a.CJZQ) as JHJSRQ
+		       from XH_TZSQ a,XH_CJRXX b,BASE_EMPLOYEE cca,BASE_EMPLOYEE crm
+		            where 1=1
+		            and a.CJRXX_ID = b.ID
+		            and b.EMPLOYEE_CCA = cca.id
+		            and b.EMPLOYEE_CRM = crm.id
+			$sql
+			) z
+			where 1=1 
+			$sql2
+			]]></sqlString>
+	</sql>
+	
+		<!-- 查询 总数 -->
+	<sql name="cnt_queryXhTzsqList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhTzsqList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhTzsqList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhTzsqList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	<!-- 查询财富进件登记 -->
+	<sql name="queryCfjjdj" common="true">
+		<sqlString>
+			<![CDATA[
+		select z.*,REPORT_CFJJDJ.alltimes(z.hkrq,to_char(to_date(z.uploaddate,'yyyy-MM-dd HH24:mi:ss'),'yyyy-MM-dd')) as alltimes,
+		REPORT_CFJJDJ.isBackRegister(z.cqcs) as sfcq from (
+      select 
+            a.TZSQBH,/*协议编号*/
+            a.JHTZRQ,/*计划投资日期*/
+            a.JHTZJE,/*计划投资金额*/
+           a.JHHKRQ,/*计划划扣日期*/
+            b.audit_Person as CREATE_BY,/*创建人员*/
+            (select to_char(max(t.create_time),'yyyy-MM-dd HH24:mi:ss') from xh_tzsq_state t where t.tzsq_id = a.id and t.state = 'B2') as sjhkrq,
+           /*a.sjhkrq as hkrq,*/
+            a.CONTRACT_NUMBER,
+            crm.name as EMPLOYEE_CRM_name,
+            cca.name as EMPLOYEE_CCA_name,
+            b.cjrxm,b.khbm,
+            (
+                   select x.RGANI_NAME from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+                    where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+                  where z.id = b.EMPLOYEE_CRM))
+                ) as yyb,
+                ( select y.PARENT_ID from BASE_ZZJG y
+                      where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+                      where z.id = b.EMPLOYEE_CRM)
+                  ) as yybid,
+             (select TZCP_MC from XH_TZCP z
+             where z.ID=a.TZCP_ID) as TZCP_MC,
+             (
+             select to_char(x.create_time,'yyyy-MM-dd HH24:mi:ss') from xh_zqtj x where x.tzsq_id=a.id
+             and x.STATE != '9' and x.LENT_STATE = '0' 
+             ) as ppzqrq,
+             (
+             select to_char(min(x.create_time),'yyyy-MM-dd HH24:mi:ss')
+             from xh_upload_files x
+             where x.MAIN_ID = a.id
+             and x.FILE_OWNER = 'XH_TZSQ'
+             ) as uploaddate,
+            REPORT_CFJJDJ.chushen_name(a.id,'2%') as chushen_name,
+           (select to_char(min(t.create_time),'yyyy-MM-dd HH24:mi:ss') from xh_tzsq_state t where t.tzsq_id = a.id and t.state like '2%')
+             as chushen_date,
+              (select to_char(min(t.create_time),'yyyy-MM-dd HH24:mi:ss') from xh_tzsq_state t where t.tzsq_id = a.id and t.state = '2')
+            as sptg_date,
+            (select count(*) rn from xh_tzsq_state t where t.tzsq_id = a.id and t.state = '21') as cqcs
+             /*REPORT_CFJJDJ.isBackRegister(a.id,'71') as sfcq,*/
+            ,(select to_char(min(t.create_time),'yyyy-MM-dd') from xh_tzsq_state t where t.tzsq_id = a.id and t.state = '6') as hkrq
+           from XH_TZSQ a,XH_CJRXX b,BASE_EMPLOYEE cca,BASE_EMPLOYEE crm
+                where 1=1
+                and a.CJRXX_ID = b.ID
+                and b.EMPLOYEE_CCA = cca.id
+                and b.EMPLOYEE_CRM = crm.id
+                and to_date(a.JHTZRQ,'yyyy-MM-dd')>to_date('2013-07-01','yyyy-MM-dd') 
+           $sql
+      ) z
+      where 1=1 
+	$sql2
+	order by uploaddate desc
+		]]>
+		</sqlString>
+	</sql>
+	
+	<sql name="cnt_queryCfjjdj" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryCfjjdj
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryCfjjdj" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryCfjjdj
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+
+	
+	
+	
+	<sql name="exportXhTzsqList" common="true">
+		<sqlString><![CDATA[
+		    select rownum as RONUM,z.*,z.PRONAME||' '||z.CITYNAME as chengshiname,
+		    to_char(z.moqidate,'yyyy-MM-dd') as moqi
+       		from (
+			select 
+				a.TZSQBH,/*协议编号*/
+				a.JHTZRQ,/*计划投资日期*/
+				a.JHTZJE,/*计划投资金额*/
+				a.TZFS,/*投资方式*/
+				a.HSFS,/*回收方式*/
+				a.FKFS,/*付款方式*/
+				a.SFFXJBC,/*是否风险金补偿*/
+				a.JHHKRQ,/*计划划扣日期*/
+				a.SQRQ,/*申请日期*/
+				a.BMZG,/*部门主管*/
+				a.XYBB,/*协议版本*/
+				a.XSZKLY,/*销售折扣率*/
+				a.XSZKLYXQX,/*销售折扣率有效期限*/
+				a.REMARK,/*备注*/
+				a.SQDYJ,/*申请单原件*/
+				a.TZFKKHH,/*投资付款开户行*/
+				a.TZFKKHZ,/*投资付款卡或折*/
+				a.TZFKYHMC,/*投资付款银行名称*/
+				a.TZFKKHMC,/*投资付款开户名称*/
+				a.TZFKYHZH,/*投资付款银行帐号*/
+				a.HSZJKHH,/*回收资金开户行*/
+				a.HSZJKHZ,/*回收资金卡或折*/
+				a.HSZJYHMC,/*回收资金银行名称*/
+				a.HSZJKHMC,/*回收资金开户名称*/
+				a.HSZJYHZH,/*回收资金银行帐号*/
+				a.CREATE_BY,/*创建人员*/
+				to_char(a.create_time,'yyyy-MM-dd hh24:mi:ss') as CREATE_TIME,/*创建时间*/
+				ADD_MONTHS(to_date(a.JHTZRQ,'yyyy-MM-dd'),a.CJZQ) as moqidate,
+				a.SQZT,/*申请状态*/
+				a.SQTYPE,
+				a.CJZQ,/*出借周期*/
+				a.TZJGR,/*交割日*/
+				a.SGHKRQ,/*首个还款日期*/
+				a.ZDR,/*账单日*/
+				a.TZZJZT,/*投资资金状态*/
+				a.SYQS,/*使用期数*/
+				a.PPZT,/*匹配状态*/
+				a.LAST_CJZQ,/*剩余出借周期*/
+				a.STATE,/*状态0暂存,1待审批，2审批通过，3审批不通过，9删除， */
+				a.AUDIT_PERSON,/*审核人*/
+				a.AUDIT_IDEA,/*审核意见*/
+				a.AUDIT_TIME,/*审核时间*/
+				a.UPSTATE,/*变更状态-1，无修改，0暂存, 1待审批，3审批不通过*/
+				a.FIRSTDATE,/*首期天数*/
+				a.OVERSTATE,/*完结状态0，未完结，2，已完结*/
+				a.ID,b.cjrxm,b.khbm,a.TZCP_ID,a.ZQTJ_ID,b.KFTD,a.shrq,
+				case a.OVERSTATE when '1' then '合同中'
+	           		when '2' then '已到期'
+	                when '0' then '合同中'
+	          		else '合同中' end STATENAME,
+				b.EMPLOYEE_CRM,
+				(
+				  select name from BASE_EMPLOYEE z
+				  where z.id = b.EMPLOYEE_CRM
+				)as EMPLOYEE_CRM_name,
+				(
+				  select z.emp_no from BASE_EMPLOYEE z
+				  where z.id = b.EMPLOYEE_CRM
+				)as EMP_NO,
+				b.EMPLOYEE_CCA,
+				(
+				  select name from BASE_EMPLOYEE z
+				  where z.id = b.EMPLOYEE_CCA
+				)as EMPLOYEE_CCA_name,
+				
+				(
+		           select x.RGANI_NAME from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+		            where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+		          where z.id = b.EMPLOYEE_CRM))
+		        ) as yyb,
+				( select y.PARENT_ID from BASE_ZZJG y
+	                where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+	              	where z.id = b.EMPLOYEE_CRM)
+	            ) as yybid,
+				
+				b.province,
+				 (
+				 select name from base_city z
+				 where z.id=b.province
+				 ) as proname,
+				 b.city,
+				 (
+				 select name from base_city z
+				 where z.id=b.city
+				 ) as cityname,
+				 b.area,
+				 (
+				 select name from base_city z
+				 where z.id=b.area
+				 ) as areaname,
+				 b.crmprovince,
+				 (
+				 select name from base_city z
+				 where z.id=b.crmprovince
+				 ) as crmprovincename,
+				 b.crmcity,
+				 (
+				 select name from base_city z
+				 where z.id=b.crmcity
+				 ) as crmcityname,
+				 (select count(*) from XH_LENTMONEYWATER z
+				 where z.tzsq_id=a.id) as lentcount,/*资金流水记录数*/
+				 (select count(*) from XH_LENTMONEYWATER z
+				 where z.tzsq_id=a.id and z.state = '2') as backcount,/*回款记录数*/
+				 (select sum(z.money) from XH_LENTMONEYWATER z
+		         where z.tzsq_id=a.id and (a.zqtj_id is null or (z.zqtj_id is null or z.ZQTJ_ID != a.zqtj_id))) as money,	/*资金流水金额总和（当前可推荐金额）*/
+		         case a.TZCP_ID when 83 then a.JHTZJE*1.02 --季度盈
+                   when 84 then a.JHTZJE*1.045 --双季盈
+                   when 85 then a.JHTZJE*1.11 --年年盈
+                   when 88 then a.JHTZJE*1.08 --年年金
+                   else 
+                     case a.overstate when '2' then
+                   (select to_number(to_char(abs(sum(z.FINAL_INTEREST)+a.jhtzje),'FM99999999.99')) from XH_LENTMONEYWATER z
+                    where z.tzsq_id=a.id and z.state = '2') else 0 end
+                end lentmoney,/*已推荐金额总和*/ 
+		         (select max(z.JHTZRQ) from XH_LENTMONEYWATER z
+		         where z.tzsq_id=a.id and z.state != '1') as LENJHTZRQ,/*资金流水入账记录最大日期（出借日期）*/
+				 (select TZCP_MC from XH_TZCP z
+				 where z.ID=a.TZCP_ID) as TZCP_MC,
+				 (
+		          select sum(z.money) from xh_zqtj_details z
+             	  where  z.zqtj_id = a.zqtj_id
+		         ) as ZQTJSMONEY
+			 from XH_TZSQ a,XH_CJRXX b
+			      where 1=1
+			      and a.CJRXX_ID = b.ID
+			      and  substr(a.SGHKRQ,length(a.SGHKRQ)-4,length(a.SGHKRQ)) != '-2-30'
+            	  and  substr(a.SGHKRQ,length(a.SGHKRQ)-4,length(a.SGHKRQ)) != '02-30'
+			$sql
+			) z
+			where 1=1 
+			$sql2
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_exportXhTzsqList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_exportXhTzsqList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_exportXhTzsqList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_exportXhTzsqList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	
+	<!-- 逾期报表统计 -->
+	<sql name="exportXhCapitalOverdueList" common="true">
+		<sqlString><![CDATA[
+		  select   rownum as RONUM,z.*
+		    FROM
+		    (
+			select 
+				h.jkhtbm,
+				(
+				         select x.RGANI_NAME from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+				          where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+				        where z.id = (select e.employee_crm from XH_XYDKZX e where e.ID=j.XYDKZX_ID)))
+				      ) as yyb,
+				(
+			        select x.id from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+			         where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+			       where z.id = (select t.employee_crm from XH_XYDKZX t where t.ID=j.XYDKZX_ID)))
+			     ) as yybid,
+				j.jkrxm,
+				--借款时间
+				to_char(m.make_loan_date,'yyyy-mm-dd') as fkdate,
+				(select e.name from base_employee e,xh_xydkzx xy where e.id=xy.employee_cca and xy.id=j.xydkzx_id) saleName,
+				h.htje,
+				h.hkqs,
+				to_char(t.overdue_date,'yyyy-mm-dd') as overdate,
+				t.spare_field02 as overday,
+				t.spare_field01 as overqs,
+				t.spare_field01*h.ybjje as syje,
+				h.dkll as dkll,
+				h.yhkje,
+				0.2 as interest ,
+				t.punish_interest,
+				0.1 as damages,
+				t.damages_money,
+				(select m.name from XH_MATE_DATA m, XH_MATEDATA_TYPE p where m.value = t.overdue_statr and m.matedatatype_id = p.id and p.type_code = '20100') as overdue_statr,
+				t.spare_field06,
+				t.spare_field03
+			from XH_CAPITAL_OVERDUE t, xh_jksq j, xh_jkht h, xh_make_loans m 
+			where 
+			j.id = t.lender_id and j.id = h.jksq_id and h.id = m.loan_contract_id 
+			$sql
+			order by t.overdue_date desc
+			) z where 1 = 1
+			$sql2
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_exportXhCapitalOverdueList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_exportXhCapitalOverdueList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_exportXhCapitalOverdueList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_exportXhCapitalOverdueList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	
+	<!-- -->
+	<sql name="queryOverStateXhTzsqList" common="true">
+		<sqlString><![CDATA[
+		    select * from (
+			select 
+            a.TZSQBH,/*协议编号*/
+            a.JHTZRQ,/*计划投资日期*/
+            a.JHTZJE,/*计划投资金额*/
+            a.TZFS,/*投资方式*/
+            a.HSFS,/*回收方式*/
+            a.FKFS,/*付款方式*/
+            a.SQTYPE,
+            a.JHHKRQ,/*计划划扣日期*/
+            a.CREATE_BY,/*创建人员*/
+            to_char(a.create_time,'yyyy-MM-dd hh24:mi:ss') as CREATE_TIME,/*创建时间*/
+            a.SQRQ,/*申请日期*/
+            a.TZFKKHH,/*投资付款开户行*/
+            a.TZFKKHZ,/*投资付款卡或折*/
+            a.TZFKYHMC,/*投资付款银行名称*/
+            a.TZFKKHMC,/*投资付款开户名称*/
+            a.TZFKYHZH,/*投资付款银行帐号*/
+            (
+               select t.name from XH_MATE_DATA t,XH_MATEDATA_TYPE f
+        where t.matedatatype_id = f.id
+        and t.state='0'
+        and f.type_code='0001'
+        and t.value=a.HSZJKHH
+               )as HSZJKHH,/*回收资金开户行*/
+            a.HSZJKHZ,/*回收资金卡或折*/
+            a.HSZJYHMC,/*回收资金银行名称*/
+            a.HSZJKHMC,/*回收资金开户名称*/
+            a.HSZJYHZH,/*回收资金银行帐号*/
+            a.CJZQ,/*出借周期*/
+            a.SGHKRQ,/*首个还款日期*/
+            REPORT_CFJJDJ.plan_lend_date(to_date(a.JHTZRQ,'yyyy-MM-dd'),a.CJZQ,a.CREDITDATE) as JHJSRQ,/*实际到期日期*/
+            to_char(REPORT_CFJJDJ.plan_lend_date(to_date(a.JHTZRQ,'yyyy-MM-dd'),a.CJZQ,a.CREDITDATE),'yyyy-MM-dd') as moqi,
+            a.TZJGR,/*交割日*/
+            a.ZDR,/*账单日*/
+            a.TZZJZT,/*投资资金状态*/
+            a.SYQS,/*使用期数*/
+            a.PPZT,/*匹配状态*/
+            a.LAST_CJZQ,/*剩余出借周期*/
+            a.STATE,/*状态0暂存,1待审批，2审批通过，3审批不通过，9删除， */
+            a.OVERSTATE,/*完结状态0，未完结，2，已完结*/
+            a.hkstate,/*划扣状态0，未划扣，1，划扣失败，2，已划扣*/
+             a.creditstate,/*债权申请状态  1，申请 2，待审批 3，审批通过 4，未通过*/
+             a.creditdate,
+            a.ID,b.cjrxm,b.khbm,a.TZCP_ID,a.ZQTJ_ID,b.KFTD,
+            b.EMPLOYEE_CRM,
+            crm.name as EMPLOYEE_CRM_name,
+            b.EMPLOYEE_CCA,
+            cca.name as EMPLOYEE_CCA_name,
+            (
+                   select x.RGANI_NAME from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+                    where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+                  where z.id = b.EMPLOYEE_CRM))
+                ) as yyb,
+            ( select y.PARENT_ID from BASE_ZZJG y
+                      where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+                      where z.id = b.EMPLOYEE_CRM)
+                  ) as yybid,
+            
+            b.province,
+             (
+             select name from base_city z
+             where z.id=b.province
+             ) as proname,
+             b.city,
+             (
+             select name from base_city z
+             where z.id=b.city
+             ) as cityname,
+             b.area,
+             (
+             select name from base_city z
+             where z.id=b.area
+             ) as areaname,
+             b.crmprovince,
+             (
+             select name from base_city z
+             where z.id=b.crmprovince
+             ) as crmprovincename,
+             b.crmcity,
+             (
+             select name from base_city z
+             where z.id=b.crmcity
+             ) as crmcityname,
+            
+                 case a.TZCP_ID when 83 then a.JHTZJE*1.02 --季度盈
+                   when 84 then a.JHTZJE*1.045 --双季盈
+                   when 85 then a.JHTZJE*1.11 --年年盈
+                   when 88 then a.JHTZJE*1.08 --年年金
+                   else 
+                   (select to_number(to_char(abs(sum(z.FINAL_INTEREST)+a.jhtzje),'FM99999999.99')) from XH_LENTMONEYWATER z
+                    where z.tzsq_id=a.id and z.state = '2') end lentmoney,/*回款金额*/ 
+             (select TZCP_MC from XH_TZCP z
+             where z.ID=a.TZCP_ID) as TZCP_MC
+           from XH_TZSQ a,XH_CJRXX b,BASE_EMPLOYEE cca,BASE_EMPLOYEE crm
+                where 1=1
+                and a.CJRXX_ID = b.ID
+                and b.EMPLOYEE_CCA = cca.id
+                and b.EMPLOYEE_CRM = crm.id
+                and a.state = '2'
+                and (a.cjzq != '-1' or a.creditstate='3')
+                and a.hkstate = '2'
+			$sql
+			) z
+			where 1=1 
+			$sql2
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryOverStateXhTzsqList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryOverStateXhTzsqList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryOverStateXhTzsqList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryOverStateXhTzsqList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	<!--  -->
+	<sql name="downloadTzsqFile" common="true">
+		<sqlString><![CDATA[
+		  select 
+  a.LENT_STATE,/*债权状态0首期,1非首期*/
+  a.jhtzrq,a.id,
+        b.cjrxm,a.tzsq_id
+       from XH_ZQTJ a,XH_TZSQ c,XH_CJRXX b  
+            where 1=1
+            and a.TZSQ_ID = c.id
+            and c.CJRXX_ID = b.ID
+            /*and a.lent_state = '0'*/
+           	and a.state='2'
+            and a.statedg <> '0'
+			$sql
+			order by a.create_time desc
+			]]></sqlString>
+	</sql>
+	
+	
+	
+	<!-- 审核导出 -->
+	<sql name="queryTzsqRefusedList" common="true">
+		<sqlString><![CDATA[
+		    select * from (
+			select 
+		        a.TZSQBH,/*协议编号*/
+	            a.JHTZRQ,/*计划投资日期*/
+	            a.JHTZJE,/*计划投资金额*/
+	            a.FKFS,/*付款方式*/
+	            a.JHHKRQ,/*计划划扣日期*/
+	            a.SQRQ,/*申请日期*/
+	            a.XSZKLYXQX,/*销售折扣率有效期限*/
+	            a.CREATE_BY,/*创建人员*/
+	            to_char(a.create_time,'yyyy-MM-dd hh24:mi:ss') as CREATE_TIME,/*创建时间*/
+	            a.SGHKRQ,/*首个还款日期*/
+	            a.ZDR,/*账单日*/
+	            a.TZZJZT,/*投资资金状态*/
+	            a.LAST_CJZQ,/*剩余出借周期*/
+	            a.STATE,/*状态0暂存,1待审批，2审批通过，3审批不通过，9删除， */
+	            a.ID,b.cjrxm,b.cjrxb,b.khbm,b.KFTD,
+	            crm.name as EMPLOYEE_CRM_name,
+	            cca.name as EMPLOYEE_CCA_name,
+	            (
+	                   select x.RGANI_NAME from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+	                    where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+	                  where z.id = b.EMPLOYEE_CRM))
+	                ) as yyb,
+	            ( select y.PARENT_ID from BASE_ZZJG y
+	                      where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+	                      where z.id = b.EMPLOYEE_CRM)
+	                  ) as yybid,
+	             (select TZCP_MC from XH_TZCP z
+	             where z.ID=a.TZCP_ID) as TZCP_MC,
+	             (
+	             select f.remarks from xh_tzsq_state f
+	             where f.id = (
+	             select min(t.id) from xh_tzsq_state t
+	             where t.tzsq_id=a.id
+	             and t.state='21'
+	              )
+	             ) as remarks
+		       from XH_TZSQ a,XH_CJRXX b,BASE_EMPLOYEE cca,BASE_EMPLOYEE crm
+		            where 1=1
+		            and a.CJRXX_ID = b.ID
+		            and b.EMPLOYEE_CCA = cca.id
+		            and b.EMPLOYEE_CRM = crm.id
+			$sql
+			) z
+			where 1=1 
+			and remarks is not null
+			$sql2
+			]]></sqlString>
+	</sql>
+</sqlmaps>

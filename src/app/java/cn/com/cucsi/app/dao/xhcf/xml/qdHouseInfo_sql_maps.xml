@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+    <!--  -->
+	 <sql name="queryQdHouseInfoList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.LOAN_CODE,/*借款编号*/
+				a.STATE,/*借款人状态*/
+				a.JKRXM,/*借款人姓名*/
+				a.JK_USE,/*借款人借款用途*/
+				a.CITY,/*城市*/
+				a.JK_TYPE,/*借款方式*/
+				a.ZQR,/*债权人*/
+				a.HTJE,/*初始借款金额*/
+				a.YBJJE,/*月本*/
+				a.YLXJE,/*月息*/
+				a.ZHGLF,/*月帐号管理费*/
+				a.YHKJE,/*月还款金额*/
+				a.QDRQ,/*初始借款时间*/
+				a.HKQS,/*还款期限*/
+				a.QSHKRQ,/*起始还款日期*/
+				a.DKLL,/*贷款利息*/
+				a.RETURNRQ,/*no还款截止日期*/
+				a.PERSON_WORK_CONDITION,/*no借款人职业情况*/
+				a.ZJHM,/*证件号码*/
+				a.JQSQID,/*借款申请ID*/
+				a.JQHTID,/*借款合同ID*/
+				a.KYZQID,/*可用债权ID*/
+				a.META1,/*备用一个*/
+				a.PROVINCE,/*省份*/
+			a.ID
+			 from QD_HOUSE_INFO a
+			      where 1=1
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryQdHouseInfoList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryQdHouseInfoList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryQdHouseInfoList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryQdHouseInfoList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

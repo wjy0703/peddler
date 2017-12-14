@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+    <!--  -->
+	 <sql name="queryXhCapitalOverdueList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.BANK_NAME,/*银行名称*/
+				a.BANK_NUMBER,/*银行账号*/
+				a.BANK_OPEN,/*银行开户行*/
+				a.DAMAGES_MONEY,/*违约金*/
+				a.LENDER_ID,/*借款人ID*/
+				a.LENDER_ID_CARD,/*借款人身份证号*/
+				a.LENDER_NAME,/*借款人名称*/
+				a.LENDER_NUMBER,/*借款编号*/
+				a.OVERDUE_DATE,/*逾期时间*/
+				a.OVERDUE_MONEY,/*逾期金额*/
+				a.OVERDUE_STATR,/*逾期状态*/
+				a.PUNISH_INTEREST,/*罚息*/
+				a.SPARE_FIELD01,/*备用字段1*/
+				a.SPARE_FIELD02,/*备用字段2*/
+				a.SPARE_FIELD03,/*备用字段3*/
+			a.ID
+			 from XH_CAPITAL_OVERDUE a
+			      where 1=1
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhCapitalOverdueList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhCapitalOverdueList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhCapitalOverdueList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhCapitalOverdueList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	
+	
+</sqlmaps>

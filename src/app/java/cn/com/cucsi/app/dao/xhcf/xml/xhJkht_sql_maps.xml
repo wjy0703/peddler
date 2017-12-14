@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+    <!--  -->
+	 <sql name="queryXhJkhtList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.HKQS,/*还款期数*/
+				a.YZHFL,/*月综合费率*/
+				a.ZXF,/*咨询费*/
+				a.ZHGLF,/*账户管理费*/
+				a.YLXJE,/*月利息金额*/
+				a.YLL,/*月利率*/
+				a.YHKJE,/*月还款金额*/
+				a.YBJJE,/*月本金金额*/
+				a.XYSHF,/*信用审核费*/
+				a.STATE,/*状态0暂存,1待审批，2审批通过，3审批不通过，9删除*/
+				a.QSHKRQ,/*起始还款日期*/
+				a.QDRQ,/*合同签订日期*/
+				a.JKHTBM,/*借款合同编号*/
+				a.HTJE,/*合同金额*/
+				a.FWF,/*服务费*/
+				a.FKJE,/*放款金额*/
+				a.AUDIT_PERSON,/*审核人*/
+				a.AUDIT_IDEA,/*审核意见*/
+				a.AUDIT_DATE,/*审核时间*/
+				a.XFF,/*信访费*/
+			a.ID
+			 from XH_JKHT a
+			      where 1=1
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhJkhtList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhJkhtList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhJkhtList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhJkhtList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

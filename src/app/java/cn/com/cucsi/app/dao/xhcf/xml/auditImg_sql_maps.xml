@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<!-- 查询消息盒子分页 -->
+	<sql name="queryAuditImgList" common="true">
+		<sqlString><![CDATA[
+		select t.img_src from XH_AUDIT_IMG t where 1 = 1
+		$sql1
+		order by t.id_no
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryAuditImgList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryAuditImgList
+			) a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryAuditImgList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryAuditImgList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

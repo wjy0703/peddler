@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<!-- 放款信息查询  -->
+	<sql name="makeLoanList" common="true">
+		<sqlString><![CDATA[
+		    select z.*,rownum, (select x.RGANI_NAME from BASE_ZZJG x where x.id =z.yybid) as YYB from (
+			 SELECT  
+			 		 A.ID,
+			 		 A.BACKUP01,
+			 		 HETONG.ID AS HETONGID,
+					 HETONG.FKJE,
+					 HETONG.HTJE,
+					 A.LOAN_CODE,
+				     (
+				        select x.id from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+				         where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+				       where z.id = (select t.employee_crm from XH_XYDKZX t where t.ID=a.XYDKZX_ID)))
+				     ) as yybid,
+					 A.JKRXM,
+					 A.ZJHM,
+					 A.JK_TYPE,
+					 A.JK_LOAN_QUOTA,
+					 A.JK_CYCLE,
+					 substrc(A.BANK_OPEN,0,instr(A.BANK_OPEN,'行')) as BANK_NAME,
+					 A.BANK_OPEN,
+					 A.BANK_NUM,
+					 A.BANK_USERNAME
+		     FROM 
+		             XH_JKHT HETONG   LEFT JOIN XH_JKSQ A ON HETONG.JKSQ_ID = A.ID 
+		                              LEFT JOIN XH_XYDKZX B  ON A.XYDKZX_ID = B.ID 
+		     WHERE 1=1  
+		     $whereClause
+		     ) z 
+		     where 1=1
+		     $sql2
+			]]></sqlString>
+	</sql>
+	<!-- 放款信息查询 -->
+	<sql name="cnt_makeLoanList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			    $ibpm_makeLoanList
+			) a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 放款信息查询 列表分页 -->
+	<sql name="page_makeLoanList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_makeLoanList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

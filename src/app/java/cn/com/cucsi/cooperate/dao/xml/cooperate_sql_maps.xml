@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<!-- 查询合同分页 -->
+	<sql name="queryContractList" common="true">
+		<sqlString><![CDATA[
+		select * from (
+			select m.message_state, t.type_name, t.type_coding, m.id, m.event_id, to_char(m.create_time,'YYYY-MM-DD HH24:MI') as create_time, m.message_title, m.message_content, m.target_url, m.target_rel, '1' as type, m.read_type as isRead
+				from xh_message_box m, xh_message_box_type t
+				where 1 = 1
+				$sql
+				and m.type_id = t.id
+				$messageType
+				
+			union
+			
+			select m.message_state, t.type_name, t.type_coding, m.id, m.event_id, to_char(m.create_time,'YYYY-MM-DD HH24:MI') as create_time, m.message_title, m.message_content, m.target_url, m.target_rel, '2' as type, m.read_type as isRead
+				from xh_message_box m, xh_message_box_type t
+				where 1 = 1
+				$sql2
+				and m.type_id = t.id
+				$messageType
+				
+			union
+			
+			select m.message_state, t.type_name, t.type_coding, m.id, m.event_id, to_char(m.create_time,'YYYY-MM-DD HH24:MI') as create_time, m.message_title, m.message_content, m.target_url, m.target_rel, '3' as type, m.read_type as isRead
+				from xh_message_box m, xh_message_box_type t
+				where 1 = 1
+				$sql3
+				and m.type_id = t.id
+				$messageType
+			) z  where 1=1  $sql4  order by create_time desc
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryContractList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryContractList
+			) a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryContractList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryContractList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

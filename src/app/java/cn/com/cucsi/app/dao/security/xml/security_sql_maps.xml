@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<sql name="queryUserList" common="true">
+		<sqlString><![CDATA[
+			select * from acct_user
+			where 1=1
+		
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryUserList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryUserList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryUserList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_paginationStart
+			$ibpm_queryUserList
+			$ibpm_paginationEnd
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

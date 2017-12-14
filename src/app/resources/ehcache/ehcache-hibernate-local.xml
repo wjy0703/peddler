@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+
+	<diskStore path="java.io.tmpdir/hibernate/app" />
+
+	<!-- DefaultCache setting. -->
+	<defaultCache maxElementsInMemory="10000"
+		memoryStoreEvictionPolicy="LRU" eternal="false" timeToIdleSeconds="300"
+		timeToLiveSeconds="300" overflowToDisk="false" diskPersistent="false" />
+
+	<!-- Special objects setting. -->
+	<cache name="cn.com.cucsi.app.entity.security.User"
+		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
+		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
+	<cache name="cn.com.cucsi.app.entity.security.User.roleList"
+		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
+		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
+	<cache name="cn.com.cucsi.app.entity.security.Role"
+		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
+		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
+	<cache name="cn.com.cucsi.app.entity.security.Role.authorityList"
+		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
+		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
+	<cache name="cn.com.cucsi.app.entity.security.Authority"
+		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
+		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
+	<cache name="cn.com.cucsi.app.entity.security.Resource"
+		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
+		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
+	<cache name="cn.com.cucsi.app.entity.security.Resource.authorityList"
+		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
+		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
+	<cache name="cn.com.cucsi.app.entity.baseinfo.Menu"
+		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
+		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
+</ehcache>

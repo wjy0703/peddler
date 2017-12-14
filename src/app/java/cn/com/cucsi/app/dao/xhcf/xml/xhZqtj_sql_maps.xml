@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+    <!-- 债权推荐 -->
+	 <sql name="queryXhZqtjList" common="true">
+		<sqlString><![CDATA[
+		select * from(
+			select 
+				a.TZSQ_ID,/*投资申请ID*/
+				a.MONEY,/*资金*/
+				a.STATE,/*状态0暂存,1待审批，2审批通过，3审批不通过，9删除，*/
+				a.LENT_STATE,/*债权状态0首期,1非首期*/
+				a.JHTZRQ,/*计划投资日期*/
+				a.XYBGQJKRYHKE,/*下一个报告期借款人应还款额*/
+				a.XYBGRQ,/*下一个报告日*/
+				a.YJXYBGRZCZE,/*预计下一个报告日您的资产总额*/
+				a.ZHGLF,/*账户管理费*/
+				a.STATEDG,/*订购标记0未订购,1已订购，2已交割*/
+				a.ZDR,/*账单日*/
+				a.BILL_SEND_STATE,/*账单发送状态*/
+				a.FILL_REASON,/*账单发送失败原因*/
+				a.AGREEMENT_MAKE_STATE,/*债权制作状态*/
+			a.ID,
+			c.TZSQBH,/*协议编号*/
+				c.JHTZJE,/*计划投资金额*/
+				c.TZFS,/*投资方式*/
+				c.HSFS,/*回收方式*/
+				c.FKFS,/*付款方式*/
+				c.SFFXJBC,/*是否风险金补偿*/
+				c.JHHKRQ,/*计划划扣日期*/
+				c.SQRQ,/*申请日期*/
+				c.BMZG,/*部门主管*/
+				c.XYBB,/*协议版本*/
+				c.XSZKLY,/*销售折扣率*/
+				c.XSZKLYXQX,/*销售折扣率有效期限*/
+				c.REMARK,/*备注*/
+				c.SQDYJ,/*申请单原件*/
+				c.SQZT,/*申请状态*/
+				c.CJZQ,/*出借周期*/
+				c.TZJGR,/*交割日*/
+				c.SGHKRQ,/*首个还款日期*/
+				c.TZZJZT,/*投资资金状态*/
+				c.SYQS,/*使用期数*/
+				c.PPZT,/*匹配状态*/
+				c.LAST_CJZQ,/*剩余出借周期*/
+				c.FIRSTDATE,/*首期天数*/
+				c.OVERSTATE,/*完结状态0，未完结，2，已完结*/
+				c.Hkstate,/*划扣状态0，未划扣，1，划扣失败，2，已划扣*/
+				b.cjrxm,b.khbm,c.TZCP_ID,b.zjhm,
+				b.cjrxb,b.yb,b.txdz,
+				b.ZQJSFS,
+				b.DZYX,
+				(
+		           select x.RGANI_NAME from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+		            where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+		          where z.id = b.EMPLOYEE_CRM))
+		        ) as yyb,
+		        ( select y.PARENT_ID from BASE_ZZJG y
+	                where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+	              	where z.id = b.EMPLOYEE_CRM)
+	            ) as yybid,
+				b.EMPLOYEE_CRM,
+				(
+				  select name from BASE_EMPLOYEE z
+				  where z.id = b.EMPLOYEE_CRM
+				)as EMPLOYEE_CRM_name,
+				b.EMPLOYEE_CCA,
+				(
+				  select name from BASE_EMPLOYEE z
+				  where z.id = b.EMPLOYEE_CCA
+				)as EMPLOYEE_CCA_name,
+				b.province,
+				 (
+				 select name from base_city z
+				 where z.id=b.province
+				 ) as proname,
+				 b.city,
+				 (
+				 select name from base_city z
+				 where z.id=b.city
+				 ) as cityname,
+				 b.area,
+				 (
+				 select name from base_city z
+				 where z.id=b.area
+				 ) as areaname,
+				 b.crmprovince,
+				 (
+				 select name from base_city z
+				 where z.id=b.crmprovince
+				 ) as crmprovincename,
+				 b.crmcity,
+				 (
+				 select name from base_city z
+				 where z.id=b.crmcity
+				 ) as crmcityname,
+				 (select sum(z.money) from XH_LENTMONEYWATER z
+		         where z.tzsq_id=c.id and z.ZQTJ_ID is null) as LENTMONEY,	/*资金流水金额总和（当前可推荐金额）*/
+		         (select max(z.JHTZRQ) from XH_LENTMONEYWATER z
+		         where z.tzsq_id=c.id and z.state != '1') as LENJHTZRQ,/*资金流水入账记录最大日期（出借日期）*/
+				 (select TZCP_MC from XH_TZCP z
+				 where z.ID=c.TZCP_ID) as TZCP_MC
+			 from XH_ZQTJ a,XH_TZSQ c,XH_CJRXX b,base_city d
+			      where 1=1
+			      and a.TZSQ_ID = c.id
+			      and c.CJRXX_ID = b.ID
+			      and b.crmprovince = d.id
+			      $sql
+			      )where 1=1
+			      $sql2
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhZqtjList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhZqtjList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhZqtjList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhZqtjList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	
+	
+	<!-- 既有债权列表 -->
+	 <sql name="queryXhLentmoneywater" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.XYBGRQ,/*下一个报告日*/
+				d.MONEY,/*资金*/
+				d.HKZQ,/*还款周期*/
+				d.KYZQJZ_ID,/*可用债权价值ID*/
+				d.ZQCYBI,/*债权持有比例*/
+				d.HKZQ_SY,/*剩余期数*/
+				d.MONEY_SY,/*剩余资金*/
+				e.SYQS,/*剩余期数*/
+				e.SQHKRQ,/*首期还款日期*/
+				e.MQHKRQ,/*末期还款日期*/
+				e.SYHKYS,/*剩余还款月数*/
+				e.SYTJJE,/*剩余推荐金额*/
+				e.ZQYJCYL*100 as ZQYJCYL,/*预计债权收益率(年)*/
+				PROPERTIES_UTIL.CHECKGJR(f.ID) as JKRXM,/*f.JKRXM,借款人姓名*/
+				f.JK_LOAN_DATE,/*申请日期*/
+				f.JK_USE,/*借款用途*/
+				PROPERTIES_UTIL.CHECKGJRZJHM(f.ID) as ZJHM,/*f.ZJHM,证件号码*/
+				f.JK_TYPE,/*借款类型A：老板贷；B：老板楼易贷；C：薪水贷；D：薪水楼易贷；E：精英贷*/
+				b.MONEY as TJMONEY,/*本期还款金额-可推荐*/
+				b.FINAL_ZHGLF,/*本期还款金额-账户管理费*/
+				b.FINAL_MONEY,/*本期还款金额-本金*/
+				b.FINAL_INTEREST/*本期还款金额-利息*/
+			from XH_ZQTJ a,XH_LENTMONEYWATER b,XH_ZQTJ_DETAILS d,XH_AVAILABLE_VALUE_OF_CLAIMS e,XH_JKSQ f
+			where 1=1
+			and a.id = d.ZQTJ_ID
+			and d.KYZQJZ_ID = e.id
+			and e.id = b.KYZQJZ_ID
+			and e.JKSQ_ID = f.id
+			and a.id = b.ZQTJ_ID
+			and b.state = '2'
+			/*
+      		and to_date(a.XYBGRQ,'yyyy-mm-dd') <= add_months(to_date(e.MQHKRQ,'yyyy-mm-dd'),1)
+			and b.id in  
+		      (
+		       select f.id 
+		       from XH_LENTMONEYWATER f,(
+		 			select z.ZQTJ_ID,max(z.JHTZRQ) as JHTZRQ from XH_LENTMONEYWATER z
+		             where z.ZQTJ_ID in (
+		             select t.id from XH_ZQTJ t 
+		             where t.statedg in ('2','3') and 
+		             t.TZSQ_ID = $sql ) and z.state='2' group by z.ZQTJ_ID
+		             ) k
+               where f.zqtj_id = k.ZQTJ_ID
+               and f.JHTZRQ = k.JHTZRQ 
+		      )
+		      */
+		    and b.JHTZRQ =    
+	          (
+	           select max(z.JHTZRQ) as JHTZRQ from XH_LENTMONEYWATER z
+	                 where z.TZSQ_ID = $sql  and z.state='2' group by z.TZSQ_ID
+	          )  
+			and a.statedg in ('2','3')
+			and a.TZSQ_ID = $sql
+			order by a.id asc
+			]]></sqlString>
+	</sql>
+	
+	 
+	  <!-- 债权推荐 -->
+	 <sql name="queryXhAvailableValueOfClaimsList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.id,
+		        a.hkr,
+		        b.hk_Way,
+		        c.MIDDLE_MAN_NAME,
+		        a.sqhkrq,
+		        a.syqs,
+		        a.syhkys,
+		        b.JK_USE,
+		        a.jkje,
+		        a.kyzqjz,
+		        d.dkll,
+		        b.BACKUP01,
+				PROPERTIES_UTIL.CHECKGJR(b.ID) as JKRXM/*f.JKRXM借款人姓名*/
+			 from XH_AVAILABLE_VALUE_OF_CLAIMS a,XH_JKSQ b,BASE_MIDDLE_MAN c,xh_jkht d
+			      where 1=1
+			      and a.JKSQ_ID = b.id
+			      and a.ZJR_ID = c.id
+			      and a.loan_contract_id = d.id
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhAvailableValueOfClaimsList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhAvailableValueOfClaimsList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhAvailableValueOfClaimsList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhAvailableValueOfClaimsList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	
+	<sql name="queryXhZqtjHuaKouList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.TZSQ_ID,/*投资申请ID*/
+				a.MONEY,/*资金*/
+				a.ID,
+				c.JHTZJE,/*计划投资金额*/
+				(
+				       select t.bank_code from XH_MATE_DATA t,XH_MATEDATA_TYPE f
+				where t.matedatatype_id = f.id
+				and t.state='0'
+				and f.type_code='0001'
+				and t.value=c.TZFKKHH
+				       )as BANK_CODE,/*投资付款开户行*/
+				 (
+				       select t.name from XH_MATE_DATA t,XH_MATEDATA_TYPE f
+				where t.matedatatype_id = f.id
+				and t.state='0'
+				and f.type_code='0001'
+				and t.value=c.TZFKKHH
+				       )as TZFKKHH,/*投资付款开户行*/
+		        c.TZFKKHZ,/*投资付款卡或折*/
+		        c.TZFKYHMC,/*投资付款银行名称*/
+		        c.TZFKKHMC,/*投资付款开户名称*/
+		        c.TZFKYHZH,/*投资付款银行帐号*/
+				b.cjrxm,b.zjhm,c.jhhkrq,c.sjhkrq,
+				b.cjrxb,b.yddh,
+				(
+				 select name from base_city z
+				 where z.id=b.province
+				 ) as proname,
+				 (
+				 select name from base_city z
+				 where z.id=b.city
+				 ) as cityname
+			 from XH_ZQTJ a,XH_TZSQ c,XH_CJRXX b,base_city d
+			      where 1=1
+			      and a.TZSQ_ID = c.id
+			      and c.CJRXX_ID = b.ID
+			      and b.crmprovince = d.id
+			$sql
+			]]></sqlString>
+	</sql>
+</sqlmaps>

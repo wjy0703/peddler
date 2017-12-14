@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+    <!--  -->
+	 <sql name="queryXhZqtjDetailsList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.ZQTJ_ID,/*债权推荐ID*/
+				a.MONEY,/*资金*/
+				a.HKZQ,/*还款周期*/
+				a.KYZQJZ_ID,/*可用债权价值ID*/
+				a.ZQCYBI,/*债权持有比例*/
+				a.HKZQ_SY,/*剩余期数*/
+				a.MONEY_SY,/*剩余资金*/
+			a.ID,
+			b.JKSQ_ID,/*借款申请ID*/
+				b.JKBH,/*借款编号*/
+				b.JKJE,/*借款金额*/
+				b.KYZQJZ,/*可用债权价值*/
+				b.ZJR_ID,/*中间人_ID*/
+				b.ZJRCYBL,/*中间人持有比例*/
+				b.SYQS,/*剩余期数*/
+				b.SQHKRQ,/*首期还款日期*/
+				b.MQHKRQ,/*末期还款日期*/
+				b.SYHKYS,/*剩余还款月数*/
+				b.SYTJJE,/*剩余推荐金额*/
+				b.MAKE_LOAN_ID,/*放款*/
+				b.LOAN_CONTRACT_ID,/*借款合同*/
+				b.ZQYJCYL*100 as ZQYJCYL,/*预计债权收益率(年)*/
+				b.HKR,/*还款日*/
+				PROPERTIES_UTIL.CHECKGJR(c.ID) as JKRXM,/*c.JKRXM,借款人姓名*/
+				c.JK_LOAN_QUOTA,/*借款申请额度*/
+				c.JK_CYCLE,/*借款周期*/
+				c.JK_LOAN_DATE,/*申请日期*/
+				c.JK_USE,/*借款用途*/
+				c.TOGETHER_PERSON,/*有无共同还款人*/
+				c.BANK_OPEN,/*账户开户行*/
+				c.BANK_USERNAME,/*账户名称*/
+				c.BANK_NUM,/*账户号码*/
+				c.JK_TYPE,/*借款类型A：老板贷；B：老板楼易贷；C：薪水贷；D：薪水楼易贷；E：精英贷*/
+				c.EXAM_STATE,/*审核状态*/
+				c.EXAM_END_STATE,/*审核结束状态*/
+				c.CREATE_BY,/*创建人*/
+				c.CREATE_TIME,/*创建时间*/
+				c.LAST_MODIFY_BY,/*最后修改人*/
+				c.LAST_MODIFY_TIME,/*最后修改时间*/
+				c.ORGANI_ID,/*组织*/
+				c.ANNUAL_INCOME,/*年收入*/
+				c.AREA,/*区县*/
+				c.BIRTHDAY,/*出生日期*/
+				c.CITY,/*地市*/
+				c.COMPANY,/*工作单位*/
+				c.COMPANY_ADRESS,/*单位地址*/
+				c.COMPANY_NATURE,/*单位性质*/
+				c.COMPANY_PHONE,/*单位电话*/
+				c.DATA,/*借款类型动态信息*/
+				c.EMAIL,/*电子邮箱*/
+				c.ENGLISH_NAME,/*英文名称*/
+				c.GENDERS,/*性别*/
+				c.HJADRESS,/*户籍地址*/
+				c.HOME_PHONE,/*家庭电话*/
+				c.INCOME_ILLUSTRATION,/*收入说明*/
+				c.LIVE_MESSAGE,/*居住说明信息*/
+				c.LIVE_STATE,/*居住状态 01:自有房屋，有无贷款月供*元;02:亲属产权;03:租房，房租* 元/月;04:其他*/
+				c.MARITAL_STATUS,/*婚姻状况*/
+				c.POCERTIFICATES,/*证件类型*/
+				c.PROVINCE,/*省份*/
+				c.QQHM,/*QQ号码*/
+				c.SPOUSE_ADRESS,/*配偶现住址*/
+				c.SPOUSE_ANNUAL_INCOME,/*配偶年收入*/
+				c.SPOUSE_BIRTHDAY,/*配偶出生日期*/
+				c.SPOUSE_COMPANY,/*配偶工作单位*/
+				c.SPOUSE_COMPANY_ADRESS,/*配偶单位地址*/
+				c.SPOUSE_COMPANY_PHONE,/*配偶单位电话*/
+				c.SPOUSE_DEP_FUNCTION,/*配偶部门与职务*/
+				c.SPOUSE_GENDERS,/*配偶性别*/
+				c.SPOUSE_HOME_PHONE,/*配偶家庭电话*/
+				c.SPOUSE_NAME,/*配偶姓名*/
+				c.SPOUSE_POCERTIFICATES,/*配偶证件类型*/
+				c.SPOUSE_TELEPHONE,/*配偶移动电话*/
+				c.SPOUSE_WORKINGLIFE,/*配偶工作年限*/
+				c.SPOUSE_ZJHM,/*配偶证件号码*/
+				c.TELEPHONE,/*移动电话*/
+				c.YWZN,/*有无子女*/
+				PROPERTIES_UTIL.CHECKGJRZJHM(c.ID) as ZJHM,/*c.ZJHM,证件号码*/
+				c.TEMPLET_ID,/*模板信息*/
+				c.TXDZ,/*通讯地址*/
+				c.LOAN_CODE,/*借款编号*/
+				c.XYDKZX_ID,/*借款咨询信息*/
+				c.WAIT_ACC_MONEY,/*待核算金额*/
+				c.HK_WAY,/*还款方式*/
+				c.APP_STATE,/*0为无借款变更申请;1为有变更申请*/
+				c.FKJE,/*放款金额(放款后回写)*/
+				c.BACKUP01,
+				d.MIDDLE_MAN_NAME,
+				d.ID_CARD,
+				d.ADDR,
+				d.CRED_ADDR,
+				d.CRED_ID ,e.DKLL
+			 from XH_ZQTJ_DETAILS a,XH_AVAILABLE_VALUE_OF_CLAIMS b,XH_JKSQ c,BASE_MIDDLE_MAN d,XH_JKHT e
+			      where 1=1
+			      and a.KYZQJZ_ID = b.ID
+			      and b.JKSQ_ID = c.id
+			      and b.ZJR_ID = d.id
+			      and b.loan_contract_id = e.id
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhZqtjDetailsList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhZqtjDetailsList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhZqtjDetailsList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhZqtjDetailsList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

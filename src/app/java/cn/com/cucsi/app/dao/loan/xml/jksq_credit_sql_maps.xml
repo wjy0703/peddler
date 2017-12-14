@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<!-- 信审信息调整 -->
+	<sql name="queryCreditAuditList" common="true">
+		<sqlString><![CDATA[
+			select
+				(select name from base_city z where z.id=a.province) as proname,
+            	(select name from base_city z where z.id=a.city) as cityname,
+		        (select t.description from base_attr t where t.value=a.JK_TYPE and t.type_id='3') JK_TYPE_INFO,
+		        (select t.name from base_employee t,xh_xydkzx xy where t.id=xy.employee_crm and xy.id=a.xydkzx_id) KHMC,
+		        (select t.name from base_employee t,xh_xydkzx xy where t.id=xy.employee_cca and xy.id=a.xydkzx_id) saleName,
+		        a.id,
+		        a.jkrxm,
+		        a.zjhm,
+		        a.english_name,
+		        a.jk_loan_quota,
+		        a.jk_cycle,
+		        a.backup02,
+		        TO_CHAR(a.CREATE_TIME,'YYYY-MM-DD HH24:MI:SS') as CREATE_TIME
+				from xh_jksq a 
+				$tablesql
+				where exists (select t.loan_apply_id from XH_CREDIT_AUDIT t, Xh_Jksq j where t.loan_apply_id = j.id and j.id = a.id and t.credit_result = 1 group by t.loan_apply_id)  and a.state in ('31','32','33','50','52')
+				$unionsql
+				$sql
+			]]></sqlString>
+	</sql>
+	
+	<sql name="kpiTime" common="true">
+		<sqlString><![CDATA[
+		select count(id) as count from
+		(
+			select x.id from xh_credit_audit x, xh_jksq j where 1 = 1
+			$sql
+			and j.id = x.loan_apply_id and j.state in ('31','31.A','31.C') and x.credit_type = '1' 
+			and j.jk_type in ('E','D','W','C') and round(to_number(sysdate-to_date(to_char(x.create_time, 'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD 
+			HH24:MI:SS'))*24) > 8
+			
+			union 
+			
+			select x.id from xh_credit_audit x, xh_jksq j where 1 = 1
+			$sql 
+			and j.id = x.loan_apply_id and j.state in ('31','31.A','31.C') and x.credit_type = '1' 
+			and j.jk_type in ('B','A','Q') and round(to_number(sysdate-to_date(to_char(x.create_time, 'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD 
+			HH24:MI:SS'))*24) > 12
+		) dual
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryCreditAuditList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryCreditAuditList
+			) a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryCreditAuditList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryCreditAuditList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	
+	
+	<sql name="loanApplyJksqList" common="true">
+		<sqlString><![CDATA[
+			 from XH_JKSQ a
+			 $tablesql
+			      where 1=1
+			 $unionsql
+			 $sql
+		 ) z
+		where 1=1 
+		$sql2
+			]]></sqlString>
+	</sql>
+	
+	<!-- 查询 总数 -->
+	<sql name="cnt_loanApplyJksqList" common="false">
+	    <sqlString><![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+				select * from (
+				select 
+					 (
+			        select x.id from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+			         where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+			       where z.id = (select t.employee_crm from XH_XYDKZX t where t.ID=a.XYDKZX_ID)))
+			     ) as yybid,a.ID
+			$ibpm_loanApplyJksqList
+			) a
+			]]></sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_loanApplyJksqList" common="false">
+	    <sqlString><![CDATA[
+			$ibpm_queryPageBefore
+			select z.*, (select x.RGANI_NAME from BASE_ZZJG x where x.id =z.yybid) as yyb from (
+			select 
+				a.ID,a.JKRXM,a.JK_LOAN_QUOTA,a.JK_CYCLE,
+				to_char(a.JK_LOAN_DATE,'yyyy-mm-dd') as JK_LOAN_DATE,a.JK_USE,
+				a.TOGETHER_PERSON istogether,
+        PROPERTIES_UTIL.ONLYEGJR(a.id) as TOGETHER_PERSON,
+        /*
+				(select k.together_name from xh_jksq_together k 
+					where k.id =(
+						select max(t.id) from xh_jksq_together t 
+						where t.xhjksq_id=a.id 
+				) ) as TOGETHER_PERSON,
+				*/
+				(select t.type from XH_XYDKZX t where t.ID=a.XYDKZX_ID)as jksq_type,
+				a.BANK_OPEN,a.BANK_USERNAME,a.BANK_NUM,
+				a.JK_TYPE,
+				(select t.description from base_attr t where t.value=a.JK_TYPE and t.type_id='3') JK_TYPE_INFO,
+				a.EXAM_STATE,a.EXAM_END_STATE,
+				a.CREATE_BY,	to_char(a.create_time,'yyyy-mm-dd HH24:MI:SS') as createTime,a.LAST_MODIFY_BY,
+				to_char(a.LAST_MODIFY_TIME,'yyyy-mm-dd HH24:MI:SS') as lastModifyTime,
+				a.ORGANI_ID,a.ANNUAL_INCOME,a.BIRTHDAY,a.COMPANY,a.COMPANY_ADRESS,
+				a.COMPANY_NATURE,a.COMPANY_PHONE,a.DATA,a.EMAIL,
+				a.ENGLISH_NAME,a.GENDERS,a.HJADRESS,a.HOME_ADDRESS,a.HOME_PHONE,
+				a.INCOME_ILLUSTRATION,a.LIVE_MESSAGE,a.LIVE_STATE,
+				a.MARITAL_STATUS,a.POCERTIFICATES,a.QQHM,a.SPOUSE_ADRESS,
+				a.SPOUSE_ANNUAL_INCOME,a.SPOUSE_BIRTHDAY,a.SPOUSE_COMPANY,
+				a.SPOUSE_COMPANY_ADRESS,a.SPOUSE_COMPANY_PHONE,a.SPOUSE_DEP_FUNCTION,
+				a.SPOUSE_GENDERS,a.SPOUSE_HOME_PHONE,a.SPOUSE_NAME,a.SPOUSE_POCERTIFICATES,
+				a.SPOUSE_TELEPHONE,a.SPOUSE_WORKINGLIFE,a.SPOUSE_ZJHM,a.TELEPHONE,
+				a.YWZN,a.ZJHM,a.TEMPLET_ID,
+				a.STATE,a.BACKUP01,
+				substr(a.BACKUP02,0,19) as BACKUP02,
+				a.BACKUP03,a.BACKUP04,
+				a.BACKUP05,a.BACKUP06,a.BACKUP07,a.BACKUP08,a.BACKUP09,
+				(select KEY_NAME from BASE_ATTR t, BASE_ATTR_TYPE bat 
+				    where bat.id = t.type_id and bat.coding = 'JKSQ_STATE' and t.VALUE=a.STATE ) stateInfo,
+				a.TXDZ,a.LOAN_CODE,
+				a.XYDKZX_ID,a.FKJE,a.APP_STATE,
+				(select ID from XH_JKHT t where t.JKSQ_ID=a.ID) XHJKHT_ID,
+				/*
+				(
+			        select x.RGANI_NAME from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+			         where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+			       where z.id = (select t.employee_crm from XH_XYDKZX t where t.ID=a.XYDKZX_ID)))
+			     ) as yyb,
+			     */
+			     (
+			        select x.id from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+			         where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+			       where z.id = (select t.employee_crm from XH_XYDKZX t where t.ID=a.XYDKZX_ID)))
+			     ) as yybid,
+				(select t.name from base_employee t,xh_xydkzx xy where t.id=xy.employee_cca and xy.id=a.xydkzx_id) saleName,
+				(select t.name from base_employee t,xh_xydkzx xy where t.id=xy.employee_crm and xy.id=a.xydkzx_id) teamName,
+				a.SUB_STATE,
+				(select t.KHMC from XH_XYDKZX t where t.ID=a.XYDKZX_ID) KHMC,
+				a.province,
+				 (
+				 select name from base_city z
+				 where z.id=a.province
+				 ) as proname,
+				 a.city,
+				 (
+				 select name from base_city z
+				 where z.id=a.city
+				 ) as cityname,
+				 a.area,
+				 (
+				 select name from base_city z
+				 where z.id=a.area
+				 ) as areaname,a.FIRST_SERVICE_ID,a.SECOND_SERVICE_ID
+			$ibpm_loanApplyJksqList
+			$ibpm_queryPageAfter
+		]]></sqlString>	
+	</sql>
+	
+	<!-- 老客户 -->
+	<sql name="queryLaokehuAndYuqi" common="true">
+		<sqlString><![CDATA[
+			select 
+            h.make_loan_date as MAKELOANDATE,
+            c.HTJE,
+            c.HKQS,
+            c.YHKJE,
+            (select z.key_name from base_attr z where z.value=b.state and z.type_id='1') as ACCOUNTSTATE,
+            c.JKHTBM,
+            PROPERTIES_UTIL.DEALINGDATES(a.id,c.QSHKRQ,c.HKQS) as DEALINGDATES,
+            (
+              select count(*) from XH_CAPITAL_OVERDUE t where t.LENDER_ID = b.id and t.overdue_statr='0'
+            ) as yuqi,
+            (
+              select sum(DAMAGES_MONEY) from XH_CAPITAL_OVERDUE t where t.LENDER_ID = b.id
+            ) as PENAL
+          from xh_loaner_account a ,xh_jksq b,xh_jkht c,XH_MAKE_LOANS h 
+            where 1=1 
+              and a.LOAN_APPLY_ID = b.id 
+              and a.LOAN_CONTRACT_ID = c.id 
+              and h.LOAN_CONTRACT_ID = c.id 
+              $andConditionSql
+             /* and b.POCERTIFICATES='身份证'
+              and b.ZJHM='231004197306010713'
+              --and b.id != */
+			]]></sqlString>
+	</sql>
+</sqlmaps>

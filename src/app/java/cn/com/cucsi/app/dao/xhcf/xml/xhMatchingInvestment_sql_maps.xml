@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<!-- -->
+	<sql name="queryXhMatchingInvestmentList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.INVEST_APPLY_ID,/*投资申请*/
+				a.FIRST_INVEST_DATE,/*出借日期*/
+				a.BILL_DAY,/*账单日*/
+				a.INVEST_TYPE,/*出借方式（ 产品类型）*/
+				a.MATCHED_AMOUNT,/*已匹配金额*/
+				a.MATCHING_AMOUNT,/*待匹配金额*/
+				a.DEDUCT_DATE,/*划扣日期*/
+				a.DELIVERY_DATE,/*交割日期*/
+				a.INVEST_STATE,/*状态  0: 未完成匹配   1:完成匹配 2  待审批  3 审核拒绝 4 审核通过，待订购， 5取消订购 6   已订购，带交割  7已交割*/
+				a.INVEST_MODE,/*0首期 1非首期*/
+			a.ID
+			 from XH_MATCHING_INVESTMENT a
+			      where 1=1
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhMatchingInvestmentList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhMatchingInvestmentList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhMatchingInvestmentList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhMatchingInvestmentList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

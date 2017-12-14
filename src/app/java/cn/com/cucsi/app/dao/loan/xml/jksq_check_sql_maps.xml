@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<sql name="loanApplyJksqCheckList" common="true">
+		<sqlString><![CDATA[
+			 from XH_JKSQ a
+			 $tablesql
+			      where 1=1
+			 $unionsql
+			 $sql
+		 ) z
+		where 1=1 
+		$sql2
+			]]></sqlString>
+	</sql>
+	
+	<!-- 查询 总数 -->
+	<sql name="cnt_loanApplyJksqCheckList" common="false">
+	    <sqlString><![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+				select * from (
+				select 
+					 (
+			        select x.id from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+			         where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+			       where z.id = (select t.employee_crm from XH_XYDKZX t where t.ID=a.XYDKZX_ID)))
+			     ) as yybid,a.ID
+			$ibpm_loanApplyJksqList
+			) a
+			]]></sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_loanApplyJksqCheckList" common="false">
+	    <sqlString><![CDATA[
+			$ibpm_queryPageBefore
+			select z.*, (select x.RGANI_NAME from BASE_ZZJG x where x.id =z.yybid) as yyb from (
+			select 
+				a.ID,a.JKRXM,a.JK_LOAN_QUOTA,a.JK_CYCLE,
+				to_char(a.JK_LOAN_DATE,'yyyy-mm-dd') as JK_LOAN_DATE,a.JK_USE,
+				a.TOGETHER_PERSON istogether,
+        PROPERTIES_UTIL.ONLYEGJR(a.id) as TOGETHER_PERSON,
+				(select t.type from XH_XYDKZX t where t.ID=a.XYDKZX_ID)as jksq_type,
+				a.BANK_OPEN,a.BANK_USERNAME,a.BANK_NUM,
+				a.JK_TYPE,
+				(select t.description from base_attr t where t.value=a.JK_TYPE and t.type_id='3') JK_TYPE_INFO,
+				a.EXAM_STATE,a.EXAM_END_STATE,
+				a.CREATE_BY,	to_char(a.create_time,'yyyy-mm-dd HH24:MI:SS') as createTime,a.LAST_MODIFY_BY,
+				to_char(a.LAST_MODIFY_TIME,'yyyy-mm-dd HH24:MI:SS') as lastModifyTime,
+				a.ORGANI_ID,a.ANNUAL_INCOME,a.BIRTHDAY,a.COMPANY,a.COMPANY_ADRESS,
+				a.COMPANY_NATURE,a.COMPANY_PHONE,a.DATA,a.EMAIL,
+				a.ENGLISH_NAME,a.GENDERS,a.HJADRESS,a.HOME_ADDRESS,a.HOME_PHONE,
+				a.INCOME_ILLUSTRATION,a.LIVE_MESSAGE,a.LIVE_STATE,
+				a.MARITAL_STATUS,a.POCERTIFICATES,a.QQHM,a.SPOUSE_ADRESS,
+				a.SPOUSE_ANNUAL_INCOME,a.SPOUSE_BIRTHDAY,a.SPOUSE_COMPANY,
+				a.SPOUSE_COMPANY_ADRESS,a.SPOUSE_COMPANY_PHONE,a.SPOUSE_DEP_FUNCTION,
+				a.SPOUSE_GENDERS,a.SPOUSE_HOME_PHONE,a.SPOUSE_NAME,a.SPOUSE_POCERTIFICATES,
+				a.SPOUSE_TELEPHONE,a.SPOUSE_WORKINGLIFE,a.SPOUSE_ZJHM,a.TELEPHONE,
+				a.YWZN,a.ZJHM,a.TEMPLET_ID,
+				a.STATE,a.BACKUP01,
+				substr(a.BACKUP02,0,19) as BACKUP02,
+				a.BACKUP03,a.BACKUP04,
+				a.BACKUP05,a.BACKUP06,a.BACKUP07,a.BACKUP08,a.BACKUP09,
+				(select KEY_NAME from BASE_ATTR t, BASE_ATTR_TYPE bat 
+				    where bat.id = t.type_id and bat.coding = 'JKSQ_STATE' and t.VALUE=a.STATE ) stateInfo,
+				a.TXDZ,a.LOAN_CODE,
+				a.XYDKZX_ID,a.FKJE,a.APP_STATE,
+				(select ID from XH_JKHT t where t.JKSQ_ID=a.ID) XHJKHT_ID,
+			     (
+			        select x.id from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+			         where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+			       where z.id = (select t.employee_crm from XH_XYDKZX t where t.ID=a.XYDKZX_ID)))
+			     ) as yybid,
+				(select xy.employee_cca from xh_xydkzx xy where xy.id=a.xydkzx_id) saleNameId,
+				(select xy.employee_crm from xh_xydkzx xy where xy.id=a.xydkzx_id) teamNameId,
+				a.SUB_STATE,
+				a.jkrxm KHMC,
+				a.province,
+				 a.city,
+				 a.area,a.FIRST_SERVICE_ID,a.SECOND_SERVICE_ID
+			$ibpm_loanApplyJksqList
+			$ibpm_queryPageAfter
+		]]></sqlString>	
+	</sql>
+</sqlmaps>

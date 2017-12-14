@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+    <!--  -->
+	 <sql name="queryXhBorrowscoreList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.MARRIAGE,/*婚姻分数*/
+				a.EDUCATION,/*文化程度*/
+				a.HOUSEHOLDS,/*户口登记*/
+				a.TOTAL_WORKYEAR,/*总工作年龄*/
+				a.SOCIAL_SECURITY,/*社保*/
+				a.HOUSE,/*住房情况*/
+				a.VECHICLE,/*车辆情况*/
+				a.OFFICE_TYPE,/*单位性质*/
+				a.OFFICE_POSITION,/*单位岗位性质*/
+				a.OFFICE_YEAR,/*单位工作年限*/
+				a.CERTIFICATION,/*职业证书*/
+				a.MONTH_SALARY,/*月收入*/
+				a.CONSUME_PERCENT,/*月供支出比*/
+				a.CREDIT_RECORD,/*信用记录*/
+				a.OLD_CUSTOMER,/*老客户*/
+				a.PUBLIC_RECORD,/*公共记录*/
+				a.EMPLOYEE_ID,/*评分人*/
+				a.JKSQ_ID,/*借款申请ID*/
+				a.SCORE_TYPE,/*评分类型 0:门店评分,1：信审评分*/
+				a.AGE,/*年龄分数*/
+				a.HEALTH_STATE,/*健康状况*/
+			a.ID
+			 from XH_BORROWSCORE a
+			      where 1=1
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhBorrowscoreList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhBorrowscoreList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhBorrowscoreList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhBorrowscoreList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

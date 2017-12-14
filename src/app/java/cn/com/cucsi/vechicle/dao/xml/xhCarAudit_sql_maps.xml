@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+    <!--  -->
+	 <sql name="queryXhCarAuditList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.CREDIT_TYPE,/*信审类型：初审(1)、复审(2)、终审(100)*/
+				a.CREDIT_STATE,/*信审状态：0信审未结束 1信审结束*/
+				a.CREDIT_AMOUNT,/*审批金额*/
+				a.CREDIT_MONTH,/*借款期限（天）*/
+				a.CREDIT_ALL_RATE,/*综合费率*/
+				a.OPERATION_FEE,/*业务收费*/
+				a.OUT_VISIT_FEE,/*外访费(需求说明文档没有)*/
+				a.URGENT_CREDIT_FEE,/*加急费需求说明文档没有)*/
+				a.CREDIT_REFUSE_REASON,/*拒贷原因*/
+				a.CREDIT_AUDIT_REPORT,/*信审意见*/
+				a.CREDIT_RESULT,/*信审结果：1通过、0拒绝*/
+				a.PASSED_CUSTOMER_NO,/*信审通过后形成的客户编号*/
+			a.ID
+			 from XH_CAR_AUDIT a
+			      where 1=1
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhCarAuditList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhCarAuditList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhCarAuditList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhCarAuditList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

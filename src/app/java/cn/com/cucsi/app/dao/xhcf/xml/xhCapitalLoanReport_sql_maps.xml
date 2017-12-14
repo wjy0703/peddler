@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+    <!--  -->
+	 <sql name="queryXhCapitalLoanReportList" common="true">
+		<sqlString><![CDATA[
+			 select sum(b.all_money)  as ALL_MONEY,
+				min(b.first_lend_date) as First_LEND_DATE,
+			  b.first_lend_money as FIRST_LEND_MONEY,
+			  c.tzsqbh as LEND_NO ,
+			  b.lend_type as LEND_TYPE
+		     ,sum(b.shoud_back) as ALL_SHOULD_BACK,
+		    sum(b.real_back) as ALL_REAL_BACK,sum(b.re_lend) as ALL_RE_LEND,sum(b.drawing) as ALL_DRAWING
+       from XH_CAPITAL_LOAN_REPORT a,XH_CAPITAL_LOAN_REPORT_INFO b ,xh_tzsq c
+            where 1=1
+            and b.report_id=a.id 
+            and a.zqtj_id=c.id
+    		$sql
+      group by b.first_lend_money,c.tzsqbh,b.lend_type,a.all_money_of_current
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhCapitalLoanReportList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhCapitalLoanReportList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhCapitalLoanReportList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhCapitalLoanReportList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	
+	
+	
+	
+	<sql name="queryLoanReportListForDown" common="true">
+		<sqlString><![CDATA[
+			select 
+	      		 a.id,to_char(a.report_date,'yyyy-MM-dd') as report_date ,c.tzsqbh ,b.cjrxm
+	       from XH_CAPITAL_LOAN_REPORT a,xh_tzsq c,xh_cjrxx b
+            where 1=1
+            and a.zqtj_id=c.id
+            and c.cjrxx_id = b.id
+    		$sql
+    		order by a.id
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryLoanReportListForDown" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryLoanReportListForDown
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryLoanReportListForDown" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryLoanReportListForDown
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

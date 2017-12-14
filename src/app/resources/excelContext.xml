@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"     
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"      
+    xmlns:aop="http://www.springframework.org/schema/aop"     
+    xmlns:tx="http://www.springframework.org/schema/tx"     
+    xmlns:context="http://www.springframework.org/schema/context"    
+    xmlns:cache="http://www.springframework.org/schema/cache"
+    xmlns:util="http://www.springframework.org/schema/util" 
+    xsi:schemaLocation="      
+          http://www.springframework.org/schema/beans      
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd      
+          http://www.springframework.org/schema/tx      
+          http://www.springframework.org/schema/tx/spring-tx-3.0.xsd     
+          http://www.springframework.org/schema/context      
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd      
+          http://www.springframework.org/schema/aop      
+          http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+          http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <bean id="excelConfiguration" class="cn.com.cucsi.app.excel.bean.ExcelConfiguration">
+      <property name="dir">
+          <value>D:\\excel</value>
+      </property>
+      <property name="rowsPerSheet" value="10000"/>
+      <property name="rowsUpperLimit" value="50000"/>
+      <property name="singleConfigMap" ref="excelServices"/>
+    </bean>
+    
+    <util:map id="excelServices">
+         <entry key="testExcelService" value-ref="testExcelServiceConfiguration"/>  
+         <entry key="tzsqExcelService" value-ref="tzsqExcelServiceConfiguration"/>  
+         <entry key="yjtjExcelService" value-ref="yjtjExcelServiceConfiguration"/>  
+         <entry key="ipcyjtjExcelService" value-ref="ipcyjtjExcelServiceConfiguration"/>  
+         <entry key="zwdqExcelService" value-ref="zwdqExcelServiceConfiguration"/>  
+         <entry key="interestManageExcelService" value-ref="interestManageExcelServiceConfiguration"/>
+         <entry key="loanBackExcelService" value-ref="loanBackExcelServiceConfiguration"/>
+         <entry key="yqbbExcelService" value-ref="yqbbExcelServiceConfiguration"/>  
+         <entry key="releaseMoneyExcelService" value-ref="releaseMoneyExcelServiceConfiguration"/>  
+         <entry key="dfkqrMoneyExcelService" value-ref="dfkqrMoneyExcelServiceConfiguration"/>  
+         <entry key="tzsqRefusedExcelService" value-ref="tzsqRefusedExcelServiceConfiguration"/>  
+    </util:map>
+    
+    <!-- 首期审批错误记录 -->
+   <bean id="tzsqRefusedExcelServiceConfiguration" class="cn.com.cucsi.app.excel.bean.ExcelModelConfiguration">
+        <property name="title">
+           <value>首期审批错误记录</value>
+        </property>
+        <property name="reportMetaStr">
+           <value>地区,客户,性别,投资金额,理财模式,划扣时间,出借时间,团队经理,客户经理,错误说明</value>
+        </property>
+        <property name="reportMetalColumnStr">
+           <value>YYB,CJRXM,CJRXB,JHTZJE,TZCP_MC,JHHKRQ,JHTZRQ,EMPLOYEE_CCA_NAME,EMPLOYEE_CRM_NAME,REMARKS</value>
+        </property>
+        <property name="reportColumnsWidthStr">
+           <value>20,20,20,20,20,20,20,20,20,20</value>
+        </property>        
+    </bean>   
+    
+    <bean id="releaseMoneyExcelServiceConfiguration" class="cn.com.cucsi.app.excel.bean.ExcelModelConfiguration">
+        <property name="title">
+           <value>放款管理列表</value>
+        </property>
+        <property name="reportMetaStr">
+           <value>唯一标志,合同编号,客户名,证件号码,产品类型,放款金额,账户,开户行,银行帐号,放款日期</value>
+        </property>
+        <property name="reportMetalColumnStr">
+           <value>HETONGID,LOAN_CODE,JKRXM,ZJHM,JK_TYPE,FKJE,ACCOUNT,BANK,BANKNUM,MAKELOANDATE</value>
+        </property>
+        <property name="reportColumnsWidthStr">
+           <value>20,20,20,20,20,20,20,20,20,20</value>
+        </property>        
+    </bean>   
+    
+    <bean id="dfkqrMoneyExcelServiceConfiguration" class="cn.com.cucsi.app.excel.bean.ExcelModelConfiguration">
+        <property name="title">
+           <value>打款信息列表</value>
+        </property>
+        <property name="reportMetaStr">
+           <value>放款时间,序号,地区,合同编号,账户名,证件号码,期数,合同金额,放款金额,账户,开户行,支行名称</value>
+        </property>
+        <property name="reportMetalColumnStr">
+           <value>,ROWNUM,YYB,LOAN_CODE,JKRXM,ZJHM,JK_CYCLE,HTJE,FKJE,BANK_NUM,BANK_NAME,BANK_OPEN</value>
+        </property>
+        <property name="reportColumnsWidthStr">
+           <value>20,20,20,20,20,20,20,20,20,20,20,20</value>
+        </property>        
+    </bean>  
+    <!-- 测试的配置文件 -->
+    <bean id="testExcelServiceConfiguration" class="cn.com.cucsi.app.excel.bean.ExcelModelConfiguration">
+        <property name="title">
+           <value>用户列表</value>
+        </property>
+        <property name="reportMetaStr">
+           <value>用户名id,姓名,性别</value>
+        </property>
+        <property name="reportMetalColumnStr">
+           <value>num,name,sex</value>
+        </property>
+        <property name="reportColumnsWidthStr">
+           <value>20,20,20</value>
+        </property>        
+    </bean>   
+    <!-- 理财业绩报表统计 -->
+    <bean id="tzsqExcelServiceConfiguration" class="cn.com.cucsi.app.excel.bean.ExcelModelConfiguration">
+        <property name="title">
+           <value>财富业绩报表</value>
+        </property>
+        <property name="reportMetaStr">
+           <value>序号,协议编号,机构,团队,团队经理,理财经理,员工代码,任务额,规模业绩,产品类型,出借日期,客户姓名,标准业绩,城市,账单日,第一账单日,债权到期日,当前状态,债权返款金额</value>
+        </property>
+        <property name="reportMetalColumnStr">
+           <value>RONUM,TZSQBH,YYB,KFTD,EMPLOYEE_CCA_NAME,EMPLOYEE_CRM_NAME,EMP_NO,,JHTZJE,TZCP_MC,JHTZRQ,CJRXM,,CHENGSHINAME,ZDR,SGHKRQ,MOQI,STATENAME,LENTMONEY</value>
+        </property>
+        <property name="reportColumnsWidthStr">
+           <value>20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20</value>
+        </property>        
+    </bean>
+    <!-- IPC业绩统计配置 -->
+    <bean id="ipcyjtjExcelServiceConfiguration" class="cn.com.cucsi.app.excel.bean.ExcelModelConfiguration">
+        <property name="title">
+           <value>IPC业绩统计报表</value>
+        </property>
+        <property name="reportMetaStr">
+           <value>序号,合同编号,客户姓名,机构,团队,团队经理 ,客户经理,员工代码 ,合同金额 ,放款金额 ,产品类型,综合费率,期数 ,放款日期 ,月还款额,借款余额</value>
+        </property>
+        <property name="reportMetalColumnStr">
+           <value>ROWNUM,JKHTBM,JKRXM,"IPC","IPC","",KF_EMP,"",HTJE,FKJE,DESCRIPTION,YZHFL,HKQS,MAKELOANDATE,YHKJE,SYJE</value>
+        </property>
+        <property name="reportColumnsWidthStr">
+           <value>20,20,20,30,20,20,20,20,20,20,20,20,20,20,20</value>
+        </property>        
+    </bean>
+    <!-- 业绩统计配置 -->
+    <bean id="yjtjExcelServiceConfiguration" class="cn.com.cucsi.app.excel.bean.ExcelModelConfiguration">
+        <property name="title">
+           <value>业绩统计报表</value>
+        </property>
+        <property name="reportMetaStr">
+           <value>序号,合同编号,客户姓名,机构,团队,团队经理 ,客户经理,员工代码 ,合同金额 ,放款金额 ,产品类型,综合费率,期数 , 放款日期  ,首次还款日期,月还款额,借款余额, 所在城市,当前状态,是否循环出借</value>
+        </property>
+        <property name="reportMetalColumnStr">
+           <value>ROWNUM,JKHTBM,JKRXM,ZZJGNAME,TEAMNAME,CRMNAME,CCANAME,EMPLOYEEBH,HTJE,FKJE,JKTYPE,YZHFL,CREDITMONTH,MAKELOANDATE,QSHKRQ,YHKJE,SYJE,CHENGSHINAME,STATE,*</value>
+        </property>
+        <property name="reportColumnsWidthStr">
+           <value>20,20,20,30,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20</value>
+        </property>        
+    </bean>   
+    
+    <!-- 债务到期报表统计 -->
+    <bean id="zwdqExcelServiceConfiguration" class="cn.com.cucsi.app.excel.bean.ExcelModelConfiguration">
+        <property name="title">
+           <value>债务到期报表</value>
+        </property>
+        <property name="reportMetaStr">
+           <value>序号,客户姓名,产品类型,销售折扣率%,销售折扣率有效期限,产品到期日,是否转让,团队经理,理财经理,团队,账单日,第一账单日,出借金额,利率,债权返款金额</value>
+        </property>
+        <property name="reportMetalColumnStr">
+           <value>RONUM,CJRXM,TZCP_MC,XSZKLY,XSZKLYXQX,MOQI,,EMPLOYEE_CCA_NAME,EMPLOYEE_CRM_NAME,KFTD,ZDR,SGHKRQ,JHTZJE,,LENTMONEY</value>
+        </property>
+        <property name="reportColumnsWidthStr">
+           <value>20,20,20,20,20,20,20,20,20,20,20,20,20,20,20</value>
+        </property>        
+    </bean>
+    
+     <!-- 利息管理报表 -->
+    <bean id="interestManageExcelServiceConfiguration" class="cn.com.cucsi.app.excel.bean.ExcelModelConfiguration">
+        <property name="title">
+           <value>利息管理报表</value>
+        </property>
+        <property name="reportMetaStr">
+           <value>序号,机构,合同号,期数 ,借款人,借款金额,放款金额,借款日期,合同状态,应还款日期,实际还款日期,月利率%,本金,利息,罚息,实际还款合计</value>
+        </property>
+        <property name="reportMetalColumnStr">
+           <value>ROWNUM,YYB,JKHTBM,HKQS,JKRXM,HTJE,FKJE,SIGNDATE,ACCOUNTSTATE,NEXTDATE,REALTIME,DKLL,YBJJE,YLXJE,PUNISH_INTEREST,REALMONEY</value>
+        </property>
+        <property name="reportColumnsWidthStr">
+           <value>20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20</value>
+        </property>        
+    </bean>  
+    
+    <!-- 逾期报表统计 -->
+    <bean id="yqbbExcelServiceConfiguration" class="cn.com.cucsi.app.excel.bean.ExcelModelConfiguration">
+        <property name="title">
+           <value>逾期报表</value>
+        </property>
+        <property name="reportMetaStr">
+           <value>合同编号,机构,客户姓名,放款日期,客户经理,合同金额,期数,逾期日期,逾期天数,剩余期数,剩余本金,利率,应还期供,罚息利率,罚息,违约金利率,违约金,当前状态,已还金额,挂账金额</value>
+        </property>
+        <property name="reportMetalColumnStr">
+           <value>JKHTBM,YYB,JKRXM,FKDATE,SALENAME,HTJE,HKQS,OVERDATE,OVERDAY,OVERQS,SYJE,DKLL,YHKJE,INTEREST,PUNISH_INTEREST,DAMAGES,DAMAGES_MONEY,OVERDUE_STATR,SPARE_FIELD06,SPARE_FIELD03</value>
+        </property>
+        <property name="reportColumnsWidthStr">
+           <value>20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20</value>
+        </property>      
+    </bean>
+    
+    <!-- 汇金还款统计表 -->
+    <bean id="loanBackExcelServiceConfiguration" class="cn.com.cucsi.app.excel.bean.ExcelModelConfiguration">
+        <property name="title">
+           <value>汇金还款统计表</value>
+        </property>
+        <property name="reportMetaStr">
+           <value>[序号],基本信息[合同编号,客户名称,当前状态,合同金额,期数,机构,产品类型],还款计划[放款日期,还款日期,应还款总额,应还本金,应还利息,贷款余额,剩余还款期限],实际还款[实际还款日期,实还总额,实还本金,实还利息,贷款余额],[未付利息],客户存款[存款余额],[提前还款金额],[逾期借款金]</value>
+        </property>
+        <property name="reportMetalColumnStr">
+           <value>ROWNUM,JKHTBM,CUSTOMERNAME,ACCOUNTSTATE,HTJE,HKQS,ORGNAZATIONNAME,LOANTYPE,MAKELOANDATE,NEXTDATEREAL,YHKZE,SJHKBJ,YHKLX,SYJE,SYHKYS,REALTIME,REALMONEY,SJHKBJ,SJHKLX,SYJE,REALDKLL,ACCOUNT_BALANCE,TQJQ,YQJKZE</value>
+        </property>
+        <property name="reportColumnsWidthStr">
+           <value>20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20</value>
+        </property>        
+    </bean>  
+</beans>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<!--   利息管理报表使用      -->
+	<sql name="queryInterestManageList" common="true">
+		<sqlString><![CDATA[
+        select  ROWNUM ,ROW_.*,
+		/*case when AccountInfoValue is not null then
+          substr(AccountInfoValue,0,10)
+        else '' end realTime,实际还款日期*/
+		case when AccountInfoValue is not null then
+          to_number(substr(AccountInfoValue,11,length(AccountInfoValue)))
+          else 0 end realMoney,/*实还总额*/
+        case when AccountInfoValue is not null then
+            substr(AccountInfoValue,11,length(AccountInfoValue))-ROW_.ybjje
+				else 0 end realdkll
+ 		from (
+         select 
+             jksq.JKRXM ,
+            hetong.JKHTBM,
+             hetong.htje as HTJE,
+             hetong.QDRQ as SIGNDATE,
+             
+             (
+                select x.description 
+					      from BASE_ATTR x ,base_attr_type y
+					      where x.type_id = y.id
+					      and y.coding = 'jkType'
+					      and x.value =jksq.jk_type
+					      )  as  JKTYPE,
+            (select z.key_name from base_attr z where z.value=jksq.state and z.type_id='1') as ACCOUNTSTATE,
+                 (
+              select x.RGANI_NAME from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+               where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+             where z.id = (select t.employee_crm from XH_XYDKZX t where t.ID=jksq.XYDKZX_ID)))
+           ) as yyb,
+           (
+              select x.id from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+               where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+             where z.id = (select t.employee_crm from XH_XYDKZX t where t.ID=jksq.XYDKZX_ID)))
+           ) as yybid,
+            hetong.QSHKRQ as QSHKDATE,/*首期还款日期*/
+            hetong.YLXJE,/*月利息金额*/
+            hetong.DKLL as DKLL,/*月利率*/
+            hetong.HKQS as HKQS,
+            hetong.YHKJE as YHKJE, /*月还款金额*/ 
+            hetong.YBJJE as YBJJE, /*月还款本金*/ 
+            hetong.FKJE as FKJE, /*放款金额*/ 
+            case when d.SYHKYS > 0 and d.SYHKYS < hetong.HKQS then
+              to_char(add_months(to_date(hetong.QSHKRQ,'yyyy-MM-dd'),(hetong.HKQS-d.SYHKYS-1)),'yyyy-MM-dd')
+              when d.SYHKYS = hetong.HKQS then
+                hetong.QSHKRQ
+               when d.SYHKYS = 0 then
+                to_char(add_months(to_date(hetong.QSHKRQ,'yyyy-MM-dd'),(hetong.HKQS-1)),'yyyy-MM-dd')
+              else '' end nextDate,
+                (
+							select sum(PUNISH_INTEREST) from XH_CAPITAL_OVERDUE t where t.LENDER_ID = jksq.id
+						) as PUNISH_INTEREST,/*罚息*/
+			substr(REPORT_CFJJDJ.reAccountInfoMoney(a.id),0,10) as realTime,
+            REPORT_CFJJDJ.reAccountInfoMoney(a.id) as AccountInfoValue
+           from xh_loaner_account a ,xh_jkht hetong,xh_jksq jksq,XH_AVAILABLE_VALUE_OF_CLAIMS d 
+                  
+              where 1=1
+              and a.LOAN_APPLY_ID = jksq.id 
+				and a.LOAN_CONTRACT_ID = hetong.id 
+              and a.LOAN_APPLY_ID = d.jksq_id 
+					  $andConditionSql
+				) ROW_
+				where 1=1
+				 	  $andConditionSql2
+			]]></sqlString>
+	</sql>
+	<!-- 查询总数 -->
+	<sql name="cnt_queryInterestManageList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryInterestManageList
+			)
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryInterestManageList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryInterestManageList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

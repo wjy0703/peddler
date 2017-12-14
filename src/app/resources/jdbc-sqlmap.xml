@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+	default-lazy-init="true">
+
+	<description>Spring Jdbc Template配置</description>
+	<bean id="sqlManager" class="cn.com.cucsi.core.orm.jdbc.SqlManager">
+		<property name="locations">
+			<list>
+				<value>classpath*:/jdbc/sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/security/xml/security_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/xml/cjrxx_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/xml/xhTzsq_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/loan/xml/jksq_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/loan/xml/jksq_credit_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/loan/xml/jksqhis_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/xml/xhKhzxjl_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/xml/xhfkgl_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/xml/xhZjzh_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/xml/xhZqtj_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/xml/xhyfkgl_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/xml/xhZqtjDetails_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/xml/xhMonthlyDw_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/xml/xhCapitalLoanReport_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/xml/xhCreditTaskAssign_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/report/report_Yeji_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/report/interestManage_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/report/loanBackReportList_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/baseinfo/xml/basePosition_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/messageBox/xml/messageBox_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/loan/xml/make_loan_realeaseMoney.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/xml/xhLoanerAccountInfo_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/xhcf/xml/auditImg_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/loan/xml/jksq_check_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/vechicle/dao/xml/xhCarLoanApply_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/vechicle/dao/xml/xhCarLoanUser_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/vechicle/dao/xml/xhCarLoanApplyAudit_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/cooperate/dao/xml/cooperate_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/vechicle/dao/xml/xhCarLoanContract_sql_maps.xml</value>
+				<value>classpath*:/cn/com/cucsi/app/dao/loan/xml/loan_task_maps.xml</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>

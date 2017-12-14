@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<!--   业绩统计yjtj报表使用      -->
+	<sql name="queryYjtjList" common="true">
+		<sqlString><![CDATA[
+			SELECT ROWNUM ,ROW_.*
+          		FROM 
+				(select 
+				    jksq.JKRXM ,
+				    hetong.JKHTBM,
+					(select zzjg.RGANI_NAME from base_zzjg zzjg where zzjg.ID = jksq.ORGANI_ID) as ZZJGNAME,
+					(select employee.NAME from BASE_EMPLOYEE employee  where zx.employee_cca = employee.ID) as CCANAME,
+					(select EMPLOYEE.EMP_NO from BASE_EMPLOYEE employee where zx.employee_crm = EMPLOYEE.ID) as EMPLOYEEBH,
+      				(select employee.NAME from BASE_EMPLOYEE employee  where zx.employee_crm = employee.ID) as CRMNAME,
+     				to_char(makeloan.MAKE_LOAN_DATE,'yyyy-MM-dd') MAKELOANDATE,
+			 		hetong.htje as HTJE,
+			 		hetong.fkje as FKJE,
+       				(
+				      select x.description 
+				      from BASE_ATTR x ,base_attr_type y
+				      where x.type_id = y.id
+				      and y.coding = 'jkType'
+				      and x.value = jksq.jk_type
+				      )  as   JKTYPE,
+					caudit.credit_month as CREDITMONTH 
+		  		    from xh_jkht hetong,xh_jksq jksq,xh_xydkzx zx ,xh_credit_audit caudit,xh_make_loans makeloan 
+      			 where 
+							jksq.xydkzx_id=zx.id 
+							and hetong.jksq_id =jksq.id  
+							and caudit.loan_apply_id=jksq.id 
+							and  caudit.credit_result=1 
+							and caudit.credit_state=1 
+							and makeloan.LOAN_CONTRACT_ID=hetong.id
+							and jksq.ORGANI_ID is not null ) ROW_
+				$andConditionSql
+			]]></sqlString>
+	</sql>
+	<!-- 查询总数 -->
+	<sql name="cnt_queryYjtjList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryYjtjList
+			)
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryYjtjList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryYjtjList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	
+</sqlmaps>

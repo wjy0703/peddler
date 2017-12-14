@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<!--   业绩统计Ipc报表使用      -->
+	<sql name="queryIpcyjtjList" common="true">
+		<sqlString><![CDATA[
+        select rownum,
+	       a.LOAN_TYPE     loantype,
+	       a.loan_apply_id as applyid,
+	       a.Kf_Emp,
+	       c.Jkhtbm        jkhtbm,
+	       c.Qdrq          qdrq,
+	       c.qshkrq        qshkrq,
+	       c.Hkqs          hkqs,
+	       jksq.Jkrxm, jksq.Jk_Type, jksq.Backup01,
+	       jkht.Yzhfl,
+	       jkht.Htje,
+	       jkht.Yhkje,
+	       to_number(REPORT_CFJJDJ.reLastMoney(jkht.QSHKRQ,jkht.YBJJE,jkht.Hkqs)) as SYJE,
+	       jkht.fkje
+	     ,attr.Description
+	      ,to_char(makeloans.MAKE_LOAN_DATE, 'yyyy-MM-dd') MAKELOANDATE
+		  from xh_make_loans makeloans,xh_ipc_apply  a,xh_ipc_constract c ,xh_jksq jksq,xh_jkht jkht,base_attr attr
+		  where 1=1
+      	  and makeloans.loan_contract_id = jkht.id
+		  and c.ipc_apply_id = a.id
+		  and c.jkht_id = jkht.id
+		  and jkht.jksq_id = jksq.id
+		  and attr.value = jksq.JK_type
+		$andConditionSql
+			]]></sqlString>
+	</sql>
+	<!-- 查询总数 -->
+	<sql name="cnt_queryIpcyjtjList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryIpcyjtjList
+			)
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryIpcyjtjList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryIpcyjtjList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	<!--   业绩统计yjtj报表使用      -->
+	<sql name="queryYjtjList" common="true">
+		<sqlString><![CDATA[
+			SELECT ROWNUM ,ROW_.*,ROW_.PRONAME||' '||ROW_.CITYNAME as chengshiname 
+              FROM 
+        (select 
+            jksq.JKRXM ,
+            hetong.QSHKRQ,
+            to_number(REPORT_CFJJDJ.reLastMoney(hetong.QSHKRQ,hetong.YBJJE,hetong.Hkqs)) as SYJE,
+            hetong.JKHTBM,
+            (select zzjg.RGANI_NAME from base_zzjg zzjg where zzjg.ID = (select PARENT_ID from base_zzjg where id = jksq.ORGANI_ID)) as ZZJGNAME,
+                    (select zzjg.RGANI_NAME from base_zzjg zzjg where zzjg.ID = jksq.ORGANI_ID) as TEAMNAME,
+          (select employee.NAME from BASE_EMPLOYEE employee  where zx.employee_cca = employee.ID) as CCANAME,
+          (select EMPLOYEE.EMP_NO from BASE_EMPLOYEE employee where zx.employee_crm = EMPLOYEE.ID) as EMPLOYEEBH,
+              (select employee.NAME from BASE_EMPLOYEE employee  where zx.employee_crm = employee.ID) as CRMNAME,
+             to_char(makeloan.MAKE_LOAN_DATE,'yyyy-MM-dd') MAKELOANDATE,
+           hetong.htje as HTJE,
+           hetong.fkje as FKJE,
+           hetong.YZHFL as YZHFL,/*月综合费率*/
+           hetong.YHKJE as YHKJE, /*月还款金额*/ 
+           hetong.hkr as HKR,
+           (
+      select x.description 
+      from BASE_ATTR x ,base_attr_type y
+      where x.type_id = y.id
+      and y.coding = 'jkType'
+      and x.value = jksq.jk_type
+      )  as   JKTYPE,
+        jksq.province,
+         (
+         select name from base_city z
+         where z.id=jksq.province
+         ) as proname,
+         jksq.city,
+         (
+         select name from base_city z
+         where z.id=jksq.city
+         ) as cityname,
+      (
+      select x.RGANI_NAME from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+               where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+             where z.id = (select t.employee_crm from XH_XYDKZX t where t.ID=jksq.XYDKZX_ID)))
+       ) as yyb,
+           (
+              select x.id from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+               where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+             where z.id = (select t.employee_crm from XH_XYDKZX t where t.ID=jksq.XYDKZX_ID)))
+           ) as yybid,
+          hetong.HKQS as CREDITMONTH ,
+          /*decode(jksq.BACKUP01,'CREDIT','信用借款','IPC','IPC业务','HOUSE','房屋抵押','QINGDAO','房易借','CAR','车借') as JKTYPE,*/ 
+          (
+          select t.name from xh_mate_data t,xh_matedata_type f
+          where t.matedatatype_id = f.id
+          and f.type_code='backup01'
+          and t.value=jksq.BACKUP01
+          ) as JK_TYPE,
+		makeloan.MAKE_LOAN_DATE,
+          (select z.key_name from base_attr z where z.value=jksq.state and z.type_id='1') as STATE
+              from xh_jkht hetong,xh_jksq jksq,xh_xydkzx zx ,xh_make_loans makeloan 
+             where 1=1
+              and jksq.xydkzx_id=zx.id 
+              and hetong.jksq_id =jksq.id  
+              and makeloan.LOAN_CONTRACT_ID=hetong.id
+              and jksq.BACKUP01 = 'CREDIT'
+              --and jksq.ORGANI_ID is not null 
+              $sql
+              ) ROW_
+              where 1=1
+				$andConditionSql
+			]]></sqlString>
+	</sql>
+	<!-- 查询总数 -->
+	<sql name="cnt_queryYjtjList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryYjtjList
+			)
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryYjtjList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryYjtjList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	<!--   业绩统计+++借款端导出使用      -->
+	<sql name="queryJksqYjtjList" common="true">
+		<sqlString><![CDATA[
+			select * from (
+			select b.organi_id,b.name,b.emp_no,c.position_name,c.position_code,e.type as loopapply,d.jk_loan_quota as months,d.jkrxm,f.JKHTBM,f.FKJE,f.HKQS,f.htje,f.QDRQ,
+			(
+			select x.description 
+			from BASE_ATTR x ,base_attr_type y
+			where x.type_id = y.id
+			and y.coding = 'jkType'
+			and x.value = d.jk_type
+			)	as 	JKTYPE,'0' as hv
+			from base_employee b,BASE_POSITION c,xh_jksq d,xh_xydkzx e,xh_jkht f
+			where 1=1
+			and b.position_id = c.id
+			and b.id = e.employee_cca
+			and e.id = d.XYDKZX_ID
+			and d.id = f.jksq_id
+			and to_char(to_date(f.QDRQ,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and f.state = '2'
+			and b.sts='0'
+			and c.position_level_code in( 'KE','TUAN')
+			and b.organi_id = $orgid
+			union all
+			select b.organi_id,b.name,b.emp_no,c.position_name,c.position_code,null,null,null,null,null,null,null,null,null,'1' as hv
+			from base_employee b,BASE_POSITION c
+			where 1=1
+			and b.position_id = c.id
+			and c.position_level_code in( 'KE','TUAN')
+			and b.organi_id = $orgid
+			and b.sts='0'
+			and b.id not in
+			(
+			select g.id
+			from base_employee g,BASE_POSITION h,xh_jksq i,xh_xydkzx j,xh_jkht k
+			where 1=1
+			and g.position_id = h.id
+			and g.id = j.employee_cca
+			and j.id = i.XYDKZX_ID
+			and i.id = k.jksq_id
+			and to_char(to_date(k.QDRQ,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and k.state = '2'
+			and g.sts='0'
+			and h.position_level_code in( 'KE','TUAN')
+			and g.organi_id = $orgid)
+			) order by hv  ,position_code, name
+			]]></sqlString>
+	</sql>
+	
+	<!--   业绩统计+++借款端页面使用      -->
+	<sql name="queryJksqYjtjListForPage" common="true">
+		<sqlString><![CDATA[
+			select a.rgani_name,b.organi_id,b.name,b.emp_no,c.position_name,c.position_code,d.jkrxm,f.JKHTBM,f.FKJE,f.HKQS,f.htje,f.QDRQ,
+			(
+			select x.description 
+			from BASE_ATTR x ,base_attr_type y
+			where x.type_id = y.id
+			and y.coding = 'jkType'
+			and x.value = d.jk_type
+			)	as 	JKTYPE,'0' as hv
+			from (select * from BASE_ZZJG t start with t.id = $orgid
+			connect by nocycle t.parent_id = prior id
+			) a,base_employee b,BASE_POSITION c,xh_jksq d,xh_xydkzx e,xh_jkht f
+			where 1=1
+			and a.id=b.organi_id
+			and b.position_id = c.id
+			and b.id = e.employee_cca
+			and e.id = d.XYDKZX_ID
+			and d.id = f.jksq_id
+			and a.organi_flag='0'
+			and to_char(to_date(f.QDRQ,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and f.state = '2'
+			and b.sts='0'
+			and c.position_level_code in( 'KE','TUAN')
+			order by position_code, name
+			]]></sqlString>
+	</sql>
+	
+	
+	<!--   业绩统计  ++++出借端使用      -->
+	<sql name="queryKehuYjtjList" common="true">
+		<sqlString><![CDATA[
+			/*
+			select wm_concat(val) from
+			(
+			select z.id||'|'||z.tzcp_mc||'|'||count(t.id)||'|'||sum(t.jhtzje) as val from XH_TZCP z,xh_tzsq t
+			where z.id = t.tzcp_id
+			group by z.id,z.tzcp_mc
+			);
+			
+			82|月息通|221|57500000,81|信和通|169|40010000,84|双季盈|307|50900000,85|年年盈|123|23110000,83|季度盈|386|87510000,252512|信和宝|11|4300000
+			
+			select b.organi_id,b.name,b.emp_no,c.position_name,c.position_level_code,
+			(
+			select wm_concat(val) from
+			(
+			select z.id||'|'||z.tzcp_mc||'|'||count(x.id)||'|'||sum(x.jhtzje) as val ,y.employee_crm
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '2013-05'
+			group by z.id,z.tzcp_mc,y.employee_crm
+			) o where o.employee_crm = b.id
+			)
+			      from base_employee b,BASE_POSITION c
+			      where 1=1
+			      and b.position_id = c.id
+			      and b.sts='0'
+			      and c.position_level_code in( 'LI','TUAN')
+			      and b.organi_id = 53311
+			
+			*/
+			select b.id,b.organi_id,b.name,b.emp_no,c.position_name,c.position_level_code,
+			(
+			select sum(x.jhtzje)
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and y.employee_crm = b.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_mc = '季度盈'
+			and z.tzcp_fl = '投资产品'
+			group by z.tzcp_mc
+			) as jdysum,
+			(
+			select count(x.jhtzje)
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and y.employee_crm = b.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_mc = '季度盈'
+			and z.tzcp_fl = '投资产品'
+			group by z.tzcp_mc
+			) as jdycount,
+			
+			(
+			select sum(x.jhtzje)
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and y.employee_crm = b.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_mc = '双季盈'
+			and z.tzcp_fl = '投资产品'
+			group by z.tzcp_mc
+			) as sjysum,
+			(
+			select count(x.jhtzje)
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and y.employee_crm = b.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_mc = '双季盈'
+			and z.tzcp_fl = '投资产品'
+			group by z.tzcp_mc
+			) as sjycount,
+			(
+			select sum(x.jhtzje)
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and y.employee_crm = b.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_mc = '年年盈'
+			and z.tzcp_fl = '投资产品'
+			group by z.tzcp_mc
+			) as nnysum,
+			(
+			select count(x.jhtzje)
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and y.employee_crm = b.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_mc = '年年盈'
+			and z.tzcp_fl = '投资产品'
+			group by z.tzcp_mc
+			) as nnycount,
+			
+			(
+			select sum(x.jhtzje)
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and y.employee_crm = b.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_mc = '信和通'
+			and z.tzcp_fl = '投资产品'
+			group by z.tzcp_mc
+			) as xhtsum,
+			(
+			select count(x.jhtzje)
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and y.employee_crm = b.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_mc = '信和通'
+			and z.tzcp_fl = '投资产品'
+			group by z.tzcp_mc
+			) as xhtcount,
+			(
+			select sum(x.jhtzje)
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and y.employee_crm = b.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_mc = '月息通'
+			and z.tzcp_fl = '投资产品'
+			group by z.tzcp_mc
+			) as yxtsum,
+			(
+			select count(x.jhtzje)
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and y.employee_crm = b.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_mc = '月息通'
+			and z.tzcp_fl = '投资产品'
+			group by z.tzcp_mc
+			) as yxtcount,
+			(
+			select sum(x.jhtzje)
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and y.employee_crm = b.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_mc = '信和宝'
+			and z.tzcp_fl = '投资产品'
+			group by z.tzcp_mc
+			) as xhbsum,
+			(
+			select count(x.jhtzje)
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and y.employee_crm = b.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_mc = '信和宝'
+			and z.tzcp_fl = '投资产品'
+			group by z.tzcp_mc
+			) as xhbcount
+	      from base_employee b,BASE_POSITION c
+	      where 1=1
+	      and b.position_id = c.id
+	      and b.sts='0'
+	      and c.position_level_code in( 'LI','TUAN')
+	      and b.organi_id = $orgid
+			]]></sqlString>
+	</sql>
+	
+	
+	<!--   业绩明细 ++++出借端使用      -->
+	<sql name="queryKehuYjmxList" common="true">
+		<sqlString><![CDATA[
+			select z.tzcp_mc,y.cjrxm,x.jhtzje,x.jhtzrq,x.tzsqbh,x.cjzq,y.khbm
+			from XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where z.id = x.tzcp_id
+			and x.cjrxx_id = y.id
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_fl = '投资产品'
+			and y.employee_crm = $empId
+			]]></sqlString>
+	</sql>
+	
+	<!--   业绩明细+++出借端页面使用      -->
+	<sql name="queryKehuYjmxListForPage" common="true">
+		<sqlString><![CDATA[
+			select a.rgani_name,b.organi_id,b.name,b.emp_no,c.position_name,c.position_code,z.tzcp_mc,y.cjrxm,x.jhtzje,x.jhtzrq,x.tzsqbh,x.cjzq,y.khbm
+			from (select * from BASE_ZZJG t start with t.id = $orgid
+			connect by nocycle t.parent_id = prior id
+			) a,base_employee b,BASE_POSITION c,XH_TZCP z,xh_tzsq x,xh_cjrxx y
+			where 1=1
+			and a.id=b.organi_id
+			and b.position_id = c.id
+			and b.id = y.employee_crm
+			and x.cjrxx_id = y.id
+			and z.id = x.tzcp_id
+			and a.organi_flag='0'
+			and x.state='2'
+			and to_char(to_date(x.jhtzrq,'yyyy-MM-dd'),'yyyy-MM') = '$date'
+			and z.tzcp_fl = '投资产品'
+			and b.sts='0'
+			and c.position_level_code in( 'LI','TUAN')
+			order by position_code, name
+			]]></sqlString>
+	</sql>
+</sqlmaps>

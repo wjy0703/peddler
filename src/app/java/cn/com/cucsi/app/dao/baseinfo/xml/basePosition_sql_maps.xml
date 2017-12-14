@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+    <!--  -->
+	 <sql name="queryBasePositionList" common="true">
+		<sqlString><![CDATA[
+			select 
+			
+
+				a.POSITION_NAME,/*职务名称*/
+
+				a.POSITION_CODE,/*职务权限级别*/
+
+				a.POSITION_LEVEL,/*职级标准*/
+				a.POSITION_LEVEL_CODE,/*职级英文编码*/
+				a.POSITION_LEVEL_VALUE,/*职级VALUE*/
+			a.ID
+			 from BASE_POSITION a
+			      where 1=1
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryBasePositionList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryBasePositionList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryBasePositionList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryBasePositionList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	 <!-- 查询 列表分页  根据组织机构包括子部门   -->
+	 <sql name="queryEmployeesByOrgAndPos" common="true">
+		<sqlString><![CDATA[
+			SELECT A.LEVELN, B.ID,A.RGANI_NAME,B.NAME,B.EMP_NO,C.POSITION_NAME,C.POSITION_LEVEL_CODE
+			 	    FROM ((SELECT LEVEL AS LEVELN ,ID ,ORGANI_FLAG,RGANI_NAME FROM BASE_ZZJG T START WITH T.PARENT_ID = $ID CONNECT BY NOCYCLE PRIOR ID = T.PARENT_ID) UNION (SELECT 1 AS LEVELN, ID, ORGANI_CODE ,RGANI_NAME FROM BASE_ZZJG WHERE ID = $ID) ) A,
+			 	    BASE_EMPLOYEE B,
+			 	    BASE_POSITION C 
+		     WHERE 
+		          A.ID= B.ORGANI_ID 
+		          AND B.POSITION_ID = C.ID 
+		          AND A.ORGANI_FLAG= '0' 
+		          $LEVELCONDITION
+		          AND B.STS='0'
+		          $WHERESQL 
+
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryEmployeesByOrgAndPos" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryEmployeesByOrgAndPos
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryEmployeesByOrgAndPos" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryEmployeesByOrgAndPos
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	
+</sqlmaps>

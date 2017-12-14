@@ -1,0 +1,107 @@
+package cn.com.peddler.app.service.security;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+
+import cn.com.peddler.app.entity.security.Roleinfo;
+
+
+/**
+ * 扩展SpringSecurity的WebAuthenticationDetails类, 增加登录时间属性和角色属性.
+ * 
+ * @author calvin
+ */
+public class OperatorDetails extends User {
+	private static final long serialVersionUID = 1919464185097508773L;
+
+	private Date loginTime;
+
+	private List<Roleinfo> roleList;
+
+	private Long userId;
+	
+	private String ctiCode;
+	
+	private Long deptId;
+	
+	private String cityInData;
+	
+	private Long LoginEmployeeId;
+	
+	private String positionCode;
+	
+	public OperatorDetails(String username, String password, boolean enabled, boolean accountNonExpired,
+			boolean credentialsNonExpired, boolean accountNonLocked, Collection<GrantedAuthority> authorities)
+			throws IllegalArgumentException {
+		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+	}
+
+	public Date getLoginTime() {
+		return loginTime;
+	}
+
+	public void setLoginTime(Date loginTime) {
+		this.loginTime = loginTime;
+	}
+
+	public List<Roleinfo> getRoleList() {
+		return roleList;
+	}
+
+	public void setRoleList(List<Roleinfo> roleList) {
+		this.roleList = roleList;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public String getCtiCode() {
+		return ctiCode;
+	}
+
+	public void setCtiCode(String ctiCode) {
+		this.ctiCode = ctiCode;
+	}
+
+	public Long getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(Long deptId) {
+		this.deptId = deptId;
+	}
+
+	public String getCityInData() {
+		return cityInData;
+	}
+
+	public void setCityInData(String cityInData) {
+		this.cityInData = cityInData;
+	}
+
+	public Long getLoginEmployeeId() {
+		return LoginEmployeeId;
+	}
+
+	public void setLoginEmployeeId(Long loginEmployeeId) {
+		LoginEmployeeId = loginEmployeeId;
+	}
+
+	public String getPositionCode() {
+		return positionCode;
+	}
+
+	public void setPositionCode(String positionCode) {
+		this.positionCode = positionCode;
+	}
+	
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<!-- -->
+	<sql name="queryXhCjrgtjlList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.YXCZRQ,/*意向出资日期*/
+				a.XCLXRQ,/*下次联系日期*/
+				a.BCGTRQ,/*本次沟通日期*/
+				a.GTKSSJ,/*沟通开始时间*/
+				a.GTJSSJ,/*沟通结束时间*/
+				a.BCLXR,/*本次联系人*/
+				a.GTNRMS,/*沟通内容描述*/
+				a.BCGTFS,/*本次沟通方式*/
+				a.YXCP,/*意向产品*/
+				a.XCLXFS,/*下次联系方式*/
+				a.KHYX,/*客户意向*/
+				a.CJR_STATE,/*客户状态。0.投资咨询，1.出借人*/
+				a.YXCZJE,/*意向出资金额*/
+				a.ID
+			 from XH_CJRGTJL a
+			      where 1=1
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhCjrgtjlList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhCjrgtjlList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhCjrgtjlList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhCjrgtjlList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

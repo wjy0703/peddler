@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+    <!--  -->
+	 <sql name="queryXhMonthlyArList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.ADDITIONAL,/*帐外*/
+				a.AREA,/*省份*/
+				a.BANK_NAME,/*银行名称*/
+				a.BANK_NUMBER,/*银行账户*/
+				a.BANK_OPEN,/*银行开户行*/
+				a.BILL_DAY,/*账单日*/
+				a.CITY,/*地市*/
+				a.INTEREST,/*利息*/
+				a.LOAN_ID,/*借款人ID*/
+				a.LOAN_ID_CARD,/*借款人身份证号*/
+				a.LOAN_NAME,/*借款人名称*/
+				a.LOAN_NUMBER,/*借款人编号*/
+				a.LOAN_PRO,/*借款产品*/
+				a.LOAN_STATE,/*借款状态*/
+				a.MONEY,/*金额*/
+				a.SETTLEMENT_DATE,/*结算日期*/
+				a.SPARE_FIELD01,/*备用字段1*/
+				a.SPARE_FIELD02,/*备用字段2*/
+				a.SPARE_FIELD03,/*备用字段3*/
+			a.ID
+			 from XH_MONTHLY_AR a
+			      where 1=1
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhMonthlyArList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhMonthlyArList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhMonthlyArList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhMonthlyArList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<!-- -->
+	<sql name="queryXhMakeLoansList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.MIDDLE_MAN_ID,/*中间人（账户）ID*/
+				a.LOAN_CONTRACT_ID,/*借款合同ID*/
+				a.MAKE_LOAN_DATE,/*放款时间*/
+			a.ID
+			 from XH_MAKE_LOANS a
+			      where 1=1
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhMakeLoansList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhMakeLoansList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhMakeLoansList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhMakeLoansList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

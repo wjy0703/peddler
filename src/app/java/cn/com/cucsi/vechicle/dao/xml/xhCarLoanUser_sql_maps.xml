@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+    <!--  -->
+	 <sql name="queryXhCarLoanUserList" common="true">
+		<sqlString><![CDATA[
+	select 
+        a.USER_NAME,/*借款人姓名*/
+        a.GENDERS,/*性别*/
+        a.BIRTHDAY,/*出生日期*/
+        a.TELEPHONE,/*移动电话*/
+        a.CARD_NUMBER,/*证件号码*/
+        a.POCERTIFICATES,/*证件类型*/
+        a.EXPIRED_DATE,/*证件有效期*/
+        a.IS_NOT_EXPIRED,/*是否长期有效*/
+        a.HJADRESS,/*户籍地址*/
+        a.TEMPORARY_CREDE,/*暂住证（有，无）*/
+        a.HOME_ADDRESS,/*本市地址（现住址)*/
+        a.HOME_PHONE,/*本市住宅电话(家庭电话)*/
+        a.FIRST_LIVE_DATE_START,/*起始居住时间*/
+        a.FIRST_COME_YEAR,/*初来本市年份*/
+        a.DEPENDENT_RELATIVES,/*供养亲属人数*/
+        a.MARITAL_STATUS,/*婚姻状况*/
+        a.HAS_CHILDREN,/*有无子女*/
+        a.EDUCATION_TYPE,/*教育程度*/
+        a.CREDIT_LIMIT,/*信用卡额度（万元）*/
+        a.LIVE_STATE,/*房产*/
+        a.LIVE_MONTH_RENT,/*月租金*/
+        a.BUSINESS_TYPE,/*企业类型*/
+        a.ESTABLISHED_DATE,/*成立时间*/
+        a.STATE,
+        a.CRMCITY,/*管辖城市(不做查询依据)*/
+             (
+             select name from base_city z
+             where z.id=a.crmcity
+             ) as crmcityname,
+        a.CRMPROVINCE,/*管辖省份(不做查询依据)*/
+         (
+             select name from base_city z
+             where z.id=a.crmprovince
+             ) as crmprovincename,
+        a.crmarea,
+        (
+             select name from base_city z
+             where z.id=a.crmarea
+             ) as crmareaname,
+        a.ORGN_ID,/*销售团队(不做查询依据)*/
+        a.TEAM_LEADER_ID,/*团队经理(不做查询依据)*/
+        (
+				  select name from BASE_EMPLOYEE z
+				  where z.id = a.TEAM_LEADER_ID
+				)as TEAM_LEADER,
+        a.CUSTOMER_LEADER_ID,/*客户经理(不做查询依据)*/
+        (
+				  select name from BASE_EMPLOYEE z
+				  where z.id = a.CUSTOMER_LEADER_ID
+				)as CUSTOMER_LEADER,
+        a.EMPLOYEE_SERVICE_STAFF,/*客服(不做查询依据)*/
+         (
+             select name from base_employee z
+             where z.id= a.EMPLOYEE_SERVICE_STAFF
+             ) as staffname,
+        a.KNOWN_WAY,/*客户来源*/
+        a.PERSON_LAW_CASE,/*客户人法情况*/
+        a.AREA,/*区县*/
+        a.CITY,/*地市*/
+        a.PROVINCE,/*省份*/
+        a.EMAIL,/*电子邮箱*/
+        a.kftd,
+         to_char(a.create_time,'yyyy-MM-dd hh24:mi:ss') as CREATE_TIME,/*创建时间*/
+      a.ID
+      ,(
+         select count(*) from xh_car_loan_apply t
+         where t.car_user_id=a.id
+         and t.state not in ('009','0','102','81','101')
+      ) as CANEDIT/*申请不在这些状态里（作废、暂存、结清、客户放弃、提前结清）,结果为0则可编辑*/
+       from XH_CAR_LOAN_USER a
+            where 1=1 
+      $sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhCarLoanUserList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhCarLoanUserList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhCarLoanUserList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhCarLoanUserList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<!-- -->
+	<sql name="queryXhKhzxList" common="true">
+		<sqlString><![CDATA[
+		select * from (
+			select 
+				a.ZXBM,/*咨询编码*/
+				a.KHMC,/*咨询客户名称*/
+				a.SEX,/*性别*/
+				a.TELEPHONE,/*固定电话*/
+				a.PHONE,/*移动电话*/
+				a.CRTY,/*城市*/
+				a.GT_TIME,/*沟通时间*/
+				 (
+				 select name from base_city z
+				 where z.id=a.crty
+				 ) as cityname,
+				to_char(a.create_time,'yyyy-mm-dd hh:mm:ss') as CREARTIME,/*创建时间s*/
+				a.GTJL,/*沟通记录*/
+				a.EMPLOYEE_CRM,/*销售人员*/
+				(
+				  select name from BASE_EMPLOYEE z
+				  where z.id = a.EMPLOYEE_CRM
+				)as EMPLOYEE_CRM_name,
+								a.EMPLOYEE_CCA,/*销售人员*/
+				(
+				  select name from BASE_EMPLOYEE z
+				  where z.id = a.EMPLOYEE_CCA
+				)as EMPLOYEE_CCA_name,
+				a.CRMPROVINCE,/*省份*/
+				(
+				 select name from base_city z
+				 where z.id=a.crmprovince
+				 ) as crmprovincename,
+				a.ZHUANG_TAI,/*状态*/
+				a.ID,
+				a.create_by,
+				a.organi_id,
+				(
+			        select x.RGANI_NAME from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+			         where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+			       where z.id = a.employee_crm))
+			     ) as yyb,
+        		(
+			        select x.id from BASE_ZZJG x where x.id =( select y.PARENT_ID from BASE_ZZJG y
+			         where y.id =(select ORGANI_ID from BASE_EMPLOYEE z
+			       where z.id = a.employee_crm))
+			     ) as yybid
+			 from XH_XYDKZX a
+			      where 1=1
+			$sql
+		) z
+		where 1=1 
+		$sql2
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhKhzxList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhKhzxList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhKhzxList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhKhzxList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+	<!--   个借还款统计报表使用      -->
+	<sql name="loanBackReportList" common="true">
+		<sqlString><![CDATA[		
+				SELECT ROWNUM ,ROW_.*,
+					case when AccountInfoValue is not null then
+					  substr(AccountInfoValue,0,10)
+					else '' end realTime,/*实际还款日期*/
+			          sjhkbj+yhklx as YHKZE,/*应还款总额*/
+			          realMoney-sjhkbj as sjhklx,/*实际已还利息*/
+		            case when nextDate is not null and substr(nextDate,9,2) = '31' then
+					  substr(nextDate,0,8)||'30'
+					  else nextDate end nextDateReal,
+					 HTJE-sjhkbj as SYJE,
+					case when AccountInfoValue is not null then
+					  REPORT_CFJJDJ.reWflx(to_number(substr(AccountInfoValue,11,length(AccountInfoValue))),YHKJE,YBJJE)
+					  else 0 end realdkll/*未付利息*/
+					/*case when AccountInfoValue is not null then
+					    substr(AccountInfoValue,11,length(AccountInfoValue))-ROW_.ybjje
+					else 0 end realdkll*/
+	          		FROM 
+					 (select 
+				 		a.ACCOUNT_BALANCE,
+				 		REPORT_CFJJDJ.reAccountInfoMoney(a.id) as AccountInfoValue,
+						c.JKHTBM,
+						(
+				          select t.name from xh_mate_data t,xh_matedata_type f
+				          where t.matedatatype_id = f.id
+				          and f.type_code='backup01'
+				          and t.value=b.BACKUP01
+				          ) as JKTYPE,
+						(
+					      select x.description 
+					      from BASE_ATTR x ,base_attr_type y
+					      where x.type_id = y.id
+					      and y.coding = 'jkType'
+					      and x.value = b.jk_type
+					      )  as  LOANTYPE,
+						c.HTJE,
+						c.HKQS,
+						d.SYHKYS,
+						b.HK_WAY as RETURNWAY,
+						--decode(b.HK_WAY,'01','独立还款','02','共同还款') as RETURNWAY,
+						c.DKLL as DKLL,
+						c.YZHFL,
+						c.FWF,
+						c.QSHKRQ as QSHKDATE,
+	           	 		case when d.SYHKYS > 0 then
+					  	to_char(add_months(to_date(c.QSHKRQ,'yyyy-MM-dd'),(c.HKQS-d.SYHKYS)),'yyyy-MM-dd')
+					  	else '' end nextDate,
+						(select z.key_name from base_attr z where z.value=b.state and z.type_id='1') as ACCOUNTSTATE,
+			            c.HTJE/c.HKQS*(c.HKQS-d.SYHKYS) as sjhkbj,/*应还本金*/
+			            c.YLXJE*(c.HKQS-d.SYHKYS) as yhklx,/*应还利息*/
+						/*c.HTJE + (c.YLXJE * c.HKQS) as YHKZE,应还款总额*/
+						c.YBJJE,
+						c.YLXJE * c.HKQS as YLXJE,
+			            c.YHKJE,
+			            (
+			            select sum(t.deailing_money) from XH_LOANER_ACCOUNT_INFO t 
+			      		where t.loaner_main_account_id=a.id and (t.dealing_type='0' or t.dealing_type='2' or t.dealing_type='3')
+			            ) as realMoney, /*实还总额*/
+			            REPORT_CFJJDJ.reYqqs(c.id)*c.YHKJE as yqjkze,/*逾期借款金额*/
+						(
+							select sum(DAMAGES_MONEY) from XH_CAPITAL_OVERDUE t where t.LENDER_ID = b.id
+						) as PENAL,
+						b.jkrxm as CUSTOMERNAME,/*客户姓名*/ 
+						 (select f.name from xh_xydkzx e,base_employee f where e.employee_cca = f.id and e.id=b.XYDKZX_ID  )as CUSTOMERLEADERNAME,/*客户经理姓名*/ 
+			            (select zzjg.id from base_zzjg zzjg where id = (select PARENT_ID from base_zzjg where id = (select f.organi_id from xh_xydkzx e,base_employee f where e.employee_cca = f.id and e.id=b.XYDKZX_ID  ))) as  ORGID,
+			           (select zzjg.rgani_name from base_zzjg zzjg where id = (select PARENT_ID from base_zzjg where id =(select f.organi_id from xh_xydkzx e,base_employee f where e.employee_cca = f.id and e.id=b.XYDKZX_ID  ))) as  ORGNAZATIONNAME,
+						--(select zzjg.id from base_zzjg zzjg where id = (select PARENT_ID from base_zzjg where id = f.organi_id)) as  ORGID,
+						--(select zzjg.rgani_name from base_zzjg zzjg where id = (select PARENT_ID from base_zzjg where id = f.organi_id)) as  ORGNAZATIONNAME,
+						h.make_loan_date as MAKELOANDATE,/*放款时间*/ 
+						/*to_number(REPORT_CFJJDJ.reLastMoney(c.QSHKRQ,c.YBJJE,c.Hkqs)) as SYJE,*/
+			            (
+			            select sum(t.deailing_money) from XH_LOANER_ACCOUNT_INFO t 
+			            where t.loaner_main_account_id=a.id and t.dealing_type='3'
+			            ) as tqjq
+					from xh_loaner_account a ,xh_jksq b,xh_jkht c,XH_AVAILABLE_VALUE_OF_CLAIMS d /*,xh_xydkzx e,base_employee f, BASE_ZZJG g*/,XH_MAKE_LOANS h 
+						where 1=1 
+							and a.LOAN_APPLY_ID = b.id 
+							and a.LOAN_CONTRACT_ID = c.id 
+							and a.LOAN_APPLY_ID = d.jksq_id 
+							/*and b.XYDKZX_ID = e.id 
+							and e.employee_cca = f.id 
+							and f.organi_id = g.id */
+							and h.LOAN_CONTRACT_ID = c.id 
+                            $andConditionSql
+				) ROW_ 
+				where 1=1
+				$andConditionSql2
+			]]></sqlString>
+	</sql>
+	<!-- 查询总数 -->
+	<sql name="cnt_loanBackReportList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_loanBackReportList
+			)
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_loanBackReportList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_loanBackReportList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	<!-- 获取机构 -->
+	<sql name="queryOrginList" common="true">
+		<sqlString><![CDATA[
+		    /*	
+		    select 	ORGID,ORGNAZATIONNAME
+		    from (
+				select 
+						(select zzjg.rgani_name from base_zzjg zzjg where id = (select PARENT_ID from base_zzjg where id = f.organi_id)) as  ORGNAZATIONNAME,
+						(select zzjg.id from base_zzjg zzjg where id = (select PARENT_ID from base_zzjg where id = f.organi_id)) as  ORGID
+					from xh_loaner_account a ,xh_jksq b,xh_jkht c,XH_AVAILABLE_VALUE_OF_CLAIMS d ,xh_xydkzx e,base_employee f,XH_MAKE_LOANS h 
+						where 1=1 
+							and a.LOAN_APPLY_ID = b.id 
+							and a.LOAN_CONTRACT_ID = c.id 
+							and a.LOAN_APPLY_ID = d.jksq_id 
+							and b.XYDKZX_ID = e.id 
+							and e.employee_cca = f.id 
+							and h.LOAN_CONTRACT_ID = c.id 
+              ) where ORGID is not null group by ORGID,ORGNAZATIONNAME order by ORGNAZATIONNAME desc
+              */
+              select xx.PARENT_ID as ORGID,
+              		(select zzjg.rgani_name from base_zzjg zzjg where zzjg.id =  xx.PARENT_ID) as ORGNAZATIONNAME       
+              from (     
+				select             
+ 					(select PARENT_ID from base_zzjg t where t.id = f.organi_id) as  PARENT_ID      
+ 				from xh_xydkzx e,base_employee f       
+ 				where 1=1     
+ 				and e.employee_cca = f.id  
+ 			) xx where xx.PARENT_ID != 0 
+ 			group by  xx.PARENT_ID order by  xx.PARENT_ID 
+              
+			]]></sqlString>
+	</sql>
+</sqlmaps>

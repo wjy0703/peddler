@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+    <!--  -->
+	 <sql name="queryXhCarLoanContractList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.CONTRACT_NUM,/*合同编号*/
+				a.CONTRACT_MONEY,/*合同金额*/
+				a.QDRQ,/*合同签订日期*/
+				a.CONTRACT_DATE,/*合同日期*/
+				a.STATE,/*0：待签约 1：已签约上传   -1：取消*/
+				a.MIDDLE_MAN_ID,/*中间人ID*/
+				a.DKLL,/*利息率（移交：0.5%；GPS：0.475%）*/
+				a.DKLL_COMLPEX,/*总费率（移交：3.5%；GPS：5%  ，客户经理可录入）*/
+				a.INTEREST,/*利息（借款总额*利息率）*/
+				a.SERVE_COMLPEX_MONEY,/*总服务费率（IF(借款总额*总费率<1000,(1000-利息)/借款总额,总费率-利息率)）*/
+				a.ADVICE_FEE,/*咨询费（综合息费*59%）*/
+				a.AUDIT_FEE,/*审核费（综合息费*5%）*/
+				a.SERVICE_FEE,/*服务费（综合息费-咨询费-审核费）*/
+				a.XH_JKHT_ID,/*借款合同ID*/
+				a.HKR,/*还款日*/
+				a.NO_EXTENSION,/*展期期数*/
+				a.IS_EXTENSION,/*是否展期*/
+				a.REMARK,/*备注*/
+			a.ID
+			 from XH_CAR_LOAN_CONTRACT a
+			      where 1=1
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhCarLoanContractList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhCarLoanContractList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhCarLoanContractList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhCarLoanContractList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	<!-- 已制作车借合同查询 -->
+	<sql name="queryXhCarLoanOverList" common="true">
+		<sqlString><![CDATA[
+select 
+        a.CONTRACT_NUM,/*合同编号*/
+        a.CONTRACT_MONEY,/*合同金额*/
+        a.QDRQ,/*合同签订日期*/
+        a.CONTRACT_DATE,/*合同日期*/
+        a.MIDDLE_MAN_ID,/*中间人ID*/
+        a.DKLL,/*利息率（移交：0.5%；GPS：0.475%）*/
+        a.DKLL_COMLPEX,/*总费率（移交：3.5%；GPS：5%  ，客户经理可录入）*/
+        a.INTEREST,/*利息（借款总额*利息率）*/
+        a.SERVE_COMLPEX_MONEY,/*总服务费率（IF(借款总额*总费率<1000,(1000-利息)/借款总额,总费率-利息率)）*/
+        a.ADVICE_FEE,/*咨询费（综合息费*59%）*/
+        a.AUDIT_FEE,/*审核费（综合息费*5%）*/
+        a.SERVICE_FEE,/*服务费（综合息费-咨询费-审核费）*/
+        a.XH_JKHT_ID,/*借款合同ID*/
+        a.HKR,/*还款日*/
+        a.NO_EXTENSION,/*展期期数*/
+        c.IS_EXTENSION,/*是否展期*/
+        c.IS_HAVEEXTENSION,/*是否已展期*/ 
+		d.PLATE, /*车牌号码*/ 
+        a.REMARK,/*备注*/
+       c.JK_LOAN_QUOTA,/*借款申请额度*/
+        c.LOAN_SCALE,/*借款成数（借款总额/车辆评估金额）*/
+        a.COMLPEX_MONEY,/*综合息费（IF(借款总额*总费率<1000,1000-利息,借款总额*总费率-利息)）*/
+				b.USER_NAME,/*借款人姓名*/
+				c.JK_CYCLE,/*借款周期*/
+				c.JK_TYPE,/*借款类型GPS移交*/
+				c.JK_LOAN_DATE,/*申请日期*/
+				c.BANK_CITY,/*开卡（省/市）*/
+				c.BANK_OPEN,/*账户开户行*/
+				c.BANK_USERNAME,/*账户名称*/
+				c.BANK_NUM,/*账户号码*/
+				c.ORGANI_ID,/*组织*/
+				c.CRMCITY,/*管辖城市(做查询依据)*/
+				c.CRMPROVINCE,/*管辖省份(做查询依据)*/
+					 (
+			             select name from base_city z
+			             where z.id=c.crmprovince
+			             ) as crmprovincename,
+				c.TEAM_LEADER_ID,/*团队经理(做查询依据)*/
+				c.CUSTOMER_LEADER_ID,/*客户经理(做查询依据)*/
+				c.EMPLOYEE_SERVICE_STAFF,/*客服(做查询依据)*/
+				c.EMPLOYEE_SELLER,/*销售(做查询依据)*/
+				c.SUB_STATE,/*提交状态*/
+				c.STATE,/*借款申请流程状态，状态参考实体*/
+				c.LOAN_CODE,/*借款编号*/
+				c.BACKUP01,/*备用字段01*/
+				c.BACKUP02,/*备用字段02*/
+				c.BACKUP03,/*备用字段03*/
+				c.BACKUP04,/*备用字段04*/
+				c.BACKUP05,/*备用字段05*/
+				a.ID,
+				c.ID as APPLYID
+      from XH_CAR_LOAN_CONTRACT a,XH_CAR_LOAN_APPLY c,xh_car_loan_user b,xh_car_message d
+            where 1=1
+            and a.car_apply_id = c.id
+            and c.car_user_id = b.id
+            and c.car_mess_id = d.id
+            $sql
+			]]></sqlString>
+	</sql>
+	<sql name="cnt_queryXhCarLoanOverList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhCarLoanOverList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<sql name="page_queryXhCarLoanOverList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhCarLoanOverList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+	<sql name="queryXhCarLoanHuaKouOverList" common="true">
+		<sqlString>
+			<![CDATA[
+			select u.user_name,
+       c.contract_num,
+       c.contract_money,
+       j.fkje,
+       m.make_loan_date,
+       m.create_by,
+        to_char(m.create_time,'yyyy-mm-dd') as create_time,
+       (select t.middle_man_name from base_middle_man t where t.id=m.middle_man_id) as middle_name,
+       (select t.cred_addr from base_middle_man t where t.id=m.middle_man_id) as cred_addr,
+       (select t.cred_id from base_middle_man t where t.id=m.middle_man_id) as cred_id
+		  from xh_make_loans        m,
+		       xh_jkht              j,
+		       xh_car_loan_contract c,
+		       xh_car_loan_apply    a,
+		       xh_car_loan_user     u
+		 where m.loan_contract_id = j.id
+		   and c.xh_jkht_id = j.id
+		   and c.car_apply_id = a.id
+		   and a.car_user_id = u.id
+		   and a.is_extension = 1
+		   $sql
+			]]>
+		</sqlString>
+	</sql>
+	
+	<sql name="cnt_queryXhCarLoanHuaKouOverList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhCarLoanHuaKouOverList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<sql name="page_queryXhCarLoanHuaKouOverList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhCarLoanHuaKouOverList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+	
+</sqlmaps>

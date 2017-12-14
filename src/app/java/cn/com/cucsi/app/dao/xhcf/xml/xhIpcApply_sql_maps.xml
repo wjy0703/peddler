@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlmaps>
+    <!--  -->
+	 <sql name="queryXhIpcApplyList" common="true">
+		<sqlString><![CDATA[
+			select 
+				a.CUSTOMER_NAME,/*客户姓名*/
+				a.CUSTOMER_NUM,/*客户编号*/
+				a.CUSTOMER_PHONE,/*客户电话*/
+				a.CUSTOMER_CARD_ID,/*开户行*/
+				a.BANK_NAME,/*账户名*/
+				a.BANK_CARD_NUM,/*账（卡）号*/
+				a.TOGETHER_NAME,/*共借人姓名*/
+				a.TOGETHER_RELATION,/*共借人关系*/
+				a.TOGETHER_PHONE,/*共借人电话*/
+				a.CUSTOMER_COMP_ADDRESS,/*商铺（单位）地址*/
+				a.CUSTOMER_HOME_ADDRESS,/*家庭住址*/
+				a.TOGETHER_HOME_ADDRESS,/*共借人住址*/
+				a.TXL,/*通讯录 */
+				a.KF_EMP,/*开发信贷员
+*/
+				a.FZ_EMP,/*负责信贷员*/
+				a.WH_EMP,/*维护人员
+*/
+				a.LOAN_TYPE,/*借款类型*/
+				a.LOAN_USE,/*借款用途*/
+			a.ID
+			 from XH_IPC_APPLY a
+			      where 1=1
+			$sql
+			]]></sqlString>
+	</sql>
+	<!-- 查询 总数 -->
+	<sql name="cnt_queryXhIpcApplyList" common="false">
+		<sqlString>
+			<![CDATA[
+			SELECT COUNT(*) RecordCount FROM (
+			$ibpm_queryXhIpcApplyList
+			)a
+		]]>
+		</sqlString>
+	</sql>
+	<!-- 查询 列表分页 -->
+	<sql name="page_queryXhIpcApplyList" common="false">
+		<sqlString>
+			<![CDATA[
+			$ibpm_queryPageBefore
+			$ibpm_queryXhIpcApplyList
+			$ibpm_queryPageAfter
+			]]>
+		</sqlString>
+	</sql>
+</sqlmaps>
