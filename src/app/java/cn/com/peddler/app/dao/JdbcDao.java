@@ -106,9 +106,10 @@ public class JdbcDao {
 			if (page == null)
 				return null;
 			this.initPage(queryName, conditions, page);
-			int page_end = page.getFirst() + page.getPageSize() - 1;
+			int page_end = page.getFirst() + page.getPageSize() - 1;//oracle使用参数
 			conditions.put("start", page.getFirst());
-			conditions.put("end", page_end);
+			conditions.put("end", page_end);//oracle使用参数
+			conditions.put("size", page.getPageSize());//mysql使用参数
 			String sql = sqlManager.getMergeSqlByName("page_" + queryName, conditions);
 			logger.debug(queryName +" sql: =" + sql);
 			logger.debug("sql map: =" + conditions);
@@ -144,6 +145,7 @@ public class JdbcDao {
 			int page_end = page.getFirst() + page.getPageSize() - 1;
 			conditions.put("start", page.getFirst());
 			conditions.put("end", page_end);
+			conditions.put("size", page.getPageSize());//mysql使用参数
 			String sql = sqlManager.getMergeSqlByName("page_" + queryName, conditions);
 			logger.debug(queryName +" sql: =" + sql);
 			logger.debug("sql map: =" + conditions);
@@ -172,6 +174,7 @@ public class JdbcDao {
 	public boolean insertBySqlTemplate(String insertName, Map<String, ?> conditions) {
 		try {
 			String sql = sqlManager.getSqlByName(insertName, conditions);
+//			System.out.println(insertName +" sql: " + sql);
 			logger.debug(insertName +" sql: " + sql);
 			logger.debug("sql map: " + conditions);
 			jdbcTemplate.update(sql, conditions);

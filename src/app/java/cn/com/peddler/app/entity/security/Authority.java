@@ -3,7 +3,9 @@ package cn.com.peddler.app.entity.security;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -17,11 +19,15 @@ import cn.com.peddler.core.orm.hibernate.AuditableEntity;
 //表名与类名不相同时重新定义表名.
 @Table(name = "authority")
 //默认的缓存策略.
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Authority extends AuditableEntity{
 
 	// Fields
-	private static final long serialVersionUID = -2276242824197821671L;
+	private static final long serialVersionUID = -6276242824197821671L;
+	/**
+	 * SpringSecurity中默认的角色/授权名前缀.
+	 */
+	public static final String AUTHORITY_PREFIX = "ROLE_";
 	
 	private String cname;//别名
 	/**别名*/
@@ -35,7 +41,7 @@ public class Authority extends AuditableEntity{
 	}
 	private String vflag;//标记
 	/**标记*/
-	@Column(columnDefinition=DEF_STR4)
+	@Column(length=1)
 	public String getVflag() {
 		return this.vflag;
 	}
@@ -93,4 +99,24 @@ public class Authority extends AuditableEntity{
 	public void setVsystype(String vsystype) {
 		this.vsystype = vsystype;
 	}
+	public Authority(Long id,String cname,  String aname, String vpath) {
+		super();
+		this.id = id;
+		this.aname = aname;
+		this.vpath = vpath;
+		this.setCname(cname);
+	}
+	public Authority() {
+	}
+	
+	@Transient
+	public String getPrefixedName() {
+		return AUTHORITY_PREFIX + aname;
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
 }

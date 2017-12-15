@@ -29,7 +29,7 @@
 	<!-- 数据源配置,使用应用内的DBCP数据库连接池 -->
 	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" 
 		destroy-method="close"> -->
-	<bean id="dataSource" class="cn.com.cucsi.core.datasource.MyDbcpDataSource"
+	<bean id="dataSource" class="cn.com.peddler.core.datasource.MyDbcpDataSource"
 		destroy-method="close">
 		<!-- Connection Info -->
 		<property name="driverClassName" value="${jdbc.driver}" />
@@ -73,10 +73,7 @@
 		</property>
 		<property name="packagesToScan">
 			<list>
-				<value>cn.com.cucsi.app.entity.*</value>
-				<value>cn.com.cucsi.app2.entity.*</value>
-				<value>cn.com.cucsi.vechicle.entity.*</value>
-				<value>cn.com.cucsi.cooperate.entity.*</value>
+				<value>cn.com.peddler.app.entity.*</value>
 			</list>
 		</property>
 
@@ -105,7 +102,7 @@
 		proxy-target-class="true" />
 
 	<!-- 使用annotation 自动注册bean,并保证@Required,@Autowired的属性被注入 -->
-	<context:component-scan base-package="cn.com.cucsi.app,cn.com.cucsi.app2,cn.com.cucsi.vechicle,cn.com.cucsi.cooperate" />
+	<context:component-scan base-package="cn.com.peddler.app" />
 
 	<!-- 引入jdbc模块的自定义sql -->
 	<import resource="jdbc-sqlmap.xml" />

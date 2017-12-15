@@ -1,5 +1,6 @@
 package cn.com.peddler.app.dao.login;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -10,7 +11,29 @@ import cn.com.peddler.core.orm.hibernate.HibernateDao;
 
 @Component
 public class MenutableDao extends HibernateDao<Menutable, Long>{
+	/**
+	 * 查询顶级菜单
+	 * @return
+	 */
+	public List<Menutable> getMenusByLevel(Integer levelId){
+		String hql = "from Menutable menu where menu.levelid=? and menu.vtypes = '0' order by menu.sortno";
+		return this.find(hql, levelId);
+	}
 
+	/**
+	 * 根据上级菜单查询下级菜单
+	 * @param parentId
+	 * @return
+	 */
+	public List<Menutable> getMenusByParent(Long parentId){
+		String hql = "from Menutable menu where menu.levelid != 4 and menu.parentid=? and menu.vtypes = '0' order by menu.sortno";
+		return this.find(hql, parentId);
+	}
+	
+	public List<Menutable> queryMenutable(){
+		String hql = "from Menutable menu where menu.vtypes=? order by menu.id asc";
+		return this.find(hql, "0");
+	}
 	public Page<Menutable> queryMenutable(Page<Menutable> page, Map<String, Object> params){
 //		String hql = "from Menutable menutable where 1=1";
 		StringBuffer hql=new StringBuffer();

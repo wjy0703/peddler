@@ -132,10 +132,23 @@ public class OperatelogManager {
 
     public void saveLogInfo(Operatelog operatelog) {
         logger.info("保存日志数据");
-        operatelogDao.save(operatelog);
+        //operatelogDao.save(operatelog);
+        namedJdbcDao.insertBySqlTemplate("insertOperatelog", fromOperatelogEntity(operatelog));
         logger.info("保存日志数据-成功");
     }
-
+    
+    private Map<String, Object> fromOperatelogEntity(Operatelog operatelog){
+    	Map<String, Object> conditions = new HashMap<String, Object>();
+    	conditions.put("id", operatelog.getId());
+    	conditions.put("createtime", operatelog.getCreatetime());
+    	conditions.put("modifytime", operatelog.getModifytime());
+    	conditions.put("createuser", operatelog.getCreateuser());
+    	conditions.put("modifyuser", operatelog.getModifyuser());
+    	conditions.put("ip", operatelog.getIp());
+    	conditions.put("remarks", operatelog.getRemarks());
+    	return conditions;
+    }
+    
     @Transactional(readOnly = true)
     public List<Map<String,Object>> searchCjrxx(String queryName,Map<String,Object> filter){
         Map<String, Object> conditions = new HashMap<String,Object>();
@@ -143,7 +156,7 @@ public class OperatelogManager {
         if(filter.containsKey("logName")){
             String value = String.valueOf(filter.get("logName"));
             if(StringUtils.isNotEmpty(value)) {
-                sql = sql + " t.create_by like '%" +  value + "%'";
+                sql = sql + " t.createuser like '%" +  value + "%'";
             }
         }
         conditions.put("sql", sql);

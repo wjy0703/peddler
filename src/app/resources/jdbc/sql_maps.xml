@@ -9,7 +9,11 @@
 	<sql name="queryPageAfter" common="true">
 		<sqlString><![CDATA[   )row_ ) where rownum_>=:start and rownum_<=:end ]]></sqlString>
 	</sql>
-
+	
+	<sql name="queryPageAfterMySql" common="true">
+		<sqlString><![CDATA[   LIMIT :start,:size ]]></sqlString>
+	</sql>
+	
 	<sql name="queryCustomer">
 		<sqlString><![CDATA[
             $ibpm_queryPageBefore

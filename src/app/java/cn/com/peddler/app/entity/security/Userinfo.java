@@ -135,6 +135,36 @@ public class Userinfo extends AuditableEntity{
 	public void setBusinessinfo(Businessinfo businessinfo) {
 		this.businessinfo = businessinfo;
 	}
+	private Long rolesid;//角色
+	/**角色*/
+	@Column(columnDefinition=DEF_NUM10)
+	public Long getRolesid() {
+		return this.rolesid;
+	}
+	/**角色*/
+	public void setRolesid(Long rolesid) {
+		this.rolesid = rolesid;
+	}
+	private Long busid;//所属企业
+	/**所属企业*/
+	@Column(columnDefinition=DEF_NUM10)
+	public Long getBusid() {
+		return this.busid;
+	}
+	/**所属企业*/
+	public void setBusid(Long busid) {
+		this.busid = busid;
+	}
+	private Long orgid;//所属机构
+	/**所属机构*/
+	@Column(columnDefinition=DEF_NUM10)
+	public Long getOrgid() {
+		return this.orgid;
+	}
+	/**所属机构*/
+	public void setOrgid(Long orgid) {
+		this.orgid = orgid;
+	}
 	/**所属机构*/
 	private Organizeinfo organizeinfo;
 	//一对一定义

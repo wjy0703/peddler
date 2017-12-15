@@ -75,7 +75,7 @@ public class JdbcPage {
 	}
 
 	/**
-	 * 根据pageNo和pageSize计算当前页第一条记录在总结果集中的位置,序号从1开始.
+	 * 根据pageNo和pageSize计算当前页第一条记录在总结果集中的位置,序号从1开始.mysql从0开始
 	 */
 	public int getFirst() {
 //		return ((pageNo - 1) * pageSize) + 1;

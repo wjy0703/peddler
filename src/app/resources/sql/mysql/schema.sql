@@ -1,4 +1,4 @@
-
+/*
     alter table acct_role_authority 
         drop foreign key FKAE243466DE3FB930;
 
@@ -71,3 +71,4 @@
         add constraint FKFE85CB3E836A7D10 
         foreign key (user_id) 
         references acct_user (id);
+*/

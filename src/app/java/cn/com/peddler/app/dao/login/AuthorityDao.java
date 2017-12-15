@@ -1,5 +1,6 @@
 package cn.com.peddler.app.dao.login;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -10,7 +11,10 @@ import cn.com.peddler.core.orm.hibernate.HibernateDao;
 
 @Component
 public class AuthorityDao extends HibernateDao<Authority, Long>{
-
+	public List<Authority> queryAuthorities(){
+		String hql = "from Authority authority where authority.vtype=? order by authority.id asc";
+		return this.find(hql, "0");
+	}
 	public Page<Authority> queryAuthority(Page<Authority> page, Map<String, Object> params){
 //		String hql = "from Authority authority where 1=1";
 		StringBuffer hql=new StringBuffer();

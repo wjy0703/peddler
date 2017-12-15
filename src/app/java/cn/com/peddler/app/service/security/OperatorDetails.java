@@ -34,6 +34,16 @@ public class OperatorDetails extends User {
 	
 	private String positionCode;
 	
+	private Long busid;
+	
+	public Long getBusid() {
+		return busid;
+	}
+
+	public void setBusid(Long busid) {
+		this.busid = busid;
+	}
+
 	public OperatorDetails(String username, String password, boolean enabled, boolean accountNonExpired,
 			boolean credentialsNonExpired, boolean accountNonLocked, Collection<GrantedAuthority> authorities)
 			throws IllegalArgumentException {

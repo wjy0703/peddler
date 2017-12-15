@@ -20,7 +20,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import cn.com.peddler.app.entity.baseinfo.Menu;
 import cn.com.peddler.app.entity.login.Menutable;
 import cn.com.peddler.core.orm.hibernate.AuditableEntity;
 import cn.com.peddler.core.utils.ReflectionUtils;
@@ -103,7 +102,7 @@ public class Roleinfo extends AuditableEntity{
 		this.authorityList = authorityList;
 	}
 
-	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH },targetEntity=Menu.class,fetch = FetchType.LAZY)
+	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH },targetEntity=Menutable.class,fetch = FetchType.LAZY)
 	@JoinTable(name = "rolemenu", joinColumns = { @JoinColumn(name = "roleid") }, inverseJoinColumns = { @JoinColumn(name = "menuid") })
 	@Fetch(FetchMode.SUBSELECT)
 	@OrderBy("id")

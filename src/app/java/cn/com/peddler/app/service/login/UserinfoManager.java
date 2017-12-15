@@ -17,7 +17,7 @@ import cn.com.peddler.app.dao.login.AuthorityDao;
 import cn.com.peddler.app.dao.login.MenutableDao;
 import cn.com.peddler.app.dao.login.RoleinfoDao;
 import cn.com.peddler.app.dao.login.UserinfoDao;
-import cn.com.peddler.app.entity.baseinfo.Menu;
+import cn.com.peddler.app.entity.login.Menutable;
 import cn.com.peddler.app.entity.security.Authority;
 import cn.com.peddler.app.entity.security.Roleinfo;
 import cn.com.peddler.app.entity.security.Userinfo;
@@ -36,6 +36,8 @@ import cn.com.peddler.core.utils.ReflectionUtils;
 @Transactional
 public class UserinfoManager {
 	private static Logger logger = LoggerFactory.getLogger(UserinfoManager.class);
+	
+	
 	private UserinfoDao userinfoDao;
 	@Autowired
 	public void setUserinfoDao(UserinfoDao userinfoDao) {
@@ -212,7 +214,34 @@ public class UserinfoManager {
 		return jdbcDao.searchPagesByMergeSqlTemplate(queryName, conditions, page);
 	}
 	
+	public void insertUserinfo(String insertName,Map<String,Object> conditions){
+		jdbcDao.insertBySqlTemplate(insertName, conditions);
+	}
 	
+	public void updateUserinfo(String updateName,Map<String,Object> conditions){
+		jdbcDao.updateBySqlTemplate(updateName, conditions);
+	}
+	
+	private Map<String, Object> fromUserinfoEntity(Userinfo userinfo){
+    	Map<String, Object> conditions = new HashMap<String, Object>();
+    	conditions.put("id", userinfo.getId());
+    	conditions.put("account", userinfo.getAccount());
+    	conditions.put("password", userinfo.getPassword());
+    	conditions.put("rolesid", userinfo.getRolesid());
+    	conditions.put("orgid", userinfo.getOrgid());
+    	conditions.put("vname", userinfo.getVname());
+    	conditions.put("sex", userinfo.getSex());
+    	conditions.put("card", userinfo.getCard());
+    	conditions.put("phone", userinfo.getPhone());
+    	conditions.put("createtime", userinfo.getCreatetime());
+    	conditions.put("modifytime", userinfo.getModifytime());
+    	conditions.put("createuser", userinfo.getCreateuser());
+    	conditions.put("modifyuser", userinfo.getModifyuser());
+    	conditions.put("vtypes", userinfo.getVtypes());
+    	conditions.put("busid", userinfo.getBusid());
+    	conditions.put("post", userinfo.getPost());
+    	return conditions;
+    }
 	public void saveUser(Userinfo entity) {
 		if(entity.getPassword().length()==0){
 			Userinfo obj = userinfoDao.get(entity.getId());
@@ -220,16 +249,19 @@ public class UserinfoManager {
 			obj.setVtypes(entity.getVtypes());
 			obj.setVname(entity.getVname());
 			obj.setRoleinfo(entity.getRoleinfo());
-			userinfoDao.save(obj);
+//			userinfoDao.save(obj);
+			jdbcDao.updateBySqlTemplate("updateUserinfo", fromUserinfoEntity(obj));
 //			entity.setPassword(userinfoDao.get(entity.getId()).getPassword());
 //			userinfoDao.merge(entity);
 		}
 		else if (entity.getPassword().length()!=32){
 			entity.setPassword(EncodeUtils.getMd5PasswordEncoder(entity.getPassword(),entity.getAccount()));
-			userinfoDao.save(entity);
+//			userinfoDao.save(entity);
+			jdbcDao.updateBySqlTemplate("updateUserinfo", fromUserinfoEntity(entity));
 		}
 		else{
-			userinfoDao.save(entity);
+//			userinfoDao.save(entity);
+			jdbcDao.insertBySqlTemplate("insertUserinfo", fromUserinfoEntity(entity));
 		}
 		
 	}
@@ -265,7 +297,7 @@ public class UserinfoManager {
 	 * 判断是否超级管理员.
 	 */
 	private boolean isSupervisor(Long id) {
-		return id == 1;
+		return id == 0;
 	}
 
 	/**
@@ -386,7 +418,7 @@ public class UserinfoManager {
 		return authorityDao.findByIds(ids);
 	}
 	
-	public List<Menu> getMenuListByIds(List<Long> ids) {
+	public List<Menutable> getMenuListByIds(List<Long> ids) {
 		return menutableDao.findByIds(ids);
 	}
 
@@ -398,20 +430,20 @@ public class UserinfoManager {
 		return allAuths;
 	}
 	
-	public List<Menu> getMergedRoleMenu(List<Menu> roleMenu) {
-		List<Menu> allMenu = menutableDao.queryMenu();
-		for(Menu menu : roleMenu){
+	public List<Menutable> getMergedRoleMenu(List<Menutable> roleMenu) {
+		List<Menutable> allMenu = menutableDao.queryMenutable();
+		for(Menutable menu : roleMenu){
 			allMenu.remove(menu);
 		}
 		return allMenu;
 	}
 	
-	public List<Map<String,Object>> getMergedRoleMenu(List<Menu> menu, List<Menu> roleMenu) {
+	public List<Map<String,Object>> getMergedRoleMenu(List<Menutable> menu, List<Menutable> roleMenu) {
 		List<Map<String,Object>> tree = new LinkedList<Map<String, Object>>();
-		for(Menu m : menu){
+		for(Menutable m : menu){
 			boolean check = false;
 			Map<String, Object> modelMap = new HashMap<String, Object>();
-			for(Menu m1 : roleMenu){
+			for(Menutable m1 : roleMenu){
 				if(m.getId() == m1.getId()){
 					check = true;
 					break;
@@ -424,17 +456,17 @@ public class UserinfoManager {
 		return tree;
 	}
 	
-	public List<Menu> getMenusByLevels(Integer levelId) {// MDY
+	public List<Menutable> getMenusByLevels(Integer levelId) {// MDY
 		return menutableDao.getMenusByLevel(levelId);
 	}
 	
-	public String[] buildMenuByTopId(List<Menu> menuRoleList){
+	public String[] buildMenuByTopId(List<Menutable> menuRoleList){
 		String[] res1 = new String[2];
 		StringBuffer chenkedNode = new StringBuffer();
-		List<Menu> menuList = getMenusByLevels(new Integer(1));
+		List<Menutable> menuList = getMenusByLevels(new Integer(1));
 		StringBuffer tree = new StringBuffer();	
 		//tree.append("<ul class=\"tree treeFolder\"><li><a href=\"#\">组织机构</a><ul>");
-		for(Menu m : menuList){
+		for(Menutable m : menuList){
 			String[] res = buildMenuNode(m.getId(), menuRoleList);
 			chenkedNode.append(res[0]);
 			tree.append(res[1]);
@@ -445,22 +477,22 @@ public class UserinfoManager {
 		return res1;
 	}
 	
-	private String[] buildMenuNode(Long orgId, List<Menu> menuRoleList){
+	private String[] buildMenuNode(Long orgId, List<Menutable> menuRoleList){
 		String[] res = new String[2];
 		StringBuffer chenkedNode = new StringBuffer();
-		Menu menu = menutableDao.get(orgId);
+		Menutable menu = menutableDao.get(orgId);
 		String chenked = "";
 		boolean isChenked = getCheckedMenu(menu, menuRoleList);
 		if(isChenked){
 			chenked = "checked=true";
-			chenkedNode.append("{id:'"+menu.getId()+"', name:'"+menu.getMenuName()+"'}|");
+			chenkedNode.append("{id:'"+menu.getId()+"', name:'"+menu.getMenuname()+"'}|");
 		}
 		StringBuffer node = new StringBuffer();
-		node.append("<li><a tname="+menu.getMenuName()+" tvalue="+menu.getId()+" "+chenked+">"+menu.getMenuName()+"</a>");
-		List<Menu> menuList = getMenuByParent(orgId);
+		node.append("<li><a tname="+menu.getMenuname()+" tvalue="+menu.getId()+" "+chenked+">"+menu.getMenuname()+"</a>");
+		List<Menutable> menuList = getMenuByParent(orgId);
 		if(menuList != null && menuList.size()>0 ){
 			node.append("<ul>");
-			for (Menu m : menuList) {
+			for (Menutable m : menuList) {
 				String[] ss = buildMenuNode(m.getId(), menuRoleList);
 				chenkedNode.append(ss[0]);
 				node.append(ss[1]);
@@ -473,9 +505,9 @@ public class UserinfoManager {
 		return res;
 	}
 	
-	private boolean getCheckedMenu(Menu menu, List<Menu> menuRoleList){
+	private boolean getCheckedMenu(Menutable menu, List<Menutable> menuRoleList){
 		boolean isChenked = false;
-		for (Menu m : menuRoleList) {
+		for (Menutable m : menuRoleList) {
 			if(m.getId() == menu.getId()){
 				isChenked = true;
 				break;
@@ -484,7 +516,7 @@ public class UserinfoManager {
 		return isChenked;
 	}
 	
-	public List<Menu> getMenuByParent(Long parentId) {
+	public List<Menutable> getMenuByParent(Long parentId) {
 		return menutableDao.getMenusByParent(parentId);
 	}
 
@@ -495,7 +527,7 @@ public class UserinfoManager {
 	}
 
 	public void searchAuthority(Page<Authority> page, Map<String, Object> params) {
-		authorityDao.queryAuth(page, params);	
+		authorityDao.queryAuthority(page, params);	
 		
 	}
 	
@@ -531,13 +563,21 @@ public class UserinfoManager {
 
 
 	public String getTypeByCode(String TYPE_CODE){
+		/*
 		StringBuffer sql = new StringBuffer("select xma.name,xma.value ");
 		sql.append("    from xhcf_mate_data xma,xhcf_matedata_type xmatype");
 		sql.append("    where xma.matedatatype_id = xmatype.id ");
 		sql.append("          and  xma.state='0'");
 		sql.append("          and xmatype.type_code='").append(TYPE_CODE).append("'");
 		sql.append("          ");
-
+        */
+		StringBuffer sql = new StringBuffer("select a.matename name,a.vvalue value ");
+		sql.append("  from matedata a,matedatatype b ");
+		sql.append("  where a.matetypeid=b.id ");
+		sql.append("  and a.vtypes='0' ");
+		sql.append("  and b.typecode='").append(TYPE_CODE).append("'");
+		sql.append("  ");
+		
     	List<Map<String, Object>> list = jdbcDao.searchByMergeSql(sql.toString());
     	String seq = "0";
     	if(null != list && list.size()>0){
@@ -548,7 +588,7 @@ public class UserinfoManager {
 		return seq+"";
 	}
 	
-	public String getLoginCityData(Long id){
+	public String getLoginCityData1(Long id){
 		String res = "";
 		String sql = "select id from BASE_ZZJG t start with t.id = "+id+" connect by nocycle t.parent_id = prior id";
 		List<Map<String, Object>> list = jdbcDao.searchByMergeSql(sql);
@@ -558,13 +598,4 @@ public class UserinfoManager {
 		return res;
 	}
 	
-	public String getLoginTeamInData(String id){
-		String res = "";
-		String sql = "select e.id from base_employee e where e.organi_id in ("+id+") and e.position_id = 6";
-		List<Map<String, Object>> list = jdbcDao.searchByMergeSql(sql);
-		if(list.size() > 0){
-			res = ReflectionUtils.convertElementPropertyToString(list, "ID", ",");
-		}
-		return res;
-	}
 }

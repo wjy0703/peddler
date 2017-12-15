@@ -1,4 +1,4 @@
-package cn.com.cucsi.app.service.security;
+package cn.com.peddler.app.service.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,9 +12,9 @@ import org.springframework.security.access.SecurityConfig;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.com.cucsi.app.dao.security.AuthorityDao;
-import cn.com.cucsi.app.dao.security.RoleDao;
-import cn.com.cucsi.app.entity.security.Authority;
+import cn.com.peddler.app.dao.login.AuthorityDao;
+import cn.com.peddler.app.dao.login.RoleinfoDao;
+import cn.com.peddler.app.entity.security.Authority;
 
 @Component
 //默认将类中的所有函数纳入事务管理.
@@ -23,7 +23,7 @@ public class DbSecurityInfo {
 
 	
 	@SuppressWarnings("unused")
-	private RoleDao roleDao;
+	private RoleinfoDao roleDao;
 	private AuthorityDao authorityDao;
 	
 	public Map<String, Collection<ConfigAttribute>> loadResourceDefine(){
@@ -48,14 +48,14 @@ public class DbSecurityInfo {
 			Collection<ConfigAttribute> configAttributes = new ArrayList<ConfigAttribute>();
 			ConfigAttribute configAttribute = new SecurityConfig(authority.getPrefixedName());
 			configAttributes.add(configAttribute);
-			resourceMap.put(authority.getPath(), configAttributes);
+			resourceMap.put(authority.getVpath(), configAttributes);
 		}
 		
 		return resourceMap;
 	}
 	
 	@Autowired	
-	public void setRoleDao(RoleDao roleDao) {
+	public void setRoleDao(RoleinfoDao roleDao) {
 		this.roleDao = roleDao;
 	}
 	
