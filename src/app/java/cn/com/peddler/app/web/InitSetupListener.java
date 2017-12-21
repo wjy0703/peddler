@@ -6,14 +6,26 @@
 package cn.com.peddler.app.web;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import cn.com.peddler.app.Constants;
+import cn.com.peddler.core.datasource.MyDataBaseConnection;
+
 
 
 public class InitSetupListener implements ServletContextListener {
@@ -103,14 +115,15 @@ public class InitSetupListener implements ServletContextListener {
 	 * @author jiangxd
 	 * create by 2011-11-10
 	 */
-	/*public static void replaceAttr2Map(String coding){
+	/*
+	public static void replaceAttr2Map(String coding){
     	Connection con = MyDataBaseConnection.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		List<Map<String,Object>> attrType = new  LinkedList<Map<String,Object>>();
 		
 		try {
-			pstmt = con.prepareStatement("select a.coding, b.* from base_attr_type a, base_attr b where a.id = b.type_id and a.coding='" + coding + "' order by b.sort_no");
+			pstmt = con.prepareStatement("select a.coding, b.* from baseattrtype a, base_attr b where a.id = b.type_id and a.coding='" + coding + "' order by b.sort_no");
 			rs = pstmt.executeQuery();
 			Map<String,Object> attr = null;
 			
@@ -128,6 +141,6 @@ public class InitSetupListener implements ServletContextListener {
 			MyDataBaseConnection.destoryConnection(con, pstmt, rs);
 		}
 		Constants.Attr_Map.put(coding, attrType);
-    }*/
-	
+    }
+	*/
 }

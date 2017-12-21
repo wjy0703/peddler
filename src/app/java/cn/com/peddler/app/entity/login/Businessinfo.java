@@ -76,46 +76,6 @@ public class Businessinfo extends AuditableEntity{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	private Timestamp createtime;//创建时间
-	/**创建时间*/
-	@Column(insertable = false)
-	public Timestamp getCreatetime() {
-		return this.createtime;
-	}
-	/**创建时间*/
-	public void setCreatetime(Timestamp createtime) {
-		this.createtime = createtime;
-	}
-	private Timestamp modifytime;//修改时间
-	/**修改时间*/
-	@Column(insertable = false)
-	public Timestamp getModifytime() {
-		return this.modifytime;
-	}
-	/**修改时间*/
-	public void setModifytime(Timestamp modifytime) {
-		this.modifytime = modifytime;
-	}
-	private String createuser;//创建人
-	/**创建人*/
-	@Column(columnDefinition=DEF_STR40)
-	public String getCreateuser() {
-		return this.createuser;
-	}
-	/**创建人*/
-	public void setCreateuser(String createuser) {
-		this.createuser = createuser;
-	}
-	private String modifyuser;//修改人
-	/**修改人*/
-	@Column(columnDefinition=DEF_STR40)
-	public String getModifyuser() {
-		return this.modifyuser;
-	}
-	/**修改人*/
-	public void setModifyuser(String modifyuser) {
-		this.modifyuser = modifyuser;
-	}
 	private String vtypes;//属性（在用、欠费、停用）
 	/**属性（在用、欠费、停用）*/
 	@Column(columnDefinition=DEF_STR2)

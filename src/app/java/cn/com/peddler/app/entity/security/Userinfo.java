@@ -117,7 +117,7 @@ public class Userinfo extends AuditableEntity{
 	private Roleinfo roleinfo;
 	//一对一定义
 	@OneToOne(cascade=CascadeType.REFRESH,fetch = FetchType.LAZY)
-	@JoinColumn(name="rolesid", unique= false, nullable=true, insertable=true, updatable=true)
+	@JoinColumn(name="rolesid", unique= false, nullable=true, insertable=false, updatable=false)
 	public Roleinfo getRoleinfo() {
 		return roleinfo;
 	}
@@ -128,7 +128,7 @@ public class Userinfo extends AuditableEntity{
 	private Businessinfo businessinfo;
 	//一对一定义
 	@OneToOne(cascade=CascadeType.REFRESH,fetch = FetchType.LAZY)
-	@JoinColumn(name="busid", unique= false, nullable=true, insertable=true, updatable=true)
+	@JoinColumn(name="busid", unique= false, nullable=true, insertable=false, updatable=false)
 	public Businessinfo getBusinessinfo() {
 		return businessinfo;
 	}
@@ -147,7 +147,6 @@ public class Userinfo extends AuditableEntity{
 	}
 	private Long busid;//所属企业
 	/**所属企业*/
-	@Column(columnDefinition=DEF_NUM10)
 	public Long getBusid() {
 		return this.busid;
 	}
@@ -157,7 +156,6 @@ public class Userinfo extends AuditableEntity{
 	}
 	private Long orgid;//所属机构
 	/**所属机构*/
-	@Column(columnDefinition=DEF_NUM10)
 	public Long getOrgid() {
 		return this.orgid;
 	}
@@ -169,7 +167,7 @@ public class Userinfo extends AuditableEntity{
 	private Organizeinfo organizeinfo;
 	//一对一定义
 	@OneToOne(cascade=CascadeType.REFRESH,fetch = FetchType.LAZY)
-	@JoinColumn(name="orgid", unique= false, nullable=true, insertable=true, updatable=true)
+	@JoinColumn(name="orgid", unique= false, nullable=true, insertable=false, updatable=false)
 	public Organizeinfo getOrganizeinfo() {
 		return organizeinfo;
 	}

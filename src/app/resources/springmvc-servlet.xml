@@ -8,9 +8,9 @@
 
 	<!-- Scans the classpath of this application for @Components to deploy as 
 		beans -->
-	<context:component-scan base-package="cn.com.cucsi.app.web,cn.com.cucsi.app2.web,cn.com.cucsi.vechicle.web,cn.com.cucsi.cooperate.web" />
+	<context:component-scan base-package="cn.com.peddler.app.web" />
 
-	<context:component-scan base-package="cn.com.cucsi.app.taglib" />
+	<context:component-scan base-package="cn.com.peddler.app.taglib" />
 
 	<!-- Configures the @Controller programming model -->
 	<mvc:annotation-driven />
@@ -24,11 +24,6 @@
 			/?locale=de -->
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
 	</mvc:interceptors>
-	<!-- 
-	<mvc:interceptors>
-		<bean class="cn.com.cucsi.app.web.util.SystemInterceptor" />
-	</mvc:interceptors>
-	 -->
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources/ directory -->

@@ -132,7 +132,7 @@
 	</listener>
 	 <!-- session超时记录退出时间到操作日志 --> 
 	 <listener>
-      <listener-class>cn.com.cucsi.app2.util.SessionInvalidation</listener-class>
+      <listener-class>cn.com.peddler.app.util.SessionInvalidation</listener-class>
     </listener> 
 	
 	<!-- session超时定义,单位为分钟 -->

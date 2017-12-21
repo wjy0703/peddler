@@ -81,7 +81,7 @@
 			<map>
 				<entry key="save-update">
 					<list>
-						<bean class="cn.com.cucsi.core.orm.hibernate.AuditListener" />
+						<bean class="cn.com.peddler.core.orm.hibernate.AuditListener" />
 						<bean class="org.hibernate.event.def.DefaultSaveOrUpdateEventListener" />
 					</list>
 				</entry>

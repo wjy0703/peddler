@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import cn.com.peddler.app.entity.baseinfo.Menu;
 import cn.com.peddler.app.entity.login.Menutable;
 
 /**

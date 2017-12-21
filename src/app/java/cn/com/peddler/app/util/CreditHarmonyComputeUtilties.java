@@ -8,6 +8,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.hibernate.tool.hbm2x.StringUtils;
+
+
 import com.ibm.icu.text.DecimalFormat;
 
 /**
@@ -60,7 +63,42 @@ public class CreditHarmonyComputeUtilties {
 		}
 		return formatDate.format(time);
 	}
-
+	
+	/**
+     * Date类型转String类型
+     * 
+     * @param date
+     * @return 字符串时间格式 yyyy-MM-dd hh:mm:ss
+     */
+    public static String dateToStringTime(Date date) {
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String str = formatDate.format(date);
+        Date time = null;
+        try {
+            time = formatDate.parse(str);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return formatDate.format(time);
+    }
+	
+	/**
+	 * Date类型转String类型
+	 * 
+	 * @param date
+	 * @return 字符串时间格式
+	 */
+	public static String dateToString(String dateFormat) {
+		SimpleDateFormat formatDate = new SimpleDateFormat(dateFormat);
+		String str = formatDate.format(new Date());
+		Date time = null;
+		try {
+			time = formatDate.parse(str);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return formatDate.format(time);
+	}
 	/**
 	 * 根据起始借款日期取出每月还款日 借款合同文件中还款日是每月15或30 公式中不考虑2月一天份 如果是2月份，客户的还款日是在2月份最后一天
 	 * 
@@ -80,7 +118,12 @@ public class CreditHarmonyComputeUtilties {
 			e.printStackTrace();
 		}
 
-		return String.valueOf(calendar.get(Calendar.DATE));
+//		return String.valueOf(calendar.get(Calendar.DATE));
+		String zdr = String.valueOf(calendar.get(Calendar.DATE));
+		if(!"15".equals(zdr)){
+			zdr = "30";
+		}
+		return zdr;
 	}
 
 	/**
@@ -416,7 +459,7 @@ public class CreditHarmonyComputeUtilties {
 					/ (1000 * 3600 * 24);// 从间隔毫秒变成间隔天数
 		} catch (ParseException e) {
 		}
-		return days;
+		return days+1;
 
 	}
 
@@ -849,6 +892,46 @@ public class CreditHarmonyComputeUtilties {
 		}
 		return ychkje;
 	}
+	
+	/**
+	 * 计算当期一次性还款金额
+	 * 
+	 * @param hkqs        还款期数
+	 * @param pdje        批贷金额
+	 * @param yhkbj       月还款本金
+	 * @return
+	 */
+	@Deprecated
+	public static double getBackMoneyOfMon(Integer hkqs, double pdje,
+			double yhkbj, double sanFsum) {
+		double ychkje = 0.0;
+
+		if (hkqs == 0) {
+			ychkje = pdje + sanFsum - sanFsum * 0.51;// 1期
+		} else if (hkqs == 1) {
+			ychkje = pdje + sanFsum - sanFsum * 0.51 - yhkbj * hkqs;// 2期
+		} else if (hkqs == 2) {
+			ychkje = pdje + sanFsum - sanFsum * 0.51 - pdje / hkqs * hkqs;// 3期
+		} else if (hkqs == 3) {
+			ychkje = pdje + sanFsum - sanFsum * 0.51 * 0.915 - pdje
+					/ hkqs * hkqs;// 4期
+		} else {
+			// =总!$E$12+总!$F$10-(总!$E$3*(I4-1))-($H$12-($G$13*(I4-4)))
+			// 批贷金额+三项综合-月本金*（期数-1）-退费
+			ychkje = pdje
+					+ sanFsum
+					- yhkbj
+					* hkqs
+					- (sanFsum * 0.51 * 0.915 - (sanFsum * 0.51 - sanFsum * 0.51 * 0.915)
+							* (hkqs - 3));// 大于4期
+		}
+
+		ychkje = (double) (Math.round(ychkje * 100)) / 100;
+		DecimalFormat df = new DecimalFormat("#.00");
+		ychkje = Double.parseDouble(df.format(ychkje));
+		return ychkje;
+	}
+	
 
 	/**
 	 * 计算逾期违约金
@@ -1092,13 +1175,19 @@ public class CreditHarmonyComputeUtilties {
 	 * @param tzcpId
 	 * @return
 	 */
-	public static String getXszklyxqx(String sqrq,Long tzcpId){
+	public static String getXszklyxqx(String sqrq,String getTzcpZq){
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		String sqrqDate = "";
 		try {
 			Date date = format.parse(sqrq);
 			Calendar cd = Calendar.getInstance();
 			cd.setTime(date);
+			if(!getTzcpZq.equals("-1")){
+				cd.add(Calendar.MONTH, Integer.parseInt(getTzcpZq));
+			}else{
+				cd.add(Calendar.YEAR, 1);
+			}
+			/*
 			if(tzcpId==82){           //月息通 12个月
 				cd.add(Calendar.YEAR, 1);
 			}else if(tzcpId==83){     //季度盈 3个月
@@ -1114,6 +1203,7 @@ public class CreditHarmonyComputeUtilties {
 			}else if(tzcpId==88){     //年年金 1年
 				cd.add(Calendar.YEAR, 1);
 			}
+			*/
 			sqrqDate = format.format(cd.getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -1121,4 +1211,71 @@ public class CreditHarmonyComputeUtilties {
 		return sqrqDate;
 	}
 
+	
+	
+	
+	/**
+     * 通过起始还款日前，和借款期数，得到最终还款日
+     * @param startTime
+     * @param months
+     * @return
+     */
+    public static String getEndTimeByStartTimeAndCountNew(String startTime , int months){
+        Date startDate =  StringToDate(startTime,"yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();  
+        cal.setTime(startDate);  
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        if(month != Calendar.FEBRUARY || day <20){
+            cal.add(Calendar.MONTH,-1);
+            SimpleDateFormat s=new SimpleDateFormat("yyyy-MM-dd");
+            String curDate = s.format(cal.getTime());
+            return curDate;   
+        }else{
+            //是2月28日，或者29日，如果是则返回截至日期的最后一天
+            cal.add(Calendar.MONTH,-1);  
+            int lastDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH) == 31 ? cal.getActualMaximum(Calendar.DAY_OF_MONTH) :30 ;
+            cal.set(Calendar.DAY_OF_MONTH, lastDayOfMonth);
+            SimpleDateFormat s=new SimpleDateFormat("yyyy-MM-dd");
+            String curDate = s.format(cal.getTime());  
+            return curDate;
+        }
+    }
+    
+    
+    public static String getEndTimeByStartTimeAndCountday(String startTime , int days){
+        Date startDate =  StringToDate(startTime,"yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();  
+        cal.setTime(startDate);  
+        //int month = cal.get(Calendar.MONTH);
+        //int day = cal.get(Calendar.DAY_OF_MONTH);
+        
+        cal.add(Calendar.DAY_OF_MONTH,+days-1);
+        SimpleDateFormat s=new SimpleDateFormat("yyyy-MM-dd");
+        String curDate = s.format(cal.getTime());
+        return curDate;   
+        
+    }
+    
+    /**
+     * 判断一个字符串是否在另一个已‘,’分割的字符串内
+     * 目前用于枚举类屏幕特定内容
+     * @param values
+     * @param value
+     * @return
+     */
+    public static boolean getValueIn(String values,String value){
+    	boolean result = true;
+    	if(StringUtils.isNotEmpty(values)){
+    		String[] strs = values.split(",");
+    		for(String s:strs){
+    			if(s.equals(value)){
+    				result = false;
+    				break;
+    			}
+    		}
+    	}
+    	return result;
+    }
+    
 }

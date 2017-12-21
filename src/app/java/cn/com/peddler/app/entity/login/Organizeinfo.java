@@ -26,16 +26,6 @@ public class Organizeinfo extends AuditableEntity{
 
 	// Fields
 	private static final long serialVersionUID = -4276242824197821671L;
-	private Long id;//id
-	/**id*/
-	@Column(columnDefinition=DEF_NUM10)
-	public Long getId() {
-		return this.id;
-	}
-	/**id*/
-	public void setId(Long id) {
-		this.id = id;
-	}
 	private String orgname;//名称
 	/**名称*/
 	@Column(columnDefinition=DEF_STR50)

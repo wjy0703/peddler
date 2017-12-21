@@ -26,16 +26,7 @@ public class Buyreatinfo extends AuditableEntity{
 
 	// Fields
 	private static final long serialVersionUID = -2276242824197821671L;
-	private Long id;//id
-	/**id*/
-	@Column(columnDefinition=DEF_NUM10)
-	public Long getId() {
-		return this.id;
-	}
-	/**id*/
-	public void setId(Long id) {
-		this.id = id;
-	}
+	
 	private Long busid;//所属企业
 	/**所属企业*/
 	@Column(columnDefinition=DEF_NUM10)
@@ -135,45 +126,5 @@ public class Buyreatinfo extends AuditableEntity{
 	/**套餐价格*/
 	public void setPrice(String price) {
 		this.price = price;
-	}
-	private Timestamp createtime;//创建时间
-	/**创建时间*/
-	@Column(insertable = false)
-	public Timestamp getCreatetime() {
-		return this.createtime;
-	}
-	/**创建时间*/
-	public void setCreatetime(Timestamp createtime) {
-		this.createtime = createtime;
-	}
-	private Timestamp modifytime;//修改时间
-	/**修改时间*/
-	@Column(insertable = false)
-	public Timestamp getModifytime() {
-		return this.modifytime;
-	}
-	/**修改时间*/
-	public void setModifytime(Timestamp modifytime) {
-		this.modifytime = modifytime;
-	}
-	private String createuser;//创建人
-	/**创建人*/
-	@Column(columnDefinition=DEF_STR40)
-	public String getCreateuser() {
-		return this.createuser;
-	}
-	/**创建人*/
-	public void setCreateuser(String createuser) {
-		this.createuser = createuser;
-	}
-	private String modifyuser;//修改人
-	/**修改人*/
-	@Column(columnDefinition=DEF_STR40)
-	public String getModifyuser() {
-		return this.modifyuser;
-	}
-	/**修改人*/
-	public void setModifyuser(String modifyuser) {
-		this.modifyuser = modifyuser;
 	}
 }

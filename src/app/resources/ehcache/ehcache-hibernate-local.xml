@@ -9,28 +9,30 @@
 		timeToLiveSeconds="300" overflowToDisk="false" diskPersistent="false" />
 
 	<!-- Special objects setting. -->
-	<cache name="cn.com.cucsi.app.entity.security.User"
+	<cache name="cn.com.peddler.app.entity.security.Userinfo"
 		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
 		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
-	<cache name="cn.com.cucsi.app.entity.security.User.roleList"
+	<cache name="cn.com.peddler.app.entity.security.Userinfo.roleinfo"
 		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
 		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
-	<cache name="cn.com.cucsi.app.entity.security.Role"
+	<cache name="cn.com.peddler.app.entity.security.Roleinfo"
 		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
 		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
-	<cache name="cn.com.cucsi.app.entity.security.Role.authorityList"
+	<cache name="cn.com.peddler.app.entity.security.Roleinfo.authorityList"
 		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
 		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
-	<cache name="cn.com.cucsi.app.entity.security.Authority"
+	<cache name="cn.com.peddler.app.entity.security.Authority"
 		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
 		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
-	<cache name="cn.com.cucsi.app.entity.security.Resource"
+	<!-- 
+	<cache name="cn.com.peddler.app.entity.security.Resource"
 		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
 		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
-	<cache name="cn.com.cucsi.app.entity.security.Resource.authorityList"
+	<cache name="cn.com.peddler.app.entity.security.Resource.authorityList"
 		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
 		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
-	<cache name="cn.com.cucsi.app.entity.baseinfo.Menu"
+		 -->
+	<cache name="cn.com.peddler.app.entity.login.Menutable"
 		maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="true"
 		diskPersistent="false" overflowToDisk="true" maxElementsOnDisk="1000000" />
 </ehcache>

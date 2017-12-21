@@ -57,12 +57,12 @@
 
 	<!-- 项目实现的用户查询服务 -->
 	<bean id="userDetailsService"
-		class="cn.com.cucsi.app.service.security.UserDetailsServiceImpl" />
+		class="cn.com.peddler.app.service.login.UserDetailsServiceImpl" />
 
 	<!-- 一个自定义的filter，必须包含authenticationManager,accessDecisionManager,securityMetadataSource三个属性， 
 		我们的所有控制将在这三个类中实现，解释详见具体配置 -->
 	<bean id="myFilter"
-		class="cn.com.cucsi.app.service.security.MyFilterSecurityInterceptor">
+		class="cn.com.peddler.app.service.security.MyFilterSecurityInterceptor">
 		<property name="authenticationManager" ref="authenticationManager" /><!-- 
 			登陆的认证 -->
 		<property name="accessDecisionManager" ref="myAccessDecisionManagerBean" /><!-- 
@@ -73,11 +73,11 @@
 	
 	<!-- 访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源 -->
 	<bean id="myAccessDecisionManagerBean"
-		class="cn.com.cucsi.app.service.security.MyAccessDecisionManager" />
+		class="cn.com.peddler.app.service.security.MyAccessDecisionManager" />
 
 	<!-- 资源源数据定义，即定义某一资源可以被哪些角色访问 -->
 	<bean id="securityMetadataSource"
-		class="cn.com.cucsi.app.service.security.MyInvocationSecurityMetadataSource">
+		class="cn.com.peddler.app.service.security.MyInvocationSecurityMetadataSource">
 		<constructor-arg name="dbSecurityInfo" ref="dbSecurityInfo" />
 	</bean>
 

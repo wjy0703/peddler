@@ -29,8 +29,8 @@ import org.hibernate.impl.CriteriaImpl;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.util.Assert;
 
-import cn.com.peddler.app.entity.baseinfo.MateData;
-import cn.com.peddler.app.entity.baseinfo.MateDataType;
+import cn.com.peddler.app.entity.login.Matedata;
+import cn.com.peddler.app.entity.login.Matedatatype;
 import cn.com.peddler.core.orm.Page;
 import cn.com.peddler.core.orm.PropertyFilter;
 import cn.com.peddler.core.orm.PropertyFilter.MatchType;
@@ -428,13 +428,13 @@ public class HibernateDao<T, PK extends Serializable> extends SimpleHibernateDao
 		return getSession().createSQLQuery(queryString).executeUpdate();
 	}
 	
-	public List<MateDataType> findAllType(){
-		String hql = "from MateDataType mateDataType where 1=1";
+	public List<Matedatatype> findAllType1(){
+		String hql = "from Matedatatype matedatatype where 1=1";
 		return find(hql);
 	}
 	
-	public List<MateData> findTypeByCode(String code){
-		String hql = "from MateData mateData where state = '0' and code.typeCode = '"+code+"'";
+	public List<Matedata> findTypeByCode1(String code){
+		String hql = "from Matedata matedata where vtypes = '0' and code.typecode = '"+code+"'";
 		return find(hql);
 	}
 
