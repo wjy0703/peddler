@@ -8,10 +8,10 @@ import org.hibernate.event.SaveOrUpdateEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cn.com.cucsi.app.entity.security.User;
-import cn.com.cucsi.app.service.security.OperatorDetails;
-import cn.com.cucsi.core.security.springsecurity.SpringSecurityUtils;
-import cn.com.cucsi.core.utils.DateUtils;
+import cn.com.peddler.app.service.security.OperatorDetails;
+import cn.com.peddler.core.security.springsecurity.SpringSecurityUtils;
+import cn.com.peddler.core.utils.DateUtils;
+
 
 /**
  * 在自动为entity添加审计信息的Hibernate EventListener.

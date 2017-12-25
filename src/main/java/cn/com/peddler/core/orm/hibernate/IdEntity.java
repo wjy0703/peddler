@@ -3,6 +3,8 @@ package cn.com.peddler.core.orm.hibernate;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
@@ -129,6 +131,7 @@ public abstract class IdEntity implements Serializable {
 //	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 //	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="HIBERNATE_SEQUENCE")     
 //  @SequenceGenerator(name="HIBERNATE_SEQUENCE",allocationSize=1,initialValue=1, sequenceName="HIBERNATE_SEQUENCE")  
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(columnDefinition= DEF_ID )
 	public Long getId() {
 		return id;

@@ -29,11 +29,14 @@ public class OperatelogManager {
     
     private NamedJdbcDao namedJdbcDao;
     
+    public static OperatelogDao staticOperLogDao;
+    
     private OperatelogDao operatelogDao;
 
     @Autowired
     public void setXhOperateLogDao(OperatelogDao operatelogDao) {
         this.operatelogDao = operatelogDao;
+        staticOperLogDao = this.operatelogDao;
     }
 
     @Autowired
@@ -50,11 +53,11 @@ public class OperatelogManager {
     
    
     @Transactional(readOnly = true)
-    public Operatelog getXhOperateLog(Long id) {
+    public Operatelog getOperatelog(Long id) {
         return operatelogDao.get(id);
     }
 
-    public void saveXhOperateLog(Operatelog entity) {
+    public void saveOperatelog(Operatelog entity) {
     	operatelogDao.save(entity);
     }
 

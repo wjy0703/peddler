@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.com.peddler.app.entity.login.Operatelog;
 import cn.com.peddler.app.entity.login.Organizeinfo;
 import cn.com.peddler.app.entity.security.Userinfo;
 import cn.com.peddler.app.service.login.UserinfoManager;
@@ -64,8 +65,12 @@ public class CustomerController {
         param.put("createuser", operator.getUsername());
         param.put("ip",ip);
         param.put("remarks","登陆系统");
-//        namedJdbcDao.getJdbcTemplate().update("insert into XH_OPERATE_LOG (id,create_by,create_time,ip,remarks) values(HIBERNATE_SEQUENCE.NEXTVAL,:CREATEBY,sysdate,:IP,:REMARKS)", param);
         operatelogManager.saveLogInfo(param);
+//        Operatelog opl = new Operatelog();
+//        opl.setCreateuser(operator.getUsername());
+//        opl.setIp(ip);
+//        opl.setRemarks("登陆系统");
+//        operatelogManager.saveOperatelog(opl);
 		String sex = operator.getSex();
 		String sexs = "先生/女士";
 		if(sex != null && sex.equals("0")){
