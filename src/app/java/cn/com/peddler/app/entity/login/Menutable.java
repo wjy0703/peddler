@@ -1,13 +1,14 @@
 package cn.com.peddler.app.entity.login;
 
-import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -31,15 +32,15 @@ public class Menutable extends AuditableEntity{
 
 	// Fields
 	private static final long serialVersionUID = -276242824197821671L;
-	private String vexternal;//是否是外部页面
+	private String external;//是否是外部页面
 	/**是否是外部页面*/
 	@Column(columnDefinition=DEF_STR2)
-	public String getVexternal() {
-		return this.vexternal;
+	public String getExternal() {
+		return this.external;
 	}
 	/**是否是外部页面*/
-	public void setVexternal(String vexternal) {
-		this.vexternal = vexternal;
+	public void setExternal(String external) {
+		this.external = external;
 	}
 	private String fresh;//是否相同页面引用中打开
 	/**是否相同页面引用中打开*/
@@ -141,15 +142,26 @@ public class Menutable extends AuditableEntity{
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	private Long parentid;//上级菜单
-	/**上级菜单*/
-	@Column(columnDefinition=DEF_NUM10)
-	public Long getParentid() {
-		return this.parentid;
+//	private Long parentid;//上级菜单
+//	/**上级菜单*/
+//	@Column(columnDefinition=DEF_NUM10)
+//	public Long getParentid() {
+//		return this.parentid;
+//	}
+//	/**上级菜单*/
+//	public void setParentid(Long parentid) {
+//		this.parentid = parentid;
+//	}
+	
+	private Menutable parent;	
+	
+	@ManyToOne(cascade=CascadeType.REFRESH)
+	@JoinColumn(name = "parentid",unique= false, nullable=true, insertable=false, updatable=false)
+	public Menutable getParent() {
+		return parent;
 	}
-	/**上级菜单*/
-	public void setParentid(Long parentid) {
-		this.parentid = parentid;
+	public void setParent(Menutable parent) {
+		this.parent = parent;
 	}
 	private String vtypes;//系统属性
 	/**系统属性*/
@@ -161,5 +173,80 @@ public class Menutable extends AuditableEntity{
 	public void setVtypes(String vtypes) {
 		this.vtypes = vtypes;
 	}
+	@Transient
+	public String getAttrTarget(){
+		String _target = target;
+		if (null==target || "".equals(target) || "null".equals(target)){
+			_target = "navTab";
+		}
+		return "target=\"" + _target + "\" ";
+	}
 	
+	@Transient
+	public String getAttrRel(){
+		String _rel = rel;
+		if (null==rel || "".equals(rel) || "null".equals(rel)){
+			_rel = "rel_"+ getId();
+		}
+		return "rel=\"" + _rel + "\" ";
+	}
+
+	@Transient
+	public String getAttrExternal(){
+		if (external.equals("Y")){
+			return "external=\"true\" ";
+		}
+		else if(external.equals("N")){
+			return "external=\"false\" ";
+		}
+		else{
+			return "";
+		}
+	}
+
+	@Transient
+	public String getAttrFresh(){
+		if (fresh.equals("N")){
+			return "fresh=\"false\" ";
+		}
+		else if (fresh.equals("Y")){
+			return "fresh=\"true\" ";
+		}
+		else{
+			return "";
+		}
+	}
+	
+	@Transient
+	public String getAttrTitle(){		
+		if (null!=title && !"".equals(title) && !"null".equals(title)){
+			return "title=\"" + title + "\" ";
+		}
+		else{
+			return "";
+		}
+	}
+
+	@Transient
+	public String getAttrMenuUrl(){
+		if (null!=menuurl && !"".equals(menuurl) && !"null".equals(menuurl)){
+			if(menuurl.indexOf("http://")==0){
+				return "href=\"" + menuurl + "\" ";
+			}
+			else if(menuurl.indexOf("javascript:")==0){
+				return "href=\"" + menuurl + "\" ";
+			}
+			else{
+				return "href=\"_CTX_" + menuurl + "\" ";
+			}
+		}
+		else{
+			return "";
+		}
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 }

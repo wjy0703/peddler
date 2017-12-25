@@ -4,7 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 
-import cn.com.cucsi.core.orm.JdbcPage;
+import cn.com.peddler.core.orm.JdbcPage;
+
 
 public class JdbcPageUtils {
 		

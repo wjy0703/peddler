@@ -30,7 +30,7 @@ public class Userinfo extends AuditableEntity{
 	private static final long serialVersionUID = -1958107672378804945L;
 	private String account;//账户
 	/**账户*/
-	@Column(columnDefinition=DEF_STR20)
+	@Column(columnDefinition=DEF_STR20, nullable = false, unique = true)
 	public String getAccount() {
 		return this.account;
 	}
@@ -38,6 +38,11 @@ public class Userinfo extends AuditableEntity{
 	public void setAccount(String account) {
 		this.account = account;
 	}
+	@Override
+	public String toString() {
+		return account;
+	}
+	
 	private String password;//密码
 	/**密码*/
 	@Column(columnDefinition=DEF_STR50)
@@ -117,7 +122,7 @@ public class Userinfo extends AuditableEntity{
 	private Roleinfo roleinfo;
 	//一对一定义
 	@OneToOne(cascade=CascadeType.REFRESH,fetch = FetchType.LAZY)
-	@JoinColumn(name="rolesid", unique= false, nullable=true, insertable=false, updatable=false)
+	@JoinColumn(name="rolesid", unique= false, nullable=true, insertable=true, updatable=false)
 	public Roleinfo getRoleinfo() {
 		return roleinfo;
 	}
@@ -128,46 +133,45 @@ public class Userinfo extends AuditableEntity{
 	private Businessinfo businessinfo;
 	//一对一定义
 	@OneToOne(cascade=CascadeType.REFRESH,fetch = FetchType.LAZY)
-	@JoinColumn(name="busid", unique= false, nullable=true, insertable=false, updatable=false)
+	@JoinColumn(name="busid", unique= false, nullable=true, insertable=true, updatable=false)
 	public Businessinfo getBusinessinfo() {
 		return businessinfo;
 	}
 	public void setBusinessinfo(Businessinfo businessinfo) {
 		this.businessinfo = businessinfo;
 	}
-	private Long rolesid;//角色
-	/**角色*/
-	@Column(columnDefinition=DEF_NUM10)
-	public Long getRolesid() {
-		return this.rolesid;
-	}
-	/**角色*/
-	public void setRolesid(Long rolesid) {
-		this.rolesid = rolesid;
-	}
-	private Long busid;//所属企业
-	/**所属企业*/
-	public Long getBusid() {
-		return this.busid;
-	}
-	/**所属企业*/
-	public void setBusid(Long busid) {
-		this.busid = busid;
-	}
-	private Long orgid;//所属机构
-	/**所属机构*/
-	public Long getOrgid() {
-		return this.orgid;
-	}
-	/**所属机构*/
-	public void setOrgid(Long orgid) {
-		this.orgid = orgid;
-	}
+//	private Long rolesid;//角色
+//	/**角色*/
+//	public Long getRolesid() {
+//		return this.rolesid;
+//	}
+//	/**角色*/
+//	public void setRolesid(Long rolesid) {
+//		this.rolesid = rolesid;
+//	}
+//	private Long busid;//所属企业
+//	/**所属企业*/
+//	public Long getBusid() {
+//		return this.busid;
+//	}
+//	/**所属企业*/
+//	public void setBusid(Long busid) {
+//		this.busid = busid;
+//	}
+//	private Long orgid;//所属机构
+//	/**所属机构*/
+//	public Long getOrgid() {
+//		return this.orgid;
+//	}
+//	/**所属机构*/
+//	public void setOrgid(Long orgid) {
+//		this.orgid = orgid;
+//	}
 	/**所属机构*/
 	private Organizeinfo organizeinfo;
 	//一对一定义
 	@OneToOne(cascade=CascadeType.REFRESH,fetch = FetchType.LAZY)
-	@JoinColumn(name="orgid", unique= false, nullable=true, insertable=false, updatable=false)
+	@JoinColumn(name="orgid", unique= false, nullable=true, insertable=true, updatable=false)
 	public Organizeinfo getOrganizeinfo() {
 		return organizeinfo;
 	}

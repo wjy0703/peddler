@@ -136,7 +136,12 @@ public class OperatelogManager {
         namedJdbcDao.insertBySqlTemplate("insertOperatelog", fromOperatelogEntity(operatelog));
         logger.info("保存日志数据-成功");
     }
-    
+    public void saveLogInfo(Map<String, Object> conditions) {
+        logger.info("保存日志数据");
+        //operatelogDao.save(operatelog);
+        namedJdbcDao.insertBySqlTemplate("insertOperatelog", conditions);
+        logger.info("保存日志数据-成功");
+    }
     private Map<String, Object> fromOperatelogEntity(Operatelog operatelog){
     	Map<String, Object> conditions = new HashMap<String, Object>();
     	conditions.put("id", operatelog.getId());

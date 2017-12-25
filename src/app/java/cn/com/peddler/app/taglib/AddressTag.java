@@ -18,7 +18,9 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import cn.com.cucsi.app.entity.baseinfo.City;
-import cn.com.cucsi.app.service.baseinfo.AddressManager;
+import cn.com.peddler.app.entity.login.Cityinfo;
+import cn.com.peddler.app.service.baseinfo.AddressManager;
+
 
 @Component
 @Scope("prototype")
@@ -162,12 +164,12 @@ public class AddressTag extends SimpleTagSupport
 	private String getOptionsNoSelected(long parentId, String title) {
 		initManager();
 		StringBuffer options = new StringBuffer();
-		List<City> provinces = addressManager.getSonsByParentId(parentId);
+		List<Cityinfo> provinces = addressManager.getSonsByParentId(parentId);
 		if(selectedAll)
 			options.append("<option value=\"\">" + title + "</option>");
 		
-		for(City province : provinces){
-				options.append("<option value=\""+ province.getId()+"\">" + province.getName() + "</option>");
+		for(Cityinfo province : provinces){
+				options.append("<option value=\""+ province.getId()+"\">" + province.getVname() + "</option>");
 		}
 		return options.toString();
 	}
@@ -179,15 +181,15 @@ public class AddressTag extends SimpleTagSupport
 	private String getTopOptions(long id) {
 		initManager();
 		StringBuffer options = new StringBuffer();
-		List<City> provinces = addressManager.getSonsByParentId(0);
+		List<Cityinfo> provinces = addressManager.getSonsByParentId(0);
 		if(selectedAll)
 			options.append("<option value=\"\">" + this.titles.split(",")[0] + "</option>");
 		
-		for(City province : provinces){
+		for(Cityinfo province : provinces){
 			if(province.getId() == id)
-				options.append("<option value=\""+ province.getId()+"\" selected=\"selected\">" + province.getName() + "</option>");
+				options.append("<option value=\""+ province.getId()+"\" selected=\"selected\">" + province.getVname() + "</option>");
 			else
-				options.append("<option value=\""+ province.getId()+"\">" + province.getName() + "</option>");
+				options.append("<option value=\""+ province.getId()+"\">" + province.getVname() + "</option>");
 		}
 		return options.toString();
 	}
@@ -207,12 +209,12 @@ public class AddressTag extends SimpleTagSupport
 		}
 			
 		initManager();
-		List<City> sons = addressManager.getSameLevelCities(id);
-		for(City son : sons){
+		List<Cityinfo> sons = addressManager.getSameLevelCities(id);
+		for(Cityinfo son : sons){
 			if(son.getId() == id)
-				options.append("<option value=\""+ son.getId()+"\" selected=\"selected\">" + son.getName() + "</option>");
+				options.append("<option value=\""+ son.getId()+"\" selected=\"selected\">" + son.getVname() + "</option>");
 			else
-				options.append("<option value=\""+ son.getId()+"\">" + son.getName() + "</option>");
+				options.append("<option value=\""+ son.getId()+"\">" + son.getVname() + "</option>");
 		}
 		return options.toString();
 		

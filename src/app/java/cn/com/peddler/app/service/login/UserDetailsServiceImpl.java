@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
@@ -27,9 +30,9 @@ import com.google.common.collect.Sets;
  */
 @Transactional(readOnly = true)
 public class UserDetailsServiceImpl implements UserDetailsService {
-
+	private Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 	private UserinfoManager userinfoManager;
-	
+	@Autowired
 	public void setUserinfoManager(UserinfoManager userinfoManager) {
 		this.userinfoManager = userinfoManager;
 	}
@@ -38,12 +41,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	 * 获取用户Details信息的回调函数.
 	 */
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
-
+		logger.warn("loadUserByUsername ========= username=======:"+username);
 		Userinfo user = userinfoManager.findUserByLoginName(username);
 		if (user == null) {
 			throw new UsernameNotFoundException("用户" + username + " 不存在");
 		}
-
+		//userinfoManager.getRole(user.getRolesid())
 		Set<GrantedAuthority> grantedAuths = obtainGrantedAuthorities(user);
 
 		//-- mini-web示例中无以下属性, 暂时全部设为true. --//
@@ -56,13 +59,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				accountNonExpired, credentialsNonExpired, accountNonLocked, grantedAuths);
 		//加入登录时间信息和用户角色
 		userDetails.setLoginTime(new Date());
-		roleList.add(userinfoManager.getRole(user.getRolesid()));
+		roleList.add(user.getRoleinfo());
 		userDetails.setRoleList(roleList);
 		userDetails.setUserId(user.getId());
 		userDetails.setCtiCode(user.getVname());
-		
-		userDetails.setDeptId(user.getOrgid());
-		userDetails.setBusid(user.getBusid());
+		userDetails.setSex(user.getSex());
+//		userDetails.setDeptId(user.getOrgid());
+//		userDetails.setBusid(user.getBusid());
+		userDetails.setDeptId(user.getOrganizeinfo().getId());
+		userDetails.setBusid(user.getBusinessinfo().getId());
 		userDetails.setLoginEmployeeId(user.getId());
 		userDetails.setPositionCode(user.getPost());
 		

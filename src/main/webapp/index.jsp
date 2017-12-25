@@ -194,30 +194,7 @@ function cqClick(){
 		document.getElementById(name).value = value;
 	}
 	
-	//打印详情
-	function print(id,type){
-		//债权订购首期预览
-		if(type == 1){
-			window.open('${ctx}/jygl/lookZqdg?Id='+id,'_blank','toolbar=no,location=no,status=yes,menubar=no,scrollbars=yes,width=900,height=600,resizable=yes');
-		}
-	 }
 	
-	function toKhh(tzfkkhhBack,hszjkhhBack){
-		var tzfkkhh = document.getElementById("tzfkkhh_tzsq");
-		for (var i = 0; i < tzfkkhh.options.length; i++) {
-			if (tzfkkhh.options[i].value == tzfkkhhBack) {
-				tzfkkhh.options[i].selected="selected";
-				break;
-	        }
-		}
-		var hszjkhh = document.getElementById("hszjkhh_tzsq");
-		for (var i = 0; i < hszjkhh.options.length; i++) {
-			if (hszjkhh.options[i].value == hszjkhhBack) {
-				hszjkhh.options[i].selected="selected";
-				break;
-	        }
-		}
-	}
 	
 	function lookLocation(lookId){
 		document.getElementById("look").href="${ctx}/baseinfo/emplookup?lookId="+lookId;
@@ -235,31 +212,7 @@ function cqClick(){
 		$("#state").val(val);
 		return true;
 	}
-	function checkBianma(){
-		var bianma = document.getElementById("bianma").value;
-		var khbmbianma = document.getElementById("khbmbianma").value;
-		var state = "";
-		 var radio=document.getElementsByName("state");  
-		 for(var i=0;i<radio.length;i++){	
-			 if(radio[i].checked==true){	  
-				 state=radio[i].value;	  
-				 break;	
-			 }  
-		 }
-		 if(state == "9" ){
-			 if(bianma=="" || bianma==null){
-				 document.getElementById("bianma").focus();
-				 alert("出借编号不能为空!!");
-				 return false;
-			 }
-			 if(khbmbianma=="" || khbmbianma==null){
-				 document.getElementById("khbmbianma").focus();
-				 alert("客户编码不能为空!!");
-				 return false;
-			 }
-		 }
-		return true;
-	}
+	
 	function checkGouTong(val){
 		if(val == 0){
 			$("#toGouTongDiv").hide();
@@ -282,23 +235,6 @@ function cqClick(){
 
 	    return (new Date(new_date.getTime()-1000*60*60*24)).getDate();//获取当月最后一天日期   
 	}
-		//报告日处理，小于15则日期处理为15，大于15则处理为30或月末
-		function resetDate(objname){
-			//alert(1);
-			var qshkrq = $("#"+objname).val();
-			//alert(qshkrq);
-			var aQshkrq=qshkrq.split("-");
-			if (aQshkrq[2] <=15 ){
-				$("#"+objname).val(aQshkrq[0] + "-" +aQshkrq[1] + "-" + 15);
-			}else{
-				if (aQshkrq[1]!="02"){
-					$("#"+objname).val(aQshkrq[0] + "-" +aQshkrq[1] + "-" + 30);
-				}else{
-					$("#"+objname).val(aQshkrq[0] + "-" +aQshkrq[1] + "-" + getLastDay(aQshkrq[0],aQshkrq[1]));
-				}
-			}
-			return true;
-		}
 </script>
 
 <script type="text/javascript">	

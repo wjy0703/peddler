@@ -3,7 +3,7 @@ package cn.com.peddler.app.util.converter.swfConverter;
 import java.io.File;
 import java.io.IOException;
 
-import cn.com.cucsi.app.Constants;
+import cn.com.peddler.app.Constants;
 import cn.com.peddler.app.util.converter.utils.FileUtils;
 
 public class SWFToolsSWFConverter implements SWFConverter{

@@ -15,9 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.com.peddler.app.dao.JdbcDao;
 import cn.com.peddler.app.dao.login.AuthorityDao;
 import cn.com.peddler.app.dao.login.MenutableDao;
+import cn.com.peddler.app.dao.login.OrganizeinfoDao;
 import cn.com.peddler.app.dao.login.RoleinfoDao;
 import cn.com.peddler.app.dao.login.UserinfoDao;
 import cn.com.peddler.app.entity.login.Menutable;
+import cn.com.peddler.app.entity.login.Organizeinfo;
 import cn.com.peddler.app.entity.security.Authority;
 import cn.com.peddler.app.entity.security.Roleinfo;
 import cn.com.peddler.app.entity.security.Userinfo;
@@ -49,19 +51,27 @@ public class UserinfoManager {
 	public void setJdbcDao(JdbcDao jdbcDao) {
 		this.jdbcDao = jdbcDao;
 	}
+	@Autowired
+	private OrganizeinfoDao organizeinfoDao;
 	
 	private RoleinfoDao roleinfoDao;
     private AuthorityDao authorityDao;
     private MenutableDao menutableDao;
-	
+    @Autowired
 	public void setRoleinfoDao(RoleinfoDao roleinfoDao) {
 		this.roleinfoDao = roleinfoDao;
 	}
+    @Autowired
 	public void setAuthorityDao(AuthorityDao authorityDao) {
 		this.authorityDao = authorityDao;
 	}
+    @Autowired
 	public void setMenutableDao(MenutableDao menutableDao) {
 		this.menutableDao = menutableDao;
+	}
+    @Transactional(readOnly = true)
+	public Organizeinfo gerOrgani(Long parentId){
+		return organizeinfoDao.get(parentId);
 	}
 	@Transactional(readOnly = true)
 	public Page<Userinfo> searchUserinfo(final Page<Userinfo> page, final Map<String,Object> filters) {
@@ -222,26 +232,6 @@ public class UserinfoManager {
 		jdbcDao.updateBySqlTemplate(updateName, conditions);
 	}
 	
-	private Map<String, Object> fromUserinfoEntity(Userinfo userinfo){
-    	Map<String, Object> conditions = new HashMap<String, Object>();
-    	conditions.put("id", userinfo.getId());
-    	conditions.put("account", userinfo.getAccount());
-    	conditions.put("password", userinfo.getPassword());
-    	conditions.put("rolesid", userinfo.getRolesid());
-    	conditions.put("orgid", userinfo.getOrgid());
-    	conditions.put("vname", userinfo.getVname());
-    	conditions.put("sex", userinfo.getSex());
-    	conditions.put("card", userinfo.getCard());
-    	conditions.put("phone", userinfo.getPhone());
-    	conditions.put("createtime", userinfo.getCreatetime());
-    	conditions.put("modifytime", userinfo.getModifytime());
-    	conditions.put("createuser", userinfo.getCreateuser());
-    	conditions.put("modifyuser", userinfo.getModifyuser());
-    	conditions.put("vtypes", userinfo.getVtypes());
-    	conditions.put("busid", userinfo.getBusid());
-    	conditions.put("post", userinfo.getPost());
-    	return conditions;
-    }
 	public void saveUser(Userinfo entity) {
 		if(entity.getPassword().length()==0){
 			Userinfo obj = userinfoDao.get(entity.getId());
@@ -250,18 +240,18 @@ public class UserinfoManager {
 			obj.setVname(entity.getVname());
 			obj.setRoleinfo(entity.getRoleinfo());
 //			userinfoDao.save(obj);
-			jdbcDao.updateBySqlTemplate("updateUserinfo", fromUserinfoEntity(obj));
-//			entity.setPassword(userinfoDao.get(entity.getId()).getPassword());
+//			jdbcDao.updateBySqlTemplate("updateUserinfo", fromUserinfoEntity(obj));
+			entity.setPassword(userinfoDao.get(entity.getId()).getPassword());
 //			userinfoDao.merge(entity);
 		}
 		else if (entity.getPassword().length()!=32){
 			entity.setPassword(EncodeUtils.getMd5PasswordEncoder(entity.getPassword(),entity.getAccount()));
-//			userinfoDao.save(entity);
-			jdbcDao.updateBySqlTemplate("updateUserinfo", fromUserinfoEntity(entity));
+			userinfoDao.save(entity);
+//			jdbcDao.updateBySqlTemplate("updateUserinfo", fromUserinfoEntity(entity));
 		}
 		else{
-//			userinfoDao.save(entity);
-			jdbcDao.insertBySqlTemplate("insertUserinfo", fromUserinfoEntity(entity));
+			userinfoDao.save(entity);
+//			jdbcDao.insertBySqlTemplate("insertUserinfo", fromUserinfoEntity(entity));
 		}
 		
 	}
@@ -310,10 +300,28 @@ public class UserinfoManager {
 	
 	@Transactional(readOnly = true)
 	public Userinfo findUserByLoginName(String account) {
-		Userinfo user = userinfoDao.findUniqueBy("account", account);
-		if(user!=null && user.getRoleinfo() != null && !"0".equals(user.getVtypes())){
+//		Userinfo user = userinfoDao.findUniqueBy("account", account);
+		Userinfo user = new Userinfo();
+		user = userinfoDao.findUniqueBy("account", account);
+//		logger.warn("user.getRoleinfo() ======:"+user.getRoleinfo());
+//		logger.warn("user.getBusinessinfo() ======:"+user.getBusinessinfo().getBusiname());
+//		logger.warn("user.getOrganizeinfo() ======:"+user.getOrganizeinfo().getOrgname());
+//		logger.warn("user.getVtypes() ======:"+user.getVtypes());
+		if(user==null || user.getRoleinfo() == null || !"0".equals(user.getVtypes())){
 			user = null;
 		}
+//		Map<String, Object> conditions = new HashMap<String, Object>();
+//		conditions.put("sql", " and a.account='"+account+"' ");
+//		List<Map<String,Object>> userList = jdbcDao.searchBySqlTemplate("queryUserinfoList", conditions);
+//		if(userList.size()==1){
+//			user = MapVsBean.mapToBean(userList.get(0), user);
+//			//获取全部权限
+//			if("0".equals(user.getVtypes())){
+//				
+//			}else{
+//				user = null;
+//			}
+//		}
 		return user;
 	}
 	
@@ -598,4 +606,14 @@ public class UserinfoManager {
 		return res;
 	}
 	
+	public boolean isLoginPass(Userinfo u){
+		boolean isRes = false;
+		if(u != null){
+			String md5PassWord = EncodeUtils.getMd5PasswordEncoder("abc123",u.getAccount());
+			if(u.getPassword() != null && u.getPassword().equals(md5PassWord)){
+				isRes = true;
+			}
+		}
+		return isRes;
+	}
 }

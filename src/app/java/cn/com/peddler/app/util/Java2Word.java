@@ -1,26 +1,15 @@
 package cn.com.peddler.app.util;
 
-import java.text.NumberFormat;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.HashMap;
-
-import cn.com.cucsi.app.entity.baseinfo.Organi;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 
 public class Java2Word {
 	private boolean saveOnExit;

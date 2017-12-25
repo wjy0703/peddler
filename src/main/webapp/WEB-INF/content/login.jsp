@@ -28,7 +28,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>会员登录</title>
+<title>小商管理系统</title>
 <link href="${ctx}/resources/front.css" rel="stylesheet" type="text/css" />
 <script src="${ctx}/resources/jquery.js" type="text/javascript"></script>
 <script src="${ctx}/resources/front.js" type="text/javascript"></script>
@@ -62,7 +62,7 @@
 					<a href="#"
 						onClick="this.style.behavior='url(#default#homepage)';this.setHomePage('http://210.51.3.64/CHP');">设为主页</a>|
 					<a
-						onClick="window.external.addFavorite('http://210.51.3.64/CHP','信和财富-中国领先的P2P信用借款服务平台')"
+						onClick="window.external.addFavorite('http://210.51.3.64/CHP','小商管理系统')"
 						href="javascript:void(0);">加入收藏</a>
 				</div>
 			</div>
@@ -95,7 +95,7 @@
 			cellspacing="0">
 			<tr>
 				<td width="500" height="300" align="left"><img
-					src="${ctx}/resources/llogo.gif" /></td>
+					src="${ctx}/resources/llogo_abk.gif" /></td>
 				<td>
 					<div class="login-bg">
 						<table width="96%" border="0" align="center" cellpadding="0"
@@ -148,8 +148,8 @@
 	<div class="footer">
 		<div class="clearfix footer-inner">
 			<p class="extralink">建议使用基于IE内核的浏览器,1024*768以上的显示分辨率</p>
-			<p class="copyright">Copyright &copy; 2012-2013
-				www.creditharmony.cn, All Rights Reserved</p>
+			<p class="copyright">Copyright &copy; 2017-2027
+				www.peddler.cn, All Rights Reserved</p>
 			<p class="extrainfo">
 				<br />
 			</p>

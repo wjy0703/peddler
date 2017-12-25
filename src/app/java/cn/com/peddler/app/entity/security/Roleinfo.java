@@ -36,16 +36,18 @@ import cn.com.peddler.core.utils.ReflectionUtils;
 public class Roleinfo extends AuditableEntity{
 
 	// Fields
-	private static final long serialVersionUID = -1490079389529844637L;
+	private static final long serialVersionUID = -1490869389529844637L;
 	
-	
+	public Roleinfo() {
+		super();
+	}
 	public Roleinfo(Long id, String rolename) {
 		this.id = id;
 		this.rolename = rolename;
 	}
 	private String rolename;//名称
 	/**名称*/
-	@Column(columnDefinition=DEF_STR20)
+	@Column(columnDefinition=DEF_STR20, nullable = false, unique = true)
 	public String getRolename() {
 		return this.rolename;
 	}
@@ -73,6 +75,7 @@ public class Roleinfo extends AuditableEntity{
 	public void setBusid(Long busid) {
 		this.busid = busid;
 	}
+	
 	private String flag;
 	@Column(columnDefinition=DEF_STR1)
 	public String getFlag() {
@@ -85,14 +88,17 @@ public class Roleinfo extends AuditableEntity{
 	
 	private List<Authority> authorityList = new LinkedList<Authority>();
 	
-	private List<Userinfo> userList = new LinkedList<Userinfo>();
 	
 	private List<Menutable> menuList = new LinkedList<Menutable>();
-	
+	//多对多定义
 	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH },targetEntity=Authority.class,fetch = FetchType.LAZY)
+	//中间表定义,表名采用默认命名规则
 	@JoinTable(name = "roleauthority", joinColumns = { @JoinColumn(name = "roleid") }, inverseJoinColumns = { @JoinColumn(name = "authorityid") })
+	//Fecth策略定义
 	@Fetch(FetchMode.SUBSELECT)
+	//集合按id排序.
 	@OrderBy("id")
+	//集合中对象id的缓存.
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	public List<Authority> getAuthorityList() {
 		return authorityList;
@@ -114,15 +120,16 @@ public class Roleinfo extends AuditableEntity{
 	public void setMenuList(List<Menutable> menuList) {
 		this.menuList = menuList;
 	}
-
-	@ManyToMany(targetEntity=Userinfo.class, mappedBy="roleinfo",fetch = FetchType.LAZY)
-	public List<Userinfo> getUserList() {
-		return userList;
-	}
-
-	public void setUserList(List<Userinfo> userList) {
-		this.userList = userList;
-	}
+//	private List<Userinfo> userList = new LinkedList<Userinfo>();
+//
+//	@ManyToMany(targetEntity=Userinfo.class, mappedBy="roleinfo",fetch = FetchType.LAZY)
+//	public List<Userinfo> getUserList() {
+//		return userList;
+//	}
+//
+//	public void setUserList(List<Userinfo> userList) {
+//		this.userList = userList;
+//	}
 
 	@Transient
 	public String getAuthNames() {

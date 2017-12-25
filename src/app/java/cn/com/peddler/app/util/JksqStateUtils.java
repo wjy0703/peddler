@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import cn.com.cucsi.app.entity.xhcf.XhJksq;
 
 public class JksqStateUtils {
     /**
@@ -35,17 +34,6 @@ public class JksqStateUtils {
                 return true;
             }
         }
-        return false;
-    }
-    /**
-     * 判断借款申请是否可以修改
-     *
-     * @param xhjksq
-     * @return
-     * @author xjs
-     * @date 2013-9-16 下午4:58:38
-     */
-    public static boolean isCanChange(XhJksq xhjksq){
         return false;
     }
     

@@ -34,6 +34,8 @@ public class OperatorDetails extends User {
 	
 	private String positionCode;
 	
+	private String sex;
+	
 	private Long busid;
 	
 	public Long getBusid() {
@@ -113,5 +115,12 @@ public class OperatorDetails extends User {
 	public void setPositionCode(String positionCode) {
 		this.positionCode = positionCode;
 	}
-	
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
 }

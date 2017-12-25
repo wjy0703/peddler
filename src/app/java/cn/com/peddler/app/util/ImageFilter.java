@@ -34,7 +34,9 @@ public class ImageFilter implements Filter{
         	response.sendRedirect(ctx+"/login?error=4");
         }else{
         	if(yanzhengm.toLowerCase().equals(sessionyanz.toLowerCase())){
-            	request.getSession().setAttribute("loginTo", "adopt");
+        		request.getSession().setAttribute("loginTo", request.getParameter("j_username"));
+        	    String ip = getIpAddr(request);//将ip地址放到session中  留在session失效时用
+        	    request.getSession().setAttribute("ip", ip);
             	arg2.doFilter(request, response); 
             }else{
             	request.setAttribute("error", "4");
@@ -48,6 +50,25 @@ public class ImageFilter implements Filter{
 		// TODO Auto-generated method stub
 		
 	}
-
+	/* 获取客户端IP地址*/
+	public static String getIpAddr(HttpServletRequest request) {
+	    String ip = request.getHeader("X-Forwarded-For");
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	    ip = request.getHeader("Proxy-Client-IP");
+	    }
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	    ip = request.getHeader("WL-Proxy-Client-IP");
+	    }
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	    ip = request.getHeader("HTTP_CLIENT_IP");
+	    }
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	    ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+	    }
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	    ip = request.getRemoteAddr();
+	    }
+	    return ip;
+	    }
 	
 }

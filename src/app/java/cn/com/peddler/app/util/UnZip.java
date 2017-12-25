@@ -17,8 +17,7 @@ import java.util.Map;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
-import cn.com.cucsi.core.utils.EncodeUtils;
-
+import cn.com.peddler.core.utils.EncodeUtils;
 import de.innosystec.unrar.Archive;
 import de.innosystec.unrar.rarfile.FileHeader;
 

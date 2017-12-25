@@ -10,7 +10,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 
-import cn.com.cucsi.core.orm.Page;
+import cn.com.peddler.core.orm.Page;
+
 
 public class RequestPageUtils<T> {
 		

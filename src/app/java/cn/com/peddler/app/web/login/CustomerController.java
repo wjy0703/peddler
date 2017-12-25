@@ -1,14 +1,27 @@
 package cn.com.peddler.app.web.login;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.com.cucsi.app.web.util.RandomValidateCode;
+import cn.com.peddler.app.entity.login.Organizeinfo;
+import cn.com.peddler.app.entity.security.Userinfo;
+import cn.com.peddler.app.service.login.UserinfoManager;
+import cn.com.peddler.app.service.security.OperatelogManager;
+import cn.com.peddler.app.service.security.OperatorDetails;
+import cn.com.peddler.app.util.RandomValidateCode;
+import cn.com.peddler.core.security.springsecurity.SpringSecurityUtils;
 
 
 @Controller
@@ -16,6 +29,14 @@ import cn.com.cucsi.app.web.util.RandomValidateCode;
 public class CustomerController {
 	
 	private Logger logger = LoggerFactory.getLogger(CustomerController.class);
+	@Autowired
+	private OperatelogManager operatelogManager;
+	
+	private UserinfoManager userinfoManager;
+	@Autowired
+	public void setUserinfoManager(UserinfoManager userinfoManager) {
+		this.userinfoManager = userinfoManager;
+	}
 	
 	@RequestMapping(value="/getImg")
 	public String getImg(HttpServletRequest request, HttpServletResponse response){
@@ -32,6 +53,77 @@ public class CustomerController {
 		return null;
 	}
 	
-
-	
+	@RequestMapping(value = "/getLoginInfo")
+	@ResponseBody
+	public Map<String, Object> getLoginInfo(HttpServletRequest request,HttpSession session){
+		OperatorDetails operator = SpringSecurityUtils.getCurrentUser();
+		String ip = getIpAddr(request);//一下几行是 登陆成功将信息添加到操作日志
+//        String name = (String)session.getAttribute("loginTo");//取登陆账号
+//        NamedJdbcDao namedJdbcDao = OperatelogManager.staticDao;
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("createuser", operator.getUsername());
+        param.put("ip",ip);
+        param.put("remarks","登陆系统");
+//        namedJdbcDao.getJdbcTemplate().update("insert into XH_OPERATE_LOG (id,create_by,create_time,ip,remarks) values(HIBERNATE_SEQUENCE.NEXTVAL,:CREATEBY,sysdate,:IP,:REMARKS)", param);
+        operatelogManager.saveLogInfo(param);
+		String sex = operator.getSex();
+		String sexs = "先生/女士";
+		if(sex != null && sex.equals("0")){
+			sexs = "先生";
+		}else{
+			sexs = "女士";
+		}
+		String organiName = "未分组";
+		Userinfo user = userinfoManager.getUserinfo(operator.getUserId());
+		Organizeinfo organi = user.getOrganizeinfo();
+		String parentName = "";
+		if(organi != null){
+			organiName = organi.getOrgname();
+			//System.out.println(organi.getParentId());
+			if(organi.getParentid() != null && organi.getParentid() != 0){
+				Organizeinfo organiPar = userinfoManager.gerOrgani(organi.getParentid());
+				if(organiPar!=null){
+					parentName = organiPar.getOrgname()+"-";
+				}
+			}
+		}
+		Map<String, Object> modelMap = new HashMap<String, Object>();
+		boolean isMess = false;
+        modelMap.put("name", "欢迎您，"+user.getBusinessinfo().getBusiname()+"-"+parentName+organiName+"-"+user.getVname()+sexs+"！");
+		modelMap.put("success", "true");
+		modelMap.put("isMess", isMess);
+		modelMap.put("pass", userinfoManager.isLoginPass(user));
+		return modelMap;
+	}
+	/* 获取客户端IP地址*/
+    public static String getIpAddr(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        ip = request.getRemoteAddr();
+        }
+        return ip;
+        }
+    
+    /**
+     * 获取系统属性参数判断是否需要放入查询条件map中
+     */
+    private String getSysTypeIsPut(HttpServletRequest request,Map<String,Object> params) {
+        String sysType = request.getParameter("sysTypeParam");
+        if (params != null && StringUtils.isNotBlank(sysType)) {
+            params.put("sysTypeParam", sysType);
+        }
+        return sysType;
+    }
 }

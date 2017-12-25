@@ -1,20 +1,18 @@
 package cn.com.peddler.app.util.converter.pdfConverter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.ConnectException;
 
-
-import com.artofsolving.jodconverter.DocumentConverter; 
-import com.artofsolving.jodconverter.openoffice.connection.OpenOfficeConnection; 
-import com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConnection; 
-import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter; 
-
-import cn.com.cucsi.app.Constants;
-import cn.com.peddler.app.util.converter.utils.FileUtils;
-import org.artofsolving.jodconverter.OfficeDocumentConverter;
 import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
 import org.artofsolving.jodconverter.office.OfficeManager;
+
+import cn.com.peddler.app.Constants;
+import cn.com.peddler.app.util.converter.utils.FileUtils;
+
+import com.artofsolving.jodconverter.DocumentConverter;
+import com.artofsolving.jodconverter.openoffice.connection.OpenOfficeConnection;
+import com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConnection;
+import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter;
 
 public class OpenOfficePDFConverter implements PDFConverter{
 	private static  OfficeManager officeManager;

@@ -36,7 +36,7 @@ public class InitSetupListener implements ServletContextListener {
 
 	public static String rootPath;
 	public static String filePath;
-//	public static String backDirectory;
+	public static String backDirectory;
 //	public static String swfServer;
 //	public static String swfBackServer;
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -56,8 +56,8 @@ public class InitSetupListener implements ServletContextListener {
 		rootPath = arg0.getServletContext().getRealPath("/");
 		System.out.println("rootPath==="+rootPath);
 		filePath = "D:" + File.separator + "xhFile" + File.separator;
-		/*
 		backDirectory = "Z";
+		/*
 		swfServer = "http://210.51.3.64:8888/CHPxhFile";
 		swfBackServer = "http://210.51.3.64:8888/BackCHPxhFile";
 		System.out.println("filePath==="+filePath);
