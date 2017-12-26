@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import cn.com.cucsi.app.entity.baseinfo.City;
 import cn.com.peddler.app.entity.login.Cityinfo;
 import cn.com.peddler.app.service.baseinfo.AddressManager;
 

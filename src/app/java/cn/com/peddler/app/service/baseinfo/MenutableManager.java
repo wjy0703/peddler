@@ -10,14 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.com.cucsi.app.entity.baseinfo.Menu;
-import cn.com.cucsi.app.entity.security.Role;
-import cn.com.cucsi.app.entity.security.User;
 import cn.com.peddler.app.dao.JdbcDao;
 import cn.com.peddler.app.dao.login.MenutableDao;
 import cn.com.peddler.app.dao.login.UserinfoDao;
 import cn.com.peddler.app.entity.login.Menutable;
-import cn.com.peddler.app.entity.security.Roleinfo;
 import cn.com.peddler.app.entity.security.Userinfo;
 import cn.com.peddler.app.service.security.OperatorDetails;
 import cn.com.peddler.core.orm.JdbcPage;

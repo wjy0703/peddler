@@ -1,6 +1,6 @@
 <%@ page
-	import="cn.com.cucsi.core.security.springsecurity.SpringSecurityUtils"%>
-<%@ page import="cn.com.cucsi.app.service.security.OperatorDetails"%>
+	import="cn.com.peddler.core.security.springsecurity.SpringSecurityUtils"%>
+<%@ page import="cn.com.peddler.app.service.security.OperatorDetails"%>
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ include file="/common/taglibs.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -221,20 +221,6 @@ function cqClick(){
 		}
 	}
 	
-	//获取当月最后一天日期   
-	function getLastDay(year,month)   
-	{   
-	    var new_year = year;    //取当前的年份          
-	    var new_month = month++;//取下一个月的第一天，方便计算（最后一天不固定）          
-	    if(month>12) {         
-	     new_month -=12;        //月份减          
-	     new_year++;            //年份增          
-	    }         
-	    var new_date = new Date(new_year,new_month,1);                //取当年当月中的第一天  
-
-
-	    return (new Date(new_date.getTime()-1000*60*60*24)).getDate();//获取当月最后一天日期   
-	}
 </script>
 
 <script type="text/javascript">	
@@ -342,6 +328,12 @@ function cqClick(){
 							</li>
 						</ul></li>
 					 -->
+					 <bjdv:validateContent type="1" funcId="系统-缓存管理"> 
+				    <li>					
+					   <a id="password" href="${ctx}/menus/cacheControl" target="dialog"
+						mask="true" width="400" onclick="">缓存管理</a>
+					</li>
+					</bjdv:validateContent> 
 					<li><img src="${ctx}/resources/user.png"
 						width="16" height="16" />
 					<div id="userName" style="line-height: 12px; color: #B9CCDA"></div>

@@ -7,63 +7,11 @@
 	<jsp-version>1.1</jsp-version>
 	<short-name>bjdv tags</short-name>
 	<uri></uri>
-	<tag>
-		<name>showName</name>
-		<tag-class>cn.com.cucsi.app.taglib.EnumToNameTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<name>state</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
 	
-	<tag>
-		<name>showTogether</name>
-		<tag-class>cn.com.cucsi.app.taglib.GetTogetherTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<name>lendId</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>yesOrNo</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-	
-	<tag>
-		<name>showTogetherIdentification</name>
-		<tag-class>cn.com.cucsi.app.taglib.GetTogetherIdentificationTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<name>lendId</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>yesOrNo</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-	
-	<tag>
-		<name>assignTime</name>
-		<tag-class>cn.com.cucsi.app.taglib.GetTaskAssignTimeTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<name>jksqId</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>	
 
 	<tag>
 		<name>address</name>
-		<tag-class>cn.com.cucsi.app.taglib.AddressTag</tag-class>
+		<tag-class>cn.com.peddler.app.taglib.AddressTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<name>titles</name>
@@ -89,7 +37,7 @@
 	
 	<tag>
 		<name>select</name>
-		<tag-class>cn.com.cucsi.app.taglib.AttrTag</tag-class>
+		<tag-class>cn.com.peddler.app.taglib.AttrTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<name>name</name>
@@ -135,7 +83,7 @@
 	
 	<tag>
 		<name>selectRadio</name>
-		<tag-class>cn.com.cucsi.app.taglib.AttrRadioTag</tag-class>
+		<tag-class>cn.com.peddler.app.taglib.AttrRadioTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<name>name</name>
@@ -181,7 +129,7 @@
 	
 	<tag>
 		<name>selectCheckbox</name>
-		<tag-class>cn.com.cucsi.app.taglib.AttrCheckTag</tag-class>
+		<tag-class>cn.com.peddler.app.taglib.AttrCheckTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<name>name</name>
@@ -225,25 +173,11 @@
 		</attribute>
 	</tag>
 	
-	<tag>
-		<name>vtoName</name>
-		<tag-class>cn.com.cucsi.app.taglib.ValueToNameTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<name>value</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>coding</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>	
+	
 	
 	<tag>
 		<name>addressName</name>
-		<tag-class>cn.com.cucsi.app.taglib.SingleAddressTag</tag-class>
+		<tag-class>cn.com.peddler.app.taglib.SingleAddressTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<name>id</name>
@@ -252,68 +186,8 @@
 		</attribute>
 	</tag>
 	
-	<tag>
-		<name>carStateSelected</name>
-		<tag-class>cn.com.cucsi.app.taglib.CarStateSelectTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<name>name</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>clazz</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>value</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>hasTitle</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>title</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>titleValue</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>id</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>	
 	
-	<tag>
-		<name>carStateToName</name>
-		<tag-class>cn.com.cucsi.app.taglib.CarStateToNameTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<name>value</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-	</tag>
-
-    <tag>
-		<name>employeeName</name>
-		<tag-class>cn.com.cucsi.app.taglib.EmployeeNameTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<name>id</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-	</tag>	
+	
 	
 </taglib>
 

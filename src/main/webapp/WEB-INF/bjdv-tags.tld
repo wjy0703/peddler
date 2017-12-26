@@ -9,7 +9,7 @@
 	<uri></uri>
 	<tag>
 		<name>validateContent</name>
-		<tag-class>cn.com.cucsi.app.taglib.ValidateContentTag</tag-class>
+		<tag-class>cn.com.peddler.app.taglib.ValidateContentTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
 			<name>type</name>

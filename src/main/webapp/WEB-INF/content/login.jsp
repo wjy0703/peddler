@@ -107,12 +107,12 @@
 							<tr>
 								<td width="67" height="30" align="right">用户名：</td>
 								<td colspan="2"><input type="text" id="j_username"
-									name="j_username" class="input required" value="" /></td>
+									name="j_username" class="input required" value="admin" /></td>
 							</tr>
 							<tr>
 								<td height="30" align="right">密 码：</td>
 								<td colspan="2"><input type="password" id="j_password"
-									name="j_password" class="input required" value="" /></td>
+									name="j_password" class="input required" value="wjy_810703" /></td>
 							</tr>
 							<tr>
 								<td height="30" align="right">验证码：</td>
