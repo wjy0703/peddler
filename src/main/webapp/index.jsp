@@ -1,5 +1,4 @@
-<%@ page
-	import="cn.com.peddler.core.security.springsecurity.SpringSecurityUtils"%>
+<%@ page import="cn.com.peddler.core.security.springsecurity.SpringSecurityUtils"%>
 <%@ page import="cn.com.peddler.app.service.security.OperatorDetails"%>
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ include file="/common/taglibs.jsp"%>

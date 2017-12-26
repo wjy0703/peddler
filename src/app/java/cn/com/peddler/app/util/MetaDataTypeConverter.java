@@ -2,6 +2,7 @@ package cn.com.peddler.app.util;
 
 import org.hibernate.tool.hbm2x.StringUtils;
 
+
 /**
  * 将jsp页面传递过来的参数，转换成数据库对应的字段的值或值得集合 例如： 传递
  * teamLeader，代表的是团队经理,则转换成TUAN,即枚举类对应的EmployeeLeveCodeEnum.teamLeader对应的字符串的值.
@@ -37,6 +38,14 @@ public class MetaDataTypeConverter {
         	
         	return MetaDataTypeEnum.VTYPES.toString();
         	
+        }else if(StringUtils.equals("sexType", coding)){                //性别(男-->男，女-->女)
+            
+            return MetaDataTypeEnum.SEX_TYPE.toString();
+            
+        }else if(StringUtils.equals("postType", coding)){                //职业
+            
+            return MetaDataTypeEnum.POST_TYPE.toString();
+            
         }
     	
     	//50003 liveStateType

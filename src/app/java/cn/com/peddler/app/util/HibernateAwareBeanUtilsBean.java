@@ -22,10 +22,10 @@ public class HibernateAwareBeanUtilsBean extends BeanUtilsBean{
     static{
         ignoreNames = new ArrayList<String>();
         ignoreNames.add("id");
-        ignoreNames.add("createTime");
-        ignoreNames.add("createBy");
-        ignoreNames.add("lastModifyTime");
-        ignoreNames.add("lastModifyBy");
+        ignoreNames.add("createtime");
+        ignoreNames.add("createuser");
+        ignoreNames.add("modifytime");
+        ignoreNames.add("modifyuser");
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })

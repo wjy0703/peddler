@@ -178,5 +178,13 @@ public class Userinfo extends AuditableEntity{
 	public void setOrganizeinfo(Organizeinfo organizeinfo) {
 		this.organizeinfo = organizeinfo;
 	}
-	
+	private String mail;
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
+	@Column(columnDefinition=DEF_STR128)
+	public String getMail() {
+		return mail;
+	}
 }

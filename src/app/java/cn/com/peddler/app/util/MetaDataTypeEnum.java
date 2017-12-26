@@ -63,6 +63,24 @@ public enum MetaDataTypeEnum {
 		public String toString() {
 			return "vtypes";
 		}	
-    }
+    },
+	/**
+	 * 性别
+	 */
+	SEX_TYPE {
+		@Override
+		public String toString() {
+			return "0004";
+		}
+	},
+	/**
+	 * 职业
+	 */
+	POST_TYPE {
+		@Override
+		public String toString() {
+			return "0003";
+		}
+	}
 	
 }

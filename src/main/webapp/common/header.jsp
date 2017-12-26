@@ -1,6 +1,6 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@ page
-	import="cn.com.cucsi.core.security.springsecurity.SpringSecurityUtils"%>
+	import="cn.com.peddler.core.security.springsecurity.SpringSecurityUtils"%>
 <%@ include file="/common/taglibs.jsp"%>
 <div id="hd">
 	<div id="title">
