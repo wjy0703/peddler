@@ -417,7 +417,7 @@ public class UserinfoManager {
 	}
 
 	public boolean isRoleNameUnique(String newValue, String oldValue) {
-		return roleinfoDao.isPropertyUnique("name", newValue, oldValue);
+		return roleinfoDao.isPropertyUnique("rolename", newValue, oldValue);
 		
 	}
 

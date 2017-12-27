@@ -80,8 +80,8 @@ public class RoleinfoDao extends HibernateDao<Roleinfo, Long>{
 		if(params.containsKey("name")){
 			hql = hql + " and rolename like '%'||:name||'%'";
 		}
-		if(params.containsKey("sts")){
-			hql = hql + " and vtypes = :sts";
+		if(params.containsKey("vtypes")){
+			hql = hql + " and vtypes = :vtypes";
 		}
 		
 		if (page.getOrderBy()!=null){

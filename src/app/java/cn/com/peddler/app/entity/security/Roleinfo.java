@@ -130,30 +130,38 @@ public class Roleinfo extends AuditableEntity{
 //	public void setUserList(List<Userinfo> userList) {
 //		this.userList = userList;
 //	}
-
+	private String authNames;
+	
 	@Transient
 	public String getAuthNames() {
-		return ReflectionUtils.convertElementPropertyToString(authorityList, "aname", ", ");
+		authNames =  ReflectionUtils.convertElementPropertyToString(authorityList, "aname", ", ");
+		return authNames;
 	}
-	
+	private String menuNames;
 	@Transient
 	public String getMenuNames() {
-		return ReflectionUtils.convertElementPropertyToString(menuList, "menuName", ", ");
+		menuNames = ReflectionUtils.convertElementPropertyToString(menuList, "menuname", ", ");
+		return menuNames;
 	}
-	
+	private String authCNames;
 	@Transient
 	public String getAuthCNames() {
-		return ReflectionUtils.convertElementPropertyToString(authorityList, "cname", ", ");
-	}
-
-	@Transient
-	public String getAuthIds() {
-		return ReflectionUtils.convertElementPropertyToString(authorityList, "id", ",");
+		authCNames = ReflectionUtils.convertElementPropertyToString(authorityList, "cname", ", ");
+		return authCNames;
 	}
 	
+	private String authIds;
+	@Transient
+	public String getAuthIds() {
+		authIds = ReflectionUtils.convertElementPropertyToString(authorityList, "id", ",");
+		return authIds;
+	}
+	
+	private String menuIds;
 	@Transient
 	public String getMenuIds() {
-		return ReflectionUtils.convertElementPropertyToString(menuList, "id", ", ");
+		menuIds = ReflectionUtils.convertElementPropertyToString(menuList, "id", ", ");
+		return menuIds;
 	}
 	
 	@Transient

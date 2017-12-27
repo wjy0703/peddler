@@ -203,7 +203,7 @@ public class AuthorityController {
 			r = authorityManager.getRoleinfo(Long.valueOf(roleId));
 		}
 		Map<String,Object> params = new HashMap<String,Object>(4);
-		params.put("levelId", 1);
+		params.put("levelId", Long.parseLong("1"));
 		String sysTypeParam = request.getParameter("sysTypeParam");
 //		sysTypeParam = StringUtils.isNotBlank(sysTypeParam) ? sysTypeParam : "0" ;
 		if (StringUtils.isNotBlank(sysTypeParam)) {

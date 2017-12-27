@@ -1,5 +1,7 @@
 package cn.com.peddler.app.web.baseinfo;
 
+import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +39,7 @@ import cn.com.peddler.core.web.ServletUtils;
 
 
 @Controller
-@RequestMapping(value="/account")
+@RequestMapping(value="/role")
 public class RoleController {
 	
     @Autowired
@@ -58,21 +60,17 @@ public class RoleController {
         Map<String, Object> params = ServletUtils.getParametersStartingWith2(request, "filter_");
         accountManager.searchRole(page, params);
         model.addAttribute("page", page);
-        return "account/role";
+        return "customer/role";
     }
 */
 	@RequestMapping(value="/listrole")
 	public String listrole(HttpServletRequest request, Model model){
 		Page<Roleinfo> page = new RequestPageUtils<Roleinfo>().generatePage(request);
 		Map<String, Object> params = ServletUtils.getParametersStartingWith2(request, "filter_");
-		String sysTypeParam = request.getParameter("sysTypeParam");
-		if (StringUtils.isNotBlank(sysTypeParam)) {
-            params.put("sysTypeParam", sysTypeParam);
-        }
 		userinfoManager.searchRole(page, params);
 		model.addAttribute("page", page);
-		model.addAttribute("sysTypeParam", sysTypeParam);
-		return "account/role";
+		model.addAttribute("map", params);
+		return "customer/roleinfoIndex";
 	}
 	
 	public static String strFilter(String str){
@@ -118,14 +116,14 @@ public class RoleController {
 	@RequestMapping(value="/addrole", method=RequestMethod.GET)
 	@AvoidDuplicateSubmission(tokenName = "tokenmdy", needSaveToken = true)
 	public ModelAndView add(){
-		return new ModelAndView("account/role-input", "role", new Roleinfo());
+		return new ModelAndView("customer/roleinfoInput", "role", new Roleinfo());
 	}
 	
 	@RequestMapping(value="/editrole/{Id}", method=RequestMethod.GET)
 	@AvoidDuplicateSubmission(tokenName = "tokenmdy", needSaveToken = true)
 	public ModelAndView edit(@PathVariable Long Id){
 		Roleinfo role = userinfoManager.getRole(Id);
-		return new ModelAndView("account/role-input", "role", role);
+		return new ModelAndView("customer/roleinfoInput", "role", role);
 	}
 
 	@RequestMapping(value="/delrole/{Id}")
@@ -164,7 +162,7 @@ public class RoleController {
         List<Roleinfo> list = accountManager.getMergedUserRoleAndAllRole(u.getRoleList());
         model.addAttribute("result", list);
         model.addAttribute("user", u);
-        return "account/rolelookup";
+        return "customer/rolelookup";
     }
 */    
 	
@@ -186,19 +184,27 @@ public class RoleController {
 			model.addAttribute("result", list);
 			model.addAttribute("user", u);
 		}
-		return "account/rolelookup";
+		return "customer/rolelookup";
 	}
 
 	@RequestMapping(value="/chkrole")
-	public String checkLoginName(HttpServletRequest request, HttpServletResponse response) {
-		
-		String newValue = request.getParameter("name");
-		String oldValue = request.getParameter("oldname");
-
-		if (userinfoManager.isRoleNameUnique(newValue, oldValue)) {
-			ServletUtils.renderText(response, "true");
-		} else {
-			ServletUtils.renderText(response, "false");
+	public String chkroleName(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			String propertyName = request.getParameter("propertyName");
+			String newValue = URLDecoder.decode(request.getParameter(propertyName), "UTF-8");
+			String oldValue = URLDecoder.decode(request.getParameter("oldValue"), "UTF-8");
+			String errmes = URLDecoder.decode(request.getParameter("errmes"), "UTF-8");
+			response.setContentType("text/html;charset=utf-8");
+			//println("propertyName===>" + propertyName + ";newValue==>" + newValue + ";oldValue==>" +oldValue + ";errmes==>" +errmes);
+			if (userinfoManager.isRoleNameUnique( newValue, oldValue)) {
+				//ServletUtils.renderText(response, "true");
+			} else {
+				//ServletUtils.render(response, "false", "hello");
+				ServletUtils.renderText(response, errmes + "已经存在");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		//因为直接输出内容而不经过jsp,因此返回null.
 		return null;
