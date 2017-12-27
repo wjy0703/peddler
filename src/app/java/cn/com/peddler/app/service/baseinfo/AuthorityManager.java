@@ -116,7 +116,7 @@ public class AuthorityManager {
 	}
 	
 	public boolean isAuthNameUnique(String newValue, String oldValue) {
-		return authorityDao.isPropertyUnique("name", newValue, oldValue);
+		return authorityDao.isPropertyUnique("aname", newValue, oldValue);
 	}
 	@Transactional(readOnly = true)
 	public List<Map<String,Object>> searchAuthority(String queryName,Map<String,Object> filter,JdbcPage page)

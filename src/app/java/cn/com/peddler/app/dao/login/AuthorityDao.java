@@ -45,8 +45,8 @@ public class AuthorityDao extends HibernateDao<Authority, Long>{
 			hql = hql + " and vpath like '%'||:path||'%'";
 		}
 
-		if(params.containsKey("sts")){
-			hql = hql + " and vtype = :sts";
+		if(params.containsKey("vtype")){
+			hql = hql + " and vtype = :vtype";
 		}
 		
 		if (page.getOrderBy()!=null){

@@ -6,7 +6,7 @@ function vProblemName(oldvale,ppname,errmes)
 	//alertMsg.error(oldvale+";"+ppname+";"+errmes+";"+NAME);
 	if(''!=NAME)
 	{
-		var url = "cjrxx/chkValue?oldValue="+encodeURI(encodeURI(oldvale))+"&propertyName="+ppname+"&errmes="+encodeURI(encodeURI(errmes))+"&"+ppname+"="+encodeURI(encodeURI(NAME));
+		var url = "authority/chkauth?oldValue="+encodeURI(encodeURI(oldvale))+"&propertyName="+ppname+"&errmes="+encodeURI(encodeURI(errmes))+"&"+ppname+"="+encodeURI(encodeURI(NAME));
 		var urlOld = convertURL(url);
 		$.get(urlOld,null,function(data,text)
 		{
@@ -48,6 +48,28 @@ function vProblemName(oldvale,ppname,errmes)
 					}
 				}
 			}else{
+				//alert(data);
+				alertMsg.error(data);
+				$("#"+ppname,$box).val("");
+			};
+		});
+	}
+}
+
+/*验证问题名是否重复*/
+function vAuthName(oldvale,ppname,errmes)
+{
+	var $box = navTab.getCurrentPanel();
+	var NAME = $("#"+ppname,$box).val();
+	//alertMsg.error(oldvale+";"+ppname+";"+errmes+";"+NAME);
+	if(''!=NAME)
+	{
+		var url = "authority/chkauth?oldValue="+encodeURI(encodeURI(oldvale))+"&propertyName="+ppname+"&errmes="+encodeURI(encodeURI(errmes))+"&"+ppname+"="+encodeURI(encodeURI(NAME));
+		var urlOld = convertURL(url);
+		$.get(urlOld,null,function(data,text)
+		{
+			if(data!='')
+			{
 				//alert(data);
 				alertMsg.error(data);
 				$("#"+ppname,$box).val("");

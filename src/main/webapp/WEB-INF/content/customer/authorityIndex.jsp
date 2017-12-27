@@ -16,12 +16,12 @@
 		<div class="searchBar">
 			<table class="searchContent">
 				<tr>
-					<td><label>资源名称:</label> <input type="text" name="filter_name" /></td>
+					<td><label>资源名称:</label> <input type="text" name="filter_name" value="${map.name }"/></td>
 					<td><label>资源描述:</label> <input type="text"
-						name="filter_cname" /></td>
-					<td><label>资源路径:</label> <input type="text" name="filter_path" /></td>
+						name="filter_cname" value="${map.cname }"/></td>
+					<td><label>资源路径:</label> <input type="text" name="filter_path" value="${map.path }"/></td>
 					<td><label>状态:</label> 
-					<sen:select name="filter_vtype" coding="vtypes" clazz="combox" title="全部" value="${filter_vtype}" />
+					<sen:select name="filter_vtype" coding="vtypes" clazz="combox" title="全部" value="${map.vtype}" />
 					
 					</td>
 				</tr>

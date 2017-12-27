@@ -1,5 +1,7 @@
 package cn.com.peddler.app.web.baseinfo;
 
+import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -216,15 +218,33 @@ public class AuthorityController {
 	
 	@RequestMapping(value="/chkauth")
 	public String checkLoginName(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			String propertyName = request.getParameter("propertyName");
+			String newValue = URLDecoder.decode(request.getParameter(propertyName), "UTF-8");
+			String oldValue = URLDecoder.decode(request.getParameter("oldValue"), "UTF-8");
+			String errmes = URLDecoder.decode(request.getParameter("errmes"), "UTF-8");
+			response.setContentType("text/html;charset=utf-8");
+			//println("propertyName===>" + propertyName + ";newValue==>" + newValue + ";oldValue==>" +oldValue + ";errmes==>" +errmes);
+			if (authorityManager.isAuthNameUnique( newValue, oldValue)) {
+				//ServletUtils.renderText(response, "true");
+			} else {
+				//ServletUtils.render(response, "false", "hello");
+				ServletUtils.renderText(response, errmes + "已经存在");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		String newValue = request.getParameter("name");
-		String oldValue = request.getParameter("oldname");
-
+//		String newValue = request.getParameter("name");
+//		String oldValue = request.getParameter("oldname");
+/*
 		if (authorityManager.isAuthNameUnique(newValue, oldValue)) {
 			ServletUtils.renderText(response, "true");
 		} else {
 			ServletUtils.renderText(response, "false");
 		}
+		*/
 		//因为直接输出内容而不经过jsp,因此返回null.
 		return null;
 	}
