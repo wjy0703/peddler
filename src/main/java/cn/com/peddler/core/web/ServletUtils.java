@@ -328,6 +328,22 @@ public class ServletUtils {
 		}
 
 	}
+	
+	public static void renderSubmitResult(HttpServletRequest request, DwzResult result)
+	  {
+	    boolean isSaveSucc = false;
+	    String code = result.getStatusCode();
+	    if ((StringUtils.isNotEmpty(code)) && 
+	      ("200".equals(code))) {
+	      isSaveSucc = true;
+	    }
 
+	    request.setAttribute("isSaveSucc", Boolean.valueOf(isSaveSucc));
+	  }
+
+	public static void renderSubmitResult(HttpServletRequest request, Boolean result)
+	  {
+	    request.setAttribute("isSaveSucc", result);
+	  }
 
 }

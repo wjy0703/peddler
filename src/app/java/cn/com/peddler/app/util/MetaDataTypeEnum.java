@@ -81,6 +81,15 @@ public enum MetaDataTypeEnum {
 		public String toString() {
 			return "0003";
 		}
+	},
+	/**
+	 * 系统属性，系统、业务
+	 */
+	SYS_TYPE {
+		@Override
+		public String toString() {
+			return "systype";
+		}
 	}
 	
 }

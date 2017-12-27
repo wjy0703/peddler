@@ -3,6 +3,7 @@ package cn.com.peddler.app.dao.login;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.xwork.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
@@ -10,13 +11,14 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
 import cn.com.peddler.app.entity.security.Roleinfo;
+import cn.com.peddler.app.entity.security.Userinfo;
 import cn.com.peddler.core.orm.Page;
 import cn.com.peddler.core.orm.hibernate.HibernateDao;
 
 @Component
 public class RoleinfoDao extends HibernateDao<Roleinfo, Long>{
 
-	public Page<Roleinfo> queryRoleinfo(Page<Roleinfo> page, Map<String, Object> params){
+	public Page<Roleinfo> queryRoleinfo1(Page<Roleinfo> page, Map<String, Object> params){
 //		String hql = "from Roleinfo roleinfo where 1=1";
 		StringBuffer hql=new StringBuffer();
 		hql.append("from Roleinfo roleinfo where 1=1");
@@ -69,5 +71,29 @@ public class RoleinfoDao extends HibernateDao<Roleinfo, Long>{
 		criteria.add(criterion);
 		criteria.addOrder(Order.asc("id"));
 		return criteria.list();
+	}
+	
+
+	public Page<Roleinfo> queryRoleinfo(Page<Roleinfo> page, Map<String, Object> params) {
+		String hql = "from Roleinfo role where 1=1";
+		
+		if(params.containsKey("name")){
+			hql = hql + " and rolename like '%'||:name||'%'";
+		}
+		if(params.containsKey("sts")){
+			hql = hql + " and vtypes = :sts";
+		}
+		
+		if (page.getOrderBy()!=null){
+			hql = hql + " order by " + page.getOrderBy() + " " + page.getOrder();
+		}
+		return this.findPage(page, hql, params);
+	}
+	
+	public List<Roleinfo> findRole(Map<String, Object> params) {
+	    String hql = "from Roleinfo role where 1=1 and sts = '0'";
+	    
+        hql = hql + "order by role.id asc" ;
+	    return this.find(hql, params);
 	}
 }

@@ -19,7 +19,33 @@ public class MenutableDao extends HibernateDao<Menutable, Long>{
 		String hql = "from Menutable menu where menu.levelid=? and menu.vtypes = '0' order by menu.sortno";
 		return this.find(hql, levelId);
 	}
-
+	/**
+	 * 重载查询顶级菜单增加查询条件map
+	 * @return
+	 */
+    public List<Menutable> getMenusByLevel(Map<String,Object> params){
+        String hql = "from Menutable menu where menu.levelid=:levelId and menu.vtypes = '0' ";
+        if (params.containsKey("sysTypeParam")) {
+            hql = hql + " and menu.vsystype like '%'||:sysTypeParam||'%'";
+        }
+        hql = hql + " order by menu.sortno ";
+        return this.find(hql, params);
+    }
+    /**
+     * 重载根据上级菜单查询下级菜单加入查询条件map
+     * @return
+     */
+    public List<Menutable> getMenusByParent(Map<String,Object> params){
+        String hql = "from Menutable menu where menu.levelid != 4  and menu.vtypes = '0' ";
+        if (params.containsKey("menuId")) {
+            hql = hql + " and menu.parent.id=:menuId ";
+        }
+        if (params.containsKey("sysTypeParam")) {
+            hql = hql + " and menu.vsystype like '%'|| :sysTypeParam ||'%' ";
+        }
+        hql = hql + " order by menu.sortno ";
+        return this.find(hql, params);
+    }
 	/**
 	 * 根据上级菜单查询下级菜单
 	 * @param parentId

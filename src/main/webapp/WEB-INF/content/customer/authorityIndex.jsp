@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ page
-	import="cn.com.cucsi.core.security.springsecurity.SpringSecurityUtils"%>
+	import="cn.com.peddler.core.security.springsecurity.SpringSecurityUtils"%>
 <%@ include file="/common/taglibs.jsp"%>
-
+<script src="ext/operationjs/showoperation.js" type="text/javascript"></script>
 <form id="pagerForm" method="post" action="#rel#">
 	<input type="hidden" name="pageNum" value="${page.pageNo }" /> <input
 		type="hidden" name="numPerPage" value="${page.pageSize}" /> <input
@@ -12,7 +12,7 @@
 
 <div class="pageHeader">
 	<form rel="pagerForm" onsubmit="return navTabSearch(this);"
-		action="${ctx }/account/listauth" method="post">
+		action="${ctx }/authority/listauth" method="post">
 		<div class="searchBar">
 			<table class="searchContent">
 				<tr>
@@ -20,12 +20,10 @@
 					<td><label>资源描述:</label> <input type="text"
 						name="filter_cname" /></td>
 					<td><label>资源路径:</label> <input type="text" name="filter_path" /></td>
-					<td><label>状态:</label> <select class="combox"
-						name="filter_sts">
-							<option value="">全部</option>
-							<option value="0">在用</option>
-							<option value="1">历史</option>
-					</select></td>
+					<td><label>状态:</label> 
+					<sen:select name="filter_vtype" coding="vtypes" clazz="combox" title="全部" value="${filter_vtype}" />
+					
+					</td>
 				</tr>
 			</table>
 			<div class="subBar">
@@ -43,11 +41,13 @@
 <div class="pageContent">
 	<div class="panelBar">
 		<ul class="toolBar">
-			<li><a class="add" href="${ctx}/account/addauth" target="navTab"><span>添加</span></a></li>
+		   <bjdv:validateContent type="1" funcId="资源管理-添加">
+			<li><a class="add" href="${ctx}/authority/addauth" target="navTab"><span>添加</span></a></li>
+			</bjdv:validateContent>
 			<li><a title="确实要删除这些记录吗?" target="selectedTodo" rel="ids"
-				postType="string" href="${ctx }/account/batchdelauth" class="delete"
+				postType="string" href="${ctx }/authority/batchdelauth" class="delete"
 				warn="请至少选择一个用户"><span>批量删除</span></a></li>
-			<li><a class="edit" href="${ctx}/account/editauth/{sid_auth}"
+			<li><a class="edit" href="${ctx}/authority/editauth/{sid_auth}"
 				target="navTab" warn="请选择一个用户"><span>修改</span></a></li>
 			<li class="line">line</li>
 			<li><a class="icon" href="#" target="dwzExport"
@@ -59,14 +59,15 @@
 			<tr>
 				<th width="28"><input type="checkbox" group="ids"
 					class="checkboxCtrl"></th>
-				<th width="80" orderField="name" class="asc">资源名称</th>
-				<th orderField="cname">资源描述</th>
-				<th orderField="path">资源路径</th>
-				<th width="80" orderField="sts">状态</th>
-				<th width="100" orderField="createBy">创建人</th>
-				<th width="100" align="center" orderField="createTime">创建日期</th>
-				<th width="100">修改人</th>
-				<th width="100">最后修改日期</th>
+				<th width="80" orderField="aname" class="asc">资源名称</th>
+				<th width="80" orderField="cname">资源描述</th>
+				<th width="100" orderField="vpath">资源路径</th>
+				<th width="40" orderField="vtype">状态</th>
+				<th width="40">系统属性</th>
+				<th width="80" orderField="createuser">创建人</th>
+				<th width="80" align="center" orderField="createtime">创建日期</th>
+				<th width="80">修改人</th>
+				<th width="80">修改日期</th>
 				<th width="70">操作</th>
 			</tr>
 		</thead>
@@ -74,19 +75,19 @@
 			<c:forEach items="${page.result}" var="auth" varStatus="st">
 				<tr target="sid_auth" rel="${auth.id}">
 					<td><input name="ids" value="${auth.id}" type="checkbox"></td>
-					<td>${auth.name }</td>
+					<td>${auth.aname }</td>
 					<td>${auth.cname }</td>
-					<td>${auth.path }</td>
-					<td><c:if test="${auth.sts=='0'}">在用</c:if> <c:if
-							test="${auth.sts=='1'}">历史</c:if></td>
-					<td>${auth.createBy }</td>
-					<td>${auth.createTime }</td>
-					<td>${auth.lastModifyBy }</td>
-					<td>${auth.lastModifyTime }</td>
+					<td>${auth.vpath }</td>
+					<td><sen:vtoName coding="vtypes" value="${auth.vtype}"/></td>
+					<td><sen:vtoName coding="systype" value="${auth.vsystype}"/></td>
+					<td>${auth.createuser }</td>
+					<td><fmt:formatDate value='${auth.createtime}' pattern='yyyy-MM-dd HH:mm:ss' /></td>
+					<td>${auth.modifyuser }</td>
+					<td><fmt:formatDate value='${auth.modifytime}' pattern='yyyy-MM-dd HH:mm:ss' /></td>
 					<td><a title="删除" target="ajaxTodo"
-						href="${ctx }/account/delauth/${auth.id}" class="btnDel">删除</a> <a
+						href="${ctx }/authority/delauth/${auth.id}" class="btnDel">删除</a> <a
 						title="编辑" target="navTab"
-						href="${ctx }/account/editauth/${auth.id}" class="btnEdit">编辑</a>
+						href="${ctx }/authority/editauth/${auth.id}" class="btnEdit">编辑</a>
 					</td>
 				</tr>
 			</c:forEach>

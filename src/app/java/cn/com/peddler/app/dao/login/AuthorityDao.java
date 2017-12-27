@@ -15,69 +15,44 @@ public class AuthorityDao extends HibernateDao<Authority, Long>{
 		String hql = "from Authority authority where authority.vtype=? order by authority.id asc";
 		return this.find(hql, "0");
 	}
-	public Page<Authority> queryAuthority(Page<Authority> page, Map<String, Object> params){
-//		String hql = "from Authority authority where 1=1";
-		StringBuffer hql=new StringBuffer();
-		hql.append("from Authority authority where 1=1");
-		//修改人
-		if(params.containsKey("modifyuser")){
-//			hql = hql + " and modifyuser = :modifyuser";
-			hql.append(" and modifyuser = :modifyuser");
+	
+	public List<Authority> queryAuthorities(Map<String,Object> params){
+        if (params == null ) {
+            return this.queryAuthorities();
+        }
+        String hql = "from Authority authority where 1=1 and authority.vtype = 0 ";
+        if (params.containsKey("sysTypeParam")) {
+            String value = String.valueOf(params.get("sysTypeParam"));
+            params.put("sysTypeParam", "%" + value + "%");
+            hql = hql + " and authority.vsystype like :sysTypeParam ";
+        }
+        hql = hql + " order by authority.id asc ";
+        return this.find(hql, params);
+    }
+	
+	public Page<Authority> queryAuthority(Page<Authority> page, Map<String, Object> params) {
+		String hql = "from Authority authority where 1=1";
+		
+		if(params.containsKey("name")){
+			hql = hql + " and aname like '%'||:name||'%'";
 		}
-		//创建人
-		if(params.containsKey("createuser")){
-//			hql = hql + " and createuser = :createuser";
-			hql.append(" and createuser = :createuser");
-		}
-		//修改时间
-		if(params.containsKey("modifytime")){
-//			hql = hql + " and modifytime = :modifytime";
-			hql.append(" and modifytime = :modifytime");
-		}
-		//创建时间
-		if(params.containsKey("createtime")){
-//			hql = hql + " and createtime = :createtime";
-			hql.append(" and createtime = :createtime");
-		}
-		//别名
+
 		if(params.containsKey("cname")){
-//			hql = hql + " and cname = :cname";
-			hql.append(" and cname = :cname");
+			hql = hql + " and cname like '%'||:cname||'%'";
 		}
-		//标记
-		if(params.containsKey("vflag")){
-//			hql = hql + " and vflag = :vflag";
-			hql.append(" and vflag = :vflag");
+		
+		if(params.containsKey("path")){
+			hql = hql + " and vpath like '%'||:path||'%'";
 		}
-		//资源名称
-		if(params.containsKey("aname")){
-//			hql = hql + " and aname = :aname";
-			hql.append(" and aname = :aname");
+
+		if(params.containsKey("sts")){
+			hql = hql + " and vtype = :sts";
 		}
-		//路径
-		if(params.containsKey("vpath")){
-//			hql = hql + " and vpath = :vpath";
-			hql.append(" and vpath = :vpath");
-		}
-		//状态
-		if(params.containsKey("vsts")){
-//			hql = hql + " and vsts = :vsts";
-			hql.append(" and vsts = :vsts");
-		}
-		//类型
-		if(params.containsKey("vtype")){
-//			hql = hql + " and vtype = :vtype";
-			hql.append(" and vtype = :vtype");
-		}
-		//系统属性
-		if(params.containsKey("vsystype")){
-//			hql = hql + " and vsystype = :vsystype";
-			hql.append(" and vsystype = :vsystype");
-		}
+		
 		if (page.getOrderBy()!=null){
-//			hql = hql + " order by " + page.getOrderBy() + " " + page.getOrder();
-			hql.append(" order by ").append(page.getOrderBy()).append(" ").append(page.getOrder());
+			hql = hql + " order by " + page.getOrderBy() + " " + page.getOrder();
 		}
-		return this.findPage(page, hql.toString(), params);
+		return this.findPage(page, hql, params);
 	}
+	
 }

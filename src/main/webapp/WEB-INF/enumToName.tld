@@ -7,7 +7,6 @@
 	<jsp-version>1.1</jsp-version>
 	<short-name>bjdv tags</short-name>
 	<uri></uri>
-	
 
 	<tag>
 		<name>address</name>
@@ -79,7 +78,19 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		
+		<attribute>
+			<name>defaultName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>unShowName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>	
+	
 	
 	<tag>
 		<name>selectRadio</name>
@@ -122,6 +133,16 @@
 		</attribute>
 		<attribute>
 			<name>end</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>defaultName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>unShowName</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -171,9 +192,44 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<name>unShowName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 	
+	<tag>
+		<name>vtoName</name>
+		<tag-class>cn.com.peddler.app.taglib.ValueToNameTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>coding</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>reconsider</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>	
 	
+	<tag>
+		<name>deptToName</name>
+		<tag-class>cn.com.peddler.app.taglib.DeptToNameTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>id</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>	
 	
 	<tag>
 		<name>addressName</name>
@@ -186,10 +242,5 @@
 		</attribute>
 	</tag>
 	
-	
-	
-	
 </taglib>
-
-
 

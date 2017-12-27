@@ -46,6 +46,10 @@ public class MetaDataTypeConverter {
             
             return MetaDataTypeEnum.POST_TYPE.toString();
             
+        }else if(StringUtils.equals("systype", coding)){                //系统属性，系统、业务
+            
+            return MetaDataTypeEnum.SYS_TYPE.toString();
+            
         }
     	
     	//50003 liveStateType

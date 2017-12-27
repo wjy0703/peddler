@@ -523,6 +523,71 @@ public class UserinfoManager {
 		}
 		return isChenked;
 	}
+	/*
+	 * 重载传入查询条件map
+	 * YY
+	 */
+    public List<Menutable> getMenusByLevels(Map<String,Object> params) {
+        return menutableDao.getMenusByLevel(params);
+    }
+  //重载方法加入查询条件map
+    public List<Menutable> getMenuByParent(Map<String,Object> params) {
+        return menutableDao.getMenusByParent(params);
+    }
+	/**
+     * 重载方法原方法保留，加入一个map作为参数查询系统属性
+     * @author yuyang
+     */
+    public String[] buildMenuByTopId(List<Menutable> menuRoleList,Map<String,Object> params){
+        String[] res1 = new String[2];
+        StringBuffer chenkedNode = new StringBuffer();
+        List<Menutable> menuList = getMenusByLevels(params);
+        StringBuffer tree = new StringBuffer(); 
+        //tree.append("<ul class=\"tree treeFolder\"><li><a href=\"#\">组织机构</a><ul>");
+        for(Menutable m : menuList){
+            params.put("menuId", m.getId());
+            String[] res = buildMenuNode(menuRoleList,params);
+            chenkedNode.append(res[0]);
+            tree.append(res[1]);
+        }
+        //tree.append("</ul></li></ul>");
+        res1[0] = chenkedNode.toString();
+        res1[1] = tree.toString();
+        return res1;
+    }
+    /**
+     * 重载方法加入map查询条件
+     * @author yuyang
+     */
+    private String[] buildMenuNode(List<Menutable> menuRoleList,Map<String,Object> params){
+        String[] res = new String[2];
+        StringBuffer chenkedNode = new StringBuffer();
+        Long menuId= Long.parseLong(params.get("menuId")+"");
+        Menutable menu = menutableDao.get(menuId);
+        String chenked = "";
+        boolean isChenked = getCheckedMenu(menu, menuRoleList);
+        if(isChenked){
+            chenked = "checked=true";
+            chenkedNode.append("{id:'"+menu.getId()+"', name:'"+menu.getMenuname()+"'}|");
+        }
+        StringBuffer node = new StringBuffer();
+        node.append("<li><a tname="+menu.getMenuname()+" tvalue="+menu.getId()+" "+chenked+">"+menu.getMenuname()+"</a>");
+        List<Menutable> menuList = getMenuByParent(params);
+        if(menuList != null && menuList.size()>0 ){
+            node.append("<ul>");
+            for (Menutable m : menuList) {
+                params.put("menuId", m.getId());
+                String[] ss = buildMenuNode(menuRoleList,params);
+                chenkedNode.append(ss[0]);
+                node.append(ss[1]);
+            }
+            node.append("</ul>");
+        }
+        node.append("</li>");
+        res[0] = chenkedNode.toString();
+        res[1] = node.toString();
+        return res;
+    }
 	
 	public List<Menutable> getMenuByParent(Long parentId) {
 		return menutableDao.getMenusByParent(parentId);
