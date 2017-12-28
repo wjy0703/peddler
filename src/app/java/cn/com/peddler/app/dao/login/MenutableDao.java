@@ -72,10 +72,11 @@ public class MenutableDao extends HibernateDao<Menutable, Long>{
 		//菜单名
 		if(params.containsKey("menuname")){
 //			hql = hql + " and menuname = :menuname";
-			hql.append(" and menuname = :menuname");
+			hql.append(" and menuName like '%'||:menuname||'%'");
 		}
 		//菜单类型
 		if(params.containsKey("menutype")){
+			params.put("menutype", Long.parseLong(params.get("menutype")+""));
 //			hql = hql + " and menutype = :menutype";
 			hql.append(" and menutype = :menutype");
 		}
@@ -118,6 +119,11 @@ public class MenutableDao extends HibernateDao<Menutable, Long>{
 		if(params.containsKey("vtypes")){
 //			hql = hql + " and vtypes = :vtypes";
 			hql.append(" and vtypes = :vtypes");
+		}
+		//系统属性
+		if(params.containsKey("vsystype")){
+//					hql = hql + " and vtypes = :vtypes";
+			hql.append(" and vsystype = :vsystype");
 		}
 		//修改人
 		if(params.containsKey("modifyuser")){

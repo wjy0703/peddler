@@ -90,6 +90,16 @@ public enum MetaDataTypeEnum {
 		public String toString() {
 			return "systype";
 		}
+	},
+	/**
+	 * 菜单属性，一级、二级、三级
+	 */
+	MENU_TYPE {
+		@Override
+		public String toString() {
+			return "menutype";
+		}
 	}
+	
 	
 }

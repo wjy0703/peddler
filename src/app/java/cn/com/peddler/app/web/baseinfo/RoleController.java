@@ -1,6 +1,8 @@
 package cn.com.peddler.app.web.baseinfo;
 
+import java.awt.Menu;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,18 +23,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import cn.com.peddler.app.entity.login.Menutable;
 import cn.com.peddler.app.entity.security.Authority;
 import cn.com.peddler.app.entity.security.Roleinfo;
 import cn.com.peddler.app.entity.security.Userinfo;
 import cn.com.peddler.app.service.baseinfo.AuthorityManager;
+import cn.com.peddler.app.service.baseinfo.MenutableManager;
 import cn.com.peddler.app.service.baseinfo.RoleinfoManager;
 import cn.com.peddler.app.service.baseinfo.UpdatedMenuManager;
 import cn.com.peddler.app.service.login.UserinfoManager;
 import cn.com.peddler.app.service.security.OperatorDetails;
 import cn.com.peddler.app.util.AvoidDuplicateSubmission;
+import cn.com.peddler.app.util.HibernateAwareBeanUtilsBean;
 import cn.com.peddler.app.util.PropertiesUtils;
 import cn.com.peddler.app.util.RequestPageUtils;
 import cn.com.peddler.core.orm.Page;
@@ -55,6 +58,55 @@ public class RoleController {
     
     @Autowired
     private RoleinfoManager roleinfoManager;
+    
+    @Autowired
+    private MenutableManager menutableManager;
+    
+    @RequestMapping(value="/listMenu")
+	public String listMenu(HttpServletRequest request, Model model){
+		// 处理分页的参数
+    	Page<Menutable> page = new RequestPageUtils<Menutable>().generatePage(request);
+		Map<String, Object> params = ServletUtils.getParametersStartingWith2(request, "filter_");	
+		
+		menutableManager.searchMenutable(page, params);
+	
+		model.addAttribute("page", page);
+		model.addAttribute("map", params);
+		return "customer/menutableIndex";
+	}
+    @RequestMapping(value="/addMenu", method=RequestMethod.GET)
+	@AvoidDuplicateSubmission(tokenName = "tokenmdy", needSaveToken = true)
+	public String addMenu(HttpServletRequest request, Model model){
+    	Menutable menu = new Menutable();
+		model.addAttribute("menu", menu);
+		return "customer/menutableInput";
+	}
+	@RequestMapping(value="/editMenu/{Id}", method=RequestMethod.GET)
+	public String editMenu(@PathVariable Long Id, Model model){
+		Menutable menu = menutableManager.getMenutable(Id);
+		model.addAttribute("menu", menu);
+		return "customer/menutableInput";
+	}
+	
+	@RequestMapping(value="/saveMenu",method=RequestMethod.POST)
+	public String saveMenu(@ModelAttribute("menu") Menutable menu, HttpServletRequest request, HttpServletResponse response){
+		Menutable menuOld = menutableManager.getMenutable(menu.getId());
+		try {
+            // 拷贝页面的值
+        	 new HibernateAwareBeanUtilsBean().copyProperties(menuOld, menu);
+        	 menutableManager.saveMenutable(menuOld);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            throw new RuntimeException("拷贝菜单记录出现错误，请联系管理员");
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            throw new RuntimeException("拷贝菜单记录出现错误，请联系管理员");
+        }
+		DwzResult success = new DwzResult("200","保存成功","rel_listMenu","","closeCurrent","");
+		ServletUtils.renderJson(response, success);
+	
+		return null;
+	}
     
 /*	替换
     @RequestMapping(value="/listrole")

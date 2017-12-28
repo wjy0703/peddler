@@ -50,6 +50,10 @@ public class MetaDataTypeConverter {
             
             return MetaDataTypeEnum.SYS_TYPE.toString();
             
+        }else if(StringUtils.equals("menutype", coding)){                //菜单属性，一级、二级、三级
+            
+            return MetaDataTypeEnum.MENU_TYPE.toString();
+            
         }
     	
     	//50003 liveStateType
