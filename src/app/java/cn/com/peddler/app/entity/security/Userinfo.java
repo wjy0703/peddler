@@ -122,7 +122,7 @@ public class Userinfo extends AuditableEntity{
 	private Roleinfo roleinfo;
 	//一对一定义
 	@OneToOne(cascade=CascadeType.REFRESH,fetch = FetchType.LAZY)
-	@JoinColumn(name="rolesid", unique= false, nullable=true, insertable=true, updatable=false)
+	@JoinColumn(name="rolesid", unique= false, nullable=true, insertable=true, updatable=true)
 	public Roleinfo getRoleinfo() {
 		return roleinfo;
 	}
@@ -133,7 +133,7 @@ public class Userinfo extends AuditableEntity{
 	private Businessinfo businessinfo;
 	//一对一定义
 	@OneToOne(cascade=CascadeType.REFRESH,fetch = FetchType.LAZY)
-	@JoinColumn(name="busid", unique= false, nullable=true, insertable=true, updatable=false)
+	@JoinColumn(name="busid", unique= false, nullable=true, insertable=true, updatable=true)
 	public Businessinfo getBusinessinfo() {
 		return businessinfo;
 	}
@@ -171,7 +171,7 @@ public class Userinfo extends AuditableEntity{
 	private Organizeinfo organizeinfo;
 	//一对一定义
 	@OneToOne(cascade=CascadeType.REFRESH,fetch = FetchType.LAZY)
-	@JoinColumn(name="orgid", unique= false, nullable=true, insertable=true, updatable=false)
+	@JoinColumn(name="orgid", unique= false, nullable=true, insertable=true, updatable=true)
 	public Organizeinfo getOrganizeinfo() {
 		return organizeinfo;
 	}

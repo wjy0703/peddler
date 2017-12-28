@@ -1,6 +1,5 @@
 package cn.com.peddler.app.web.baseinfo;
 
-import java.awt.Menu;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
@@ -24,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import cn.com.peddler.app.entity.login.Matedata;
+import cn.com.peddler.app.entity.login.Matedatatype;
 import cn.com.peddler.app.entity.login.Menutable;
 import cn.com.peddler.app.entity.security.Authority;
 import cn.com.peddler.app.entity.security.Roleinfo;
@@ -61,6 +62,58 @@ public class RoleController {
     
     @Autowired
     private MenutableManager menutableManager;
+    
+    @RequestMapping(value="/listZd")
+	public String listZd(HttpServletRequest request, Model model){
+		// 处理分页的参数
+    	// 处理分页的参数
+    	Page<Matedata> page = new RequestPageUtils<Matedata>().generatePage(request);
+		Map<String, Object> params = ServletUtils.getParametersStartingWith2(request, "filter_");	
+		
+		roleinfoManager.searchMatedata(page, params);
+		List<Matedatatype> list = roleinfoManager.getAllType();
+		model.addAttribute("map", params);
+		model.addAttribute("page", page);
+		model.addAttribute("type", list);
+		return "customer/mateDataIndex";
+	}
+	
+	@RequestMapping(value="/addZp", method=RequestMethod.GET)
+	public String addZp(HttpServletRequest request, Model model){
+		List<Matedatatype> list = roleinfoManager.getAllType();
+		
+		model.addAttribute("zd", new Matedata());
+		model.addAttribute("type", list);
+		return "customer/mateDataInput";
+	}
+	
+	@RequestMapping(value="/saveZd",method=RequestMethod.POST)
+	public String saveZd(@ModelAttribute("mateData") Matedata mateData, HttpServletRequest request, HttpServletResponse response){
+		roleinfoManager.saveMatedata(mateData);
+
+		DwzResult success = new DwzResult("200","保存成功","rel_listZd","","closeCurrent","");
+		ServletUtils.renderJson(response, success);
+	
+		return null;
+	}
+	
+	@RequestMapping(value="/delZd/{Id}")
+	public String delZd(@PathVariable Long Id, HttpServletResponse response){
+		roleinfoManager.deleteMatedata(Id);
+		DwzResult success = new DwzResult("200","删除成功","rel_listZd","","","");
+		ServletUtils.renderJson(response, success);
+		return null;
+	}
+	
+	@RequestMapping(value="/editZd/{Id}", method=RequestMethod.GET)
+	public String editZd(@PathVariable Long Id, Model model){
+		Matedata zd = roleinfoManager.getMatedata(Id);
+		List<Matedatatype> list = roleinfoManager.getAllType();
+		
+		model.addAttribute("zd", zd);
+		model.addAttribute("type", list);
+		return "customer/mateDataInput";
+	}
     
     @RequestMapping(value="/listMenu")
 	public String listMenu(HttpServletRequest request, Model model){

@@ -19,7 +19,6 @@ import cn.com.peddler.core.orm.hibernate.AuditableEntity;
  * 使用JPA annotation定义ORM关系.
  * 使用Hibernate annotation定义JPA 1.0未覆盖的部分.
  * 关于属性的annotation 放到get方法的上面。
- * @author 马道永
  */
 @Entity
 //表名与类名不相同时重新定义表名.

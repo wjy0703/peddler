@@ -156,7 +156,7 @@ public class Menutable extends AuditableEntity{
 	private Menutable parent;	
 	
 	@ManyToOne(cascade=CascadeType.REFRESH)
-	@JoinColumn(name = "parentid",unique= false, nullable=true, insertable=false, updatable=false)
+	@JoinColumn(name = "parentid",unique= false, nullable=true, insertable=true, updatable=true)
 	public Menutable getParent() {
 		return parent;
 	}

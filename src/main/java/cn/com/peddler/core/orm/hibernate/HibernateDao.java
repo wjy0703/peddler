@@ -428,12 +428,12 @@ public class HibernateDao<T, PK extends Serializable> extends SimpleHibernateDao
 		return getSession().createSQLQuery(queryString).executeUpdate();
 	}
 	
-	public List<Matedatatype> findAllType1(){
+	public List<Matedatatype> findAllType(){
 		String hql = "from Matedatatype matedatatype where 1=1";
 		return find(hql);
 	}
 	
-	public List<Matedata> findTypeByCode1(String code){
+	public List<Matedata> findTypeByCode(String code){
 		String hql = "from Matedata matedata where vtypes = '0' and code.typecode = '"+code+"'";
 		return find(hql);
 	}

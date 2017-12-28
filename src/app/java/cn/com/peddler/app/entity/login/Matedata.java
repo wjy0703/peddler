@@ -1,11 +1,11 @@
 package cn.com.peddler.app.entity.login;
 
-import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -57,16 +57,32 @@ public class Matedata extends AuditableEntity{
 	public void setVvalue(String vvalue) {
 		this.vvalue = vvalue;
 	}
+	/*
 	private Long matetypeid;//编码类型
-	/**编码类型*/
+	*//**编码类型*//*
 	@Column(columnDefinition=DEF_NUM10)
 	public Long getMatetypeid() {
 		return this.matetypeid;
 	}
-	/**编码类型*/
+	*//**编码类型*//*
 	public void setMatetypeid(Long matetypeid) {
 		this.matetypeid = matetypeid;
 	}
+	*/
+	//编码类型
+	private Matedatatype code;
+	//一对一定义
+	@OneToOne(cascade=CascadeType.REFRESH, fetch = FetchType.LAZY)
+	@JoinColumn(name="matetypeid", unique= false, nullable=true, insertable=true, updatable=true)
+	public Matedatatype getCode() {
+		return code;
+	}
+
+	public void setCode(Matedatatype code) {
+		this.code = code;
+	}
+	
+	
 	private String bankcode;//银行类补充一列银行代码
 	/**银行类补充一列银行代码*/
 	@Column(columnDefinition=DEF_STR16)

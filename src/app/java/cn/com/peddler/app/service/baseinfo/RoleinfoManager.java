@@ -10,7 +10,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.com.peddler.app.dao.JdbcDao;
+import cn.com.peddler.app.dao.baseinfo.MatedataDao;
+import cn.com.peddler.app.dao.baseinfo.MatedatatypeDao;
 import cn.com.peddler.app.dao.login.RoleinfoDao;
+import cn.com.peddler.app.entity.login.Matedata;
+import cn.com.peddler.app.entity.login.Matedatatype;
 import cn.com.peddler.app.entity.security.Roleinfo;
 import cn.com.peddler.core.orm.JdbcPage;
 import cn.com.peddler.core.orm.Page;
@@ -22,7 +26,17 @@ import cn.com.peddler.core.orm.Page;
 //默认将类中的所有函数纳入事务管理.
 @Transactional
 public class RoleinfoManager {
-
+	
+	private MatedataDao matedataDao;
+	@Autowired
+	public void setMatedataDao(MatedataDao matedataDao) {
+		this.matedataDao = matedataDao;
+	}
+	private MatedatatypeDao matedatatypeDao;
+	@Autowired
+	public void setMatedatatypeDao(MatedatatypeDao matedatatypeDao) {
+		this.matedatatypeDao = matedatatypeDao;
+	}
 	private RoleinfoDao roleinfoDao;
 	@Autowired
 	public void setRoleinfoDao(RoleinfoDao roleinfoDao) {
@@ -34,6 +48,78 @@ public class RoleinfoManager {
 	public void setJdbcDao(JdbcDao jdbcDao) {
 		this.jdbcDao = jdbcDao;
 	}
+	
+	@Transactional(readOnly = true)
+	public Page<Matedata> searchMatedata(final Page<Matedata> page, final Map<String,Object> filters) {
+		return matedataDao.queryMatedata(page, filters);
+	}
+	@Transactional(readOnly = true)
+	public Matedata getMatedata(Long id) {
+		return matedataDao.get(id);
+	}
+
+	public void saveMatedata(Matedata entity) {
+		matedataDao.save(entity);
+	}
+
+	/**
+	 * 删除用户,如果尝试删除超级管理员将抛出异常.
+	 */
+	public void deleteMatedata(Long id) {
+		matedataDao.delete(id);
+	}
+	
+	public boolean batchDelMatedata(String[] ids){
+		
+		try {
+			for(String id: ids){
+				deleteMatedata(Long.valueOf(id));
+			}
+			return true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
+	@Transactional(readOnly = true)
+	public Page<Matedatatype> searchMatedatatype(final Page<Matedatatype> page, final Map<String,Object> filters) {
+		return matedatatypeDao.queryMatedatatype(page, filters);
+	}
+	@Transactional(readOnly = true)
+	public Matedatatype getMatedatatype(Long id) {
+		return matedatatypeDao.get(id);
+	}
+
+	public void saveMatedatatype(Matedatatype entity) {
+		matedatatypeDao.save(entity);
+	}
+	public List<Matedatatype> getAllType() {
+		return matedatatypeDao.findAllType();
+	}
+	/**
+	 * 删除用户,如果尝试删除超级管理员将抛出异常.
+	 */
+	public void deleteMatedatatype(Long id) {
+		matedatatypeDao.delete(id);
+	}
+	
+	public boolean batchDelMatedatatype(String[] ids){
+		
+		try {
+			for(String id: ids){
+				deleteMatedatatype(Long.valueOf(id));
+			}
+			return true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
+	
 	@Transactional(readOnly = true)
 	public Page<Roleinfo> searchRoleinfo(final Page<Roleinfo> page, final Map<String,Object> filters) {
 		return roleinfoDao.queryRoleinfo(page, filters);
