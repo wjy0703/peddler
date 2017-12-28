@@ -112,13 +112,13 @@ public class Menutable extends AuditableEntity{
 	public void setSortno(Long sortno) {
 		this.sortno = sortno;
 	}
-	private String vsts;//菜单状态
-	/**菜单状态*/
+	private String vsts;//菜单状态-弃用
+	/**菜单状态-弃用*/
 	@Column(columnDefinition=DEF_STR2)
 	public String getVsts() {
 		return this.vsts;
 	}
-	/**菜单状态*/
+	/**菜单状态-弃用*/
 	public void setVsts(String vsts) {
 		this.vsts = vsts;
 	}
@@ -163,15 +163,25 @@ public class Menutable extends AuditableEntity{
 	public void setParent(Menutable parent) {
 		this.parent = parent;
 	}
-	private String vtypes;//系统属性
-	/**系统属性*/
+	private String vtypes;//菜单状态
+	/**菜单状态*/
 	@Column(columnDefinition=DEF_STR2)
 	public String getVtypes() {
 		return this.vtypes;
 	}
-	/**系统属性*/
+	/**菜单状态*/
 	public void setVtypes(String vtypes) {
 		this.vtypes = vtypes;
+	}
+	private String vsystype;//系统属性
+	/**系统属性*/
+	@Column(columnDefinition=DEF_STR4)
+	public String getVsystype() {
+		return this.vsystype;
+	}
+	/**系统属性*/
+	public void setVsystype(String vsystype) {
+		this.vsystype = vsystype;
 	}
 	@Transient
 	public String getAttrTarget(){

@@ -31,9 +31,12 @@ import cn.com.peddler.app.service.baseinfo.AuthorityManager;
 import cn.com.peddler.app.service.baseinfo.RoleinfoManager;
 import cn.com.peddler.app.service.baseinfo.UpdatedMenuManager;
 import cn.com.peddler.app.service.login.UserinfoManager;
+import cn.com.peddler.app.service.security.OperatorDetails;
 import cn.com.peddler.app.util.AvoidDuplicateSubmission;
+import cn.com.peddler.app.util.PropertiesUtils;
 import cn.com.peddler.app.util.RequestPageUtils;
 import cn.com.peddler.core.orm.Page;
+import cn.com.peddler.core.security.springsecurity.SpringSecurityUtils;
 import cn.com.peddler.core.web.DwzResult;
 import cn.com.peddler.core.web.ServletUtils;
 
@@ -67,6 +70,7 @@ public class RoleController {
 	public String listrole(HttpServletRequest request, Model model){
 		Page<Roleinfo> page = new RequestPageUtils<Roleinfo>().generatePage(request);
 		Map<String, Object> params = ServletUtils.getParametersStartingWith2(request, "filter_");
+		PropertiesUtils.putBusidCheck(params);
 		userinfoManager.searchRole(page, params);
 		model.addAttribute("page", page);
 		model.addAttribute("map", params);

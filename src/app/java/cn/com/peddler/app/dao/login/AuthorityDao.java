@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import cn.com.peddler.app.entity.security.Authority;
+import cn.com.peddler.app.util.PropertiesUtils;
 import cn.com.peddler.core.orm.Page;
 import cn.com.peddler.core.orm.hibernate.HibernateDao;
 
@@ -20,11 +21,10 @@ public class AuthorityDao extends HibernateDao<Authority, Long>{
         if (params == null ) {
             return this.queryAuthorities();
         }
-        String hql = "from Authority authority where 1=1 and authority.vtype = 0 ";
-        if (params.containsKey("sysTypeParam")) {
-            String value = String.valueOf(params.get("sysTypeParam"));
-            params.put("sysTypeParam", "%" + value + "%");
-            hql = hql + " and authority.vsystype like :sysTypeParam ";
+        String hql = "from Authority authority where 1=1 and authority.vtype = '0' ";
+        PropertiesUtils.putBusidCheck(params);
+        if (params.containsKey("vsystype")) {
+            hql = hql + " and authority.vsystype = :vsystype ";
         }
         hql = hql + " order by authority.id asc ";
         return this.find(hql, params);

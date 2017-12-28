@@ -12,21 +12,16 @@ import cn.com.peddler.core.orm.hibernate.HibernateDao;
 @Component
 public class MenutableDao extends HibernateDao<Menutable, Long>{
 	/**
-	 * 查询顶级菜单
-	 * @return
-	 */
-	public List<Menutable> getMenusByLevel(Integer levelId){
-		String hql = "from Menutable menu where menu.levelid=? and menu.vtypes = '0' order by menu.sortno";
-		return this.find(hql, levelId);
-	}
-	/**
 	 * 重载查询顶级菜单增加查询条件map
 	 * @return
 	 */
     public List<Menutable> getMenusByLevel(Map<String,Object> params){
-        String hql = "from Menutable menu where menu.levelid=:levelId and menu.vtypes = '0' ";
-        if (params.containsKey("sysTypeParam")) {
-            hql = hql + " and menu.vsystype like '%'||:sysTypeParam||'%'";
+        String hql = "from Menutable menu where menu.vtypes = '0' ";
+        if (params.containsKey("levelid")) {
+            hql = hql + " and menu.levelid = :levelid ";
+        }
+        if (params.containsKey("vsystype")) {
+            hql = hql + " and menu.vsystype = :vsystype ";
         }
         hql = hql + " order by menu.sortno ";
         return this.find(hql, params);
@@ -37,28 +32,23 @@ public class MenutableDao extends HibernateDao<Menutable, Long>{
      */
     public List<Menutable> getMenusByParent(Map<String,Object> params){
         String hql = "from Menutable menu where menu.levelid != 4  and menu.vtypes = '0' ";
-        if (params.containsKey("menuId")) {
-            hql = hql + " and menu.parent.id=:menuId ";
+        if (params.containsKey("parentid")) {
+            hql = hql + " and menu.parent.id=:parentid ";
         }
-        if (params.containsKey("sysTypeParam")) {
-            hql = hql + " and menu.vsystype like '%'|| :sysTypeParam ||'%' ";
+        if (params.containsKey("vsystype")) {
+        	hql = hql + " and menu.vsystype = :vsystype ";
         }
         hql = hql + " order by menu.sortno ";
         return this.find(hql, params);
     }
-	/**
-	 * 根据上级菜单查询下级菜单
-	 * @param parentId
-	 * @return
-	 */
-	public List<Menutable> getMenusByParent(Long parentId){
-		String hql = "from Menutable menu where menu.levelid != 4 and menu.parentid=? and menu.vtypes = '0' order by menu.sortno";
-		return this.find(hql, parentId);
-	}
 	
-	public List<Menutable> queryMenutable(){
-		String hql = "from Menutable menu where menu.vtypes=? order by menu.id asc";
-		return this.find(hql, "0");
+	public List<Menutable> queryMenutable(Map<String,Object> params){
+		String hql = "from Menutable menu where menu.vtypes='0' ";
+		if (params.containsKey("vsystype")) {
+        	hql = hql + " and menu.vsystype = :vsystype ";
+        }
+        hql = hql + "  order by menu.id asc ";
+		return this.find(hql, params);
 	}
 	public Page<Menutable> queryMenutable(Page<Menutable> page, Map<String, Object> params){
 //		String hql = "from Menutable menutable where 1=1";

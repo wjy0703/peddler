@@ -116,85 +116,14 @@ public class AuthorityController {
 		if(!StringUtils.isBlank(roleId)){
 			r = authorityManager.getRoleinfo(Long.valueOf(roleId));
 		}
-		Map<String,Object> params = new HashMap<String,Object>(1);
-		String sysTypeParam = request.getParameter("sysTypeParam");
-		if (StringUtils.isNotBlank(sysTypeParam)) {
-		    params.put("sysTypeParam", sysTypeParam);
-        }
+		Map<String,Object> params = new HashMap<String,Object>();
 		List<Authority> list = authorityManager.getMergedRoleinfoAuthAndAllAuth(r.getAuthorityList(),params);
 		model.addAttribute("result", list);
 		model.addAttribute("result1", r.getAuthorityList());
 		model.addAttribute("role", r);
 		return "customer/resourcelookup";
 	}
-/*
-    //mdy需要更改2013-08-07
-    @RequestMapping(value="/findMenu")
-    public String findMenu( @RequestParam(value="roleId",required=false) String roleId, Model model){
-        Roleinfo r = new Roleinfo();
-        if(!StringUtils.isBlank(roleId)){
-            r = authorityManager.getRoleinfo(Long.valueOf(roleId));
-        }
-        
-        //List<Menu> list = authorityManager.getMergedRoleinfoMenu(r.getMenuList());
-        //StringBuffer menuStr = new StringBuffer();
-        //StringBuffer sb = new StringBuffer();
-       // List<Menu> topList = baseInfoManager.getMenusByLevels(new Integer(1));
-        //List<Map<String,Object>> menuMap = authorityManager.getMergedRoleinfoMenu(topList, r.getMenuList());
-        //for(Menu topMenu: topList){
-      //  for(int i = 0 ; i < menuMap.size() ; i++){
-       //     String ch1 = "";
-       //     Menu topMenu = (Menu)menuMap.get(i).get("menu");
-       //     String checked = menuMap.get(i).get("checked").toString();
-       //     if(checked != null && checked.equals("true")){
-       //         ch1 = "checked="+checked;
-      //          menuStr.append("{id:'"+topMenu.getId()+"', name:'"+topMenu.getMenuName()+"'}|");
-      //      }
-      //      sb.append("<li><a tname="+topMenu.getMenuName()+" tvalue="+topMenu.getId()+" "+ch1+">"+topMenu.getMenuName()+"</a><ul>");
-      //      List<Menu> menus = new LinkedList<Menu>();
-      //      baseInfoManager.buildMenuByTopId(menus, topMenu.getId());
-      //      List<Map<String,Object>> menuMap1 = authorityManager.getMergedRoleinfoMenu(menus, r.getMenuList());
-      //      int last_level = 0;
-      //      for (int j = 0 ; j < menuMap1.size() ; j++){
-      //          String ch = "";
-      //          Menu menu = (Menu)menuMap1.get(j).get("menu");
-      //          String checked1 = menuMap1.get(j).get("checked").toString();
-      //          if(checked1 != null && checked1.equals("true")){
-      //              ch = "checked="+checked1;
-      //              menuStr.append("{id:'"+menu.getId()+"', name:'"+menu.getMenuName()+"'}|");
-      //          }
-      //          if(menu.getLevelId()==2 && last_level != 3){
-      //              sb.append("<li><a tname="+menu.getMenuName()+" tvalue="+menu.getId()+" "+ch+">"+menu.getMenuName()+"</a>");  
-      //         }
-      //          if(menu.getLevelId()==3 && last_level==2){
-      //              sb.append("<ul>");
-      //          }
-      //          if(menu.getLevelId()==3){
-      //              sb.append("<li><a tname="+menu.getMenuName()+" tvalue="+menu.getId()+" "+ch+">"+menu.getMenuName()+"</a></li>");  
-      //          }
-      //          if(menu.getLevelId()==2 && last_level==3){
-      //              sb.append("</ul>");
-      //              sb.append("</li>");
-      //              sb.append("<li><a tname="+menu.getMenuName()+" tvalue="+menu.getId()+" "+ch+">"+menu.getMenuName()+"</a>"); 
-      //          }
-      //          last_level = menu.getLevelId();
-      //      }
-     //       sb.append("</ul>");
-     //       sb.append("</li>");
-     //       sb.append("</ul>");
-     //       sb.append("</li>");
-     //   }
 
-        
-        //model.addAttribute("menuStr", menuStr.toString());
-        String[] res = authorityManager.buildMenuByTopId(r.getMenuList());
-        model.addAttribute("menuStr", res[0]);
-        model.addAttribute("result1", res[1]);
-        model.addAttribute("role", r);
-        return "account/menulookup";
-    }
-*/
-	//mdy需要更改2013-08-07
 	@RequestMapping(value="/findMenu")
 	public String findMenu( @RequestParam(value="roleId",required=false) String roleId,
 	        HttpServletRequest request, Model model){
@@ -202,13 +131,8 @@ public class AuthorityController {
 		if(!StringUtils.isBlank(roleId)){
 			r = authorityManager.getRoleinfo(Long.valueOf(roleId));
 		}
-		Map<String,Object> params = new HashMap<String,Object>(4);
-		params.put("levelId", Long.parseLong("1"));
-		String sysTypeParam = request.getParameter("sysTypeParam");
-//		sysTypeParam = StringUtils.isNotBlank(sysTypeParam) ? sysTypeParam : "0" ;
-		if (StringUtils.isNotBlank(sysTypeParam)) {
-		    params.put("sysTypeParam", sysTypeParam);
-        }
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("levelid", Long.parseLong("1"));
 		String[] res = userinfoManager.buildMenuByTopId(r.getMenuList(),params);
 		model.addAttribute("menuStr", res[0]);
 		model.addAttribute("result1", res[1]);

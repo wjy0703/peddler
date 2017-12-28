@@ -16,6 +16,7 @@ import cn.com.peddler.app.dao.login.UserinfoDao;
 import cn.com.peddler.app.entity.login.Menutable;
 import cn.com.peddler.app.entity.security.Userinfo;
 import cn.com.peddler.app.service.security.OperatorDetails;
+import cn.com.peddler.app.util.PropertiesUtils;
 import cn.com.peddler.core.orm.JdbcPage;
 import cn.com.peddler.core.orm.Page;
 import cn.com.peddler.core.security.springsecurity.SpringSecurityUtils;
@@ -261,7 +262,10 @@ public class MenutableManager {
 	
 	
 	public List<Menutable> getMenusByParent(Long parentId) {
-		return menutableDao.getMenusByParent(parentId);
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("parentid", parentId);
+		PropertiesUtils.putBusidCheck(params);
+		return menutableDao.getMenusByParent(params);
 	}
 	
 	public List<Menutable> buildMenuByTopId(List<Menutable> menus) {
@@ -293,8 +297,11 @@ public class MenutableManager {
 	public List<Menutable> getMenusByLevel(Integer levelId) {// MDY
 
 		List<Menutable> menus2 = new LinkedList<Menutable>();
-
-		List<Menutable> menus = menutableDao.getMenusByLevel(levelId);
+		
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("levelid", levelId);
+		PropertiesUtils.putBusidCheck(params);
+		List<Menutable> menus = menutableDao.getMenusByLevel(params);
 
 		if (levelId == 1) {
 			OperatorDetails operator = SpringSecurityUtils.getCurrentUser();

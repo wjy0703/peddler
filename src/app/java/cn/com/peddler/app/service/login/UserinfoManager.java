@@ -24,6 +24,7 @@ import cn.com.peddler.app.entity.security.Authority;
 import cn.com.peddler.app.entity.security.Roleinfo;
 import cn.com.peddler.app.entity.security.Userinfo;
 import cn.com.peddler.app.service.ServiceException;
+import cn.com.peddler.app.util.PropertiesUtils;
 import cn.com.peddler.core.orm.JdbcPage;
 import cn.com.peddler.core.orm.Page;
 import cn.com.peddler.core.security.springsecurity.SpringSecurityUtils;
@@ -439,7 +440,9 @@ public class UserinfoManager {
 	}
 	
 	public List<Menutable> getMergedRoleMenu(List<Menutable> roleMenu) {
-		List<Menutable> allMenu = menutableDao.queryMenutable();
+		Map<String,Object> params = new HashMap<String,Object>();
+		PropertiesUtils.putBusidCheck(params);
+		List<Menutable> allMenu = menutableDao.queryMenutable(params);
 		for(Menutable menu : roleMenu){
 			allMenu.remove(menu);
 		}
@@ -465,7 +468,10 @@ public class UserinfoManager {
 	}
 	
 	public List<Menutable> getMenusByLevels(Integer levelId) {// MDY
-		return menutableDao.getMenusByLevel(levelId);
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("levelid", levelId);
+		PropertiesUtils.putBusidCheck(params);
+		return menutableDao.getMenusByLevel(params);
 	}
 	
 	public String[] buildMenuByTopId(List<Menutable> menuRoleList){
@@ -528,11 +534,8 @@ public class UserinfoManager {
 	 * YY
 	 */
     public List<Menutable> getMenusByLevels(Map<String,Object> params) {
+    	PropertiesUtils.putBusidCheck(params);
         return menutableDao.getMenusByLevel(params);
-    }
-  //重载方法加入查询条件map
-    public List<Menutable> getMenuByParent(Map<String,Object> params) {
-        return menutableDao.getMenusByParent(params);
     }
 	/**
      * 重载方法原方法保留，加入一个map作为参数查询系统属性
@@ -572,7 +575,7 @@ public class UserinfoManager {
         }
         StringBuffer node = new StringBuffer();
         node.append("<li><a tname="+menu.getMenuname()+" tvalue="+menu.getId()+" "+chenked+">"+menu.getMenuname()+"</a>");
-        List<Menutable> menuList = getMenuByParent(params);
+        List<Menutable> menuList = getMenuByParent(menuId);
         if(menuList != null && menuList.size()>0 ){
             node.append("<ul>");
             for (Menutable m : menuList) {
@@ -590,7 +593,10 @@ public class UserinfoManager {
     }
 	
 	public List<Menutable> getMenuByParent(Long parentId) {
-		return menutableDao.getMenusByParent(parentId);
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("parentid", parentId);
+		PropertiesUtils.putBusidCheck(params);
+		return menutableDao.getMenusByParent(params);
 	}
 
 	//-- Authority Manager --//

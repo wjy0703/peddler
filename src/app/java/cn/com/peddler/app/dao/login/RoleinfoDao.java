@@ -83,7 +83,9 @@ public class RoleinfoDao extends HibernateDao<Roleinfo, Long>{
 		if(params.containsKey("vtypes")){
 			hql = hql + " and vtypes = :vtypes";
 		}
-		
+		if(params.containsKey("busid")){
+			hql = hql + " and busid = :busid";
+		}
 		if (page.getOrderBy()!=null){
 			hql = hql + " order by " + page.getOrderBy() + " " + page.getOrder();
 		}

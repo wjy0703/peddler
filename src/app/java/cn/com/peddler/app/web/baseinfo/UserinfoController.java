@@ -18,6 +18,7 @@ import cn.com.peddler.app.entity.security.Userinfo;
 import cn.com.peddler.app.service.login.UserinfoManager;
 import cn.com.peddler.app.service.security.OperatorDetails;
 import cn.com.peddler.app.util.HibernateAwareBeanUtilsBean;
+import cn.com.peddler.app.util.PropertiesUtils;
 import cn.com.peddler.core.security.springsecurity.SpringSecurityUtils;
 import cn.com.peddler.core.utils.EncodeUtils;
 import cn.com.peddler.core.web.DwzResult;
@@ -40,7 +41,9 @@ public class UserinfoController {
 	public String editLoginUser(Model model, HttpServletResponse response) {
 		OperatorDetails operator = SpringSecurityUtils.getCurrentUser();
 		Userinfo user = userinfoManager.getUserinfo(operator.getUserId());
+		String canLook = PropertiesUtils.putBusidLook();
 		if (user != null) {
+			model.addAttribute("canLook", canLook);
 			model.addAttribute("user", user);
 			return "customer/userInput";
 		} else {

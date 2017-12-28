@@ -44,7 +44,14 @@
 
 			<p>
 				<label>岗位：</label> 
-				<sen:select clazz="combox required" name="post" id="post" coding="postType" value="${user.post }" title="请选择"/>
+				<c:if test="${canLook=='1'}">
+					<sen:select clazz="combox required" name="post" id="post" coding="postType" value="${user.post }" title="请选择" 
+					unShowName="超级管理员"/>
+				</c:if>
+				<c:if test="${canLook=='0'}">
+					<sen:select clazz="combox required" name="post" id="post" coding="postType" value="${user.post }" title="请选择" 
+					/>
+				</c:if>
 			</p>
 
 		</div>
