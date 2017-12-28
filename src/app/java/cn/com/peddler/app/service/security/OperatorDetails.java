@@ -38,6 +38,20 @@ public class OperatorDetails extends User {
 	
 	private Long busid;
 	
+	private String busname;
+	
+	private String orgname;
+	
+	private String busacc;
+	
+	public String getBusacc() {
+		return busacc;
+	}
+
+	public void setBusacc(String busacc) {
+		this.busacc = busacc;
+	}
+
 	public Long getBusid() {
 		return busid;
 	}
@@ -123,4 +137,21 @@ public class OperatorDetails extends User {
 	public void setSex(String sex) {
 		this.sex = sex;
 	}
+
+	public String getBusname() {
+		return busname;
+	}
+
+	public void setBusname(String busname) {
+		this.busname = busname;
+	}
+
+	public String getOrgname() {
+		return orgname;
+	}
+
+	public void setOrgname(String orgname) {
+		this.orgname = orgname;
+	}
+	
 }

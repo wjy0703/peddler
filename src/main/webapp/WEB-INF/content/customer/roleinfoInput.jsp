@@ -7,6 +7,9 @@
 		class="pageForm required-validate"
 		onsubmit="return validateCallback(this, navTabAjaxDone);">
 		<input type="hidden" name="id" value="${role.id}" />
+		<input type="hidden" name="busid" value="${role.busid}" />
+		<input type="hidden" name="busacc" id="busacc" value="${operator.busacc}" />
+		<input type="hidden" name="canLook" id="canLook" value="${canLook}" />
 		<div class="pageFormContent" layoutH="56">
 			<p>
 				<label>角色名称：</label> <input name="rolename" id="rolename" type="text" size="30"

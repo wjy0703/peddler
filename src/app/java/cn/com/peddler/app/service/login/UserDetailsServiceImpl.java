@@ -70,7 +70,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		userDetails.setBusid(user.getBusinessinfo().getId());
 		userDetails.setLoginEmployeeId(user.getId());
 		userDetails.setPositionCode(user.getPost());
-		
+		userDetails.setBusname(user.getBusinessinfo().getBusiname());
+		userDetails.setOrgname(user.getOrganizeinfo().getOrgname());
+		userDetails.setBusacc(user.getBusinessinfo().getBusiaccount());
 		return userDetails;
 
 	}

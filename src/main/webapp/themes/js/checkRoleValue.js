@@ -3,9 +3,19 @@ function vRoleName(oldvale,ppname,errmes)
 {
 	var $box = navTab.getCurrentPanel();
 	var NAME = $("#"+ppname,$box).val();
-	//alertMsg.error(oldvale+";"+ppname+";"+errmes+";"+NAME);
+	var busacc = $("#busacc",$box).val();
+	var canLook = $("#canLook",$box).val();
 	if(''!=NAME)
 	{
+		if('1' == canLook){
+			var names= new Array(); //定义一数组
+			names = NAME.split(busacc); //字符分割    
+	//	alertMsg.error(NAME+";"+busacc+";"+names+";"+names.length);
+			if(names.length==1){
+				NAME = busacc + "-" + NAME;
+				$("#"+ppname,$box).val(NAME);
+			}
+		}
 		var url = "role/chkrole?oldValue="+encodeURI(encodeURI(oldvale))+"&propertyName="+ppname+"&errmes="+encodeURI(encodeURI(errmes))+"&"+ppname+"="+encodeURI(encodeURI(NAME));
 		var urlOld = convertURL(url);
 		$.get(urlOld,null,function(data,text)

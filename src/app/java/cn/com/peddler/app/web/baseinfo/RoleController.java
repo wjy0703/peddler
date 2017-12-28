@@ -119,17 +119,41 @@ public class RoleController {
 	
 	@RequestMapping(value="/addrole", method=RequestMethod.GET)
 	@AvoidDuplicateSubmission(tokenName = "tokenmdy", needSaveToken = true)
+	public String add(HttpServletRequest request, Model model){
+		Roleinfo role = new Roleinfo();
+		OperatorDetails operator = (OperatorDetails)SpringSecurityUtils.getCurrentUser();
+		role.setBusid(operator.getBusid());
+		String canLook = PropertiesUtils.putBusidLook();
+		model.addAttribute("canLook", canLook);
+		model.addAttribute("role", role);
+		model.addAttribute("operator", operator);
+		return "customer/roleinfoInput";
+	}
+	/*
 	public ModelAndView add(){
+		OperatorDetails operator = (OperatorDetails)SpringSecurityUtils.getCurrentUser();
+		Roleinfo role = new Roleinfo();
+		role.setBusid(operator.getBusid());
 		return new ModelAndView("customer/roleinfoInput", "role", new Roleinfo());
 	}
-	
-	@RequestMapping(value="/editrole/{Id}", method=RequestMethod.GET)
-	@AvoidDuplicateSubmission(tokenName = "tokenmdy", needSaveToken = true)
 	public ModelAndView edit(@PathVariable Long Id){
 		Roleinfo role = userinfoManager.getRole(Id);
 		return new ModelAndView("customer/roleinfoInput", "role", role);
 	}
-
+	*/
+	@RequestMapping(value="/editrole/{Id}", method=RequestMethod.GET)
+	@AvoidDuplicateSubmission(tokenName = "tokenmdy", needSaveToken = true)
+	public String edit(@PathVariable Long Id, HttpServletRequest request, Model model){
+		Roleinfo role = userinfoManager.getRole(Id);
+		OperatorDetails operator = (OperatorDetails)SpringSecurityUtils.getCurrentUser();
+		String canLook = PropertiesUtils.putBusidLook();
+		model.addAttribute("canLook", canLook);
+		model.addAttribute("role", role);
+		model.addAttribute("operator", operator);
+		return "customer/roleinfoInput";
+	}
+	
+	
 	@RequestMapping(value="/delrole/{Id}")
 	public String delUser(@PathVariable Long Id, HttpServletResponse response){
 		userinfoManager.deleteRole(Id);
