@@ -54,6 +54,10 @@ public class MetaDataTypeConverter {
             
             return MetaDataTypeEnum.MENU_TYPE.toString();
             
+        }else if(StringUtils.equals("orgflags", coding)){                //门店类别，行业，区域，门店
+            
+            return MetaDataTypeEnum.ORGFLAG.toString();
+            
         }
     	
     	//50003 liveStateType

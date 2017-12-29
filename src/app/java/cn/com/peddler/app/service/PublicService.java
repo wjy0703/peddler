@@ -83,7 +83,7 @@ public class PublicService {
 	}
 
 	/**
-	 * 格式化时间 MDY 2013-7-24
+	 * 格式化时间  2013-7-24
 	 * @return
 	 */
 	public String getFormatDate(){
@@ -93,7 +93,7 @@ public class PublicService {
 	}
 	
 	/**
-	 * 格式化时间 MDY 2013-7-24
+	 * 格式化时间  2013-7-24
 	 * @return
 	 */
 	public String getFormatDateMonth(){
@@ -103,7 +103,7 @@ public class PublicService {
 	}
 	
 	/**
-	 * 格式化时间 MDY 2013-8-23
+	 * 格式化时间  2013-8-23
 	 * @return
 	 */
 	public String getFormatDateMonth(String date){
@@ -116,7 +116,7 @@ public class PublicService {
 	}
 	
 	/**
-	 * 格式化时间 MDY 2013-7-24
+	 * 格式化时间  2013-7-24
 	 * @return
 	 */
 	public static String getDateMonth(){
@@ -126,7 +126,7 @@ public class PublicService {
 	}
 	
 	/**
-	 * 当前月后1年时间 MDY 2013-08-01
+	 * 当前月后1年时间  2013-08-01
 	 * @return
 	 */
 	public String[] getYearMonth() {
@@ -150,7 +150,7 @@ public class PublicService {
 	}
 	
 	/**
-	 * 当前月后1年时间 MDY 2013-08-01
+	 * 当前月后1年时间  2013-08-01
 	 * @return
 	 */
 	public String[] getYearMonths() {

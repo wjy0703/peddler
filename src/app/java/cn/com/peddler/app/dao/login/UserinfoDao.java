@@ -1,5 +1,6 @@
 package cn.com.peddler.app.dao.login;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,14 +10,29 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
+import cn.com.peddler.app.entity.login.Organizeinfo;
 import cn.com.peddler.app.entity.security.Roleinfo;
 import cn.com.peddler.app.entity.security.Userinfo;
+import cn.com.peddler.app.util.PropertiesUtils;
 import cn.com.peddler.core.orm.Page;
 import cn.com.peddler.core.orm.hibernate.HibernateDao;
 
 @Component
 public class UserinfoDao extends HibernateDao<Userinfo, Long>{
-
+	
+	public List<Userinfo> find(Map<String, Object> params){
+//		PropertiesUtils.putBusidCheck(params);
+		StringBuffer hql=new StringBuffer();
+		hql.append("from Userinfo u where u.vtypes='0' ");
+//		String hql = "from Organizeinfo organi where organi.parentid=? and organi.orgflag = '0' order by organi.id";
+		//所属企业
+		if(params.containsKey("orgid")){
+//					hql = hql + " and busid = :busid";
+			hql.append(" and  organizeinfo.id=:orgid ");
+		}
+		hql.append("  order by u.id");
+		return this.find(hql.toString(), params);
+	}
 	public Page<Userinfo> queryUserinfo(Page<Userinfo> page, Map<String, Object> params){
 //		String hql = "from Userinfo userinfo where 1=1";
 		StringBuffer hql=new StringBuffer();

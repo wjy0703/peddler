@@ -1,32 +1,33 @@
-//javaµ÷ÓÃ»ú¹¹
+//javaè°ƒç”¨æœºæ„
 listTzsq.get(i).put("YYB", departmentManager.getDepartmentName(Long.parseLong(listTzsq.get(i).get("ORGANI_ID")+"")));
-//javaµ÷ÓÃÊ¡ÊĞÇø
+//javaè°ƒç”¨çœå¸‚åŒº
 list.get(i).put("PROVINCE", addressManager.getCityNameById(Long.parseLong(list.get(i).get("PROVINCE").toString())));
-//javaµ÷ÓÃÃ¶¾Ù
+//javaè°ƒç”¨æšä¸¾
 data.put("KHH", attrCacheManager.getAttrName(MetaDataTypeEnum.ALL_BANK.toString(),data.get("HSZJKHH").toString()));
 
 
 
-Ò³ÃæÊ¡ÊĞ¼¶Áª
-<sen:address names="filter_crmprovince,filter_crmcity" titles="ËùÓĞÊ¡·İ,ËùÓĞ³ÇÊĞ" values="${map.crmprovince},${map.crmcity}"/>
-ÁĞ±íÕ¹Ê¾
+é¡µé¢çœå¸‚çº§è”
+<sen:address names="filter_crmprovince,filter_crmcity" titles="æ‰€æœ‰çœä»½,æ‰€æœ‰åŸå¸‚" values="${map.crmprovince},${map.crmcity}"/>
+åˆ—è¡¨å±•ç¤º
 <td><sen:addressName id="${user.PROVINCE}" /></td>
 
-×ÖµäÏÔÊ¾£¬codingÄÚÎªÃ¶¾ÙÀà
-<sen:select name="filter_jkType"coding="productType" clazz="combox" title="È«²¿" value="${filter_jkType}" />
+å­—å…¸æ˜¾ç¤ºï¼Œcodingå†…ä¸ºæšä¸¾ç±»
+<sen:select name="filter_jkType"coding="productType" clazz="combox" title="å…¨éƒ¨" value="${filter_jkType}" />
 <sen:selectCheckbox clazz="fkfsId"  coding="moneyComeType" name="fkfsNs" value="${map.fkfs}"/>
-//ÁĞ±íÄÚ×ÖµäÖµÏÔÊ¾
+//åˆ—è¡¨å†…å­—å…¸å€¼æ˜¾ç¤º
 <td><sen:vtoName coding="moneyComeType" value="${user.SQTYPE}"/></td>
 
 
-½ğ¶î¸ñÊ½»¯
+é‡‘é¢æ ¼å¼åŒ–
 <fmt:formatNumber value="${user.JHTZJE}" pattern="#,#00.00" />
 
-ÈÕÆÚ¸ñÊ½»¯
+æ—¥æœŸæ ¼å¼åŒ–
 <td align="center"><fmt:formatDate value='${accredited.createTime}' pattern='yyyy-MM-dd HH:mm:ss' /></td>
 
+//è®¾ç½®è‡ªå¢ä¸»é”®èµ·å§‹å€¼
+alter table menutable AUTO_INCREMENT = 100;
 
-
-ÎÊÌâ£º
-1¡¢ÍË³öÏµÍ³ÈÕÖ¾±£´æÊ§°Ü
-2¡¢¸öÈËĞŞ¸ÄÃÜÂë£¬·µ»ØÌø×ªÒ³ÃæÊ§°Ü£¬Ò³Ãæ±¨JS´íÎó					
+é—®é¢˜ï¼š
+1ã€é€€å‡ºç³»ç»Ÿæ—¥å¿—ä¿å­˜å¤±è´¥
+2ã€ä¸ªäººä¿®æ”¹å¯†ç ï¼Œè¿”å›è·³è½¬é¡µé¢å¤±è´¥ï¼Œé¡µé¢æŠ¥JSé”™è¯¯					

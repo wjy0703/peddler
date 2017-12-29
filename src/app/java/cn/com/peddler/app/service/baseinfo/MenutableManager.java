@@ -294,7 +294,7 @@ public class MenutableManager {
 		}
 	}
 	
-	public List<Menutable> getMenusByLevel(Integer levelId) {// MDY
+	public List<Menutable> getMenusByLevel(Integer levelId) {
 
 		List<Menutable> menus2 = new LinkedList<Menutable>();
 		

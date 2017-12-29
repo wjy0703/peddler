@@ -35,7 +35,7 @@ public class MenuController {
 
 	
 	/**
-	 * 获取顶级菜单 MDY
+	 * 获取顶级菜单 
 	 * @return
 	 */
 	@RequestMapping(value = "/topmenus", method = RequestMethod.GET)

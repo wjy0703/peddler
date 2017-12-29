@@ -12,6 +12,16 @@ public enum MetaDataTypeEnum {
 		public String toString() {
 			return "0001";
 		}
+	},
+	/**
+	 * 门店类别，行业，区域，门店
+	 */
+	ORGFLAG {
+
+		@Override
+		public String toString() {
+			return "0002";
+		}
 	}
 	,
 	/**

@@ -75,7 +75,7 @@ public class Constants {
 	 * @param attrTypeCoding 属性类型编码，对应数据库表base_attr_type的coding字段值。
 	 * @param value  属性值，对应数据库表base_attr的value字段的值.
 	 * @return 返回属性键名，对应数据库表base_attr的keyName字段的值.
-	 * @author mdy
+	 * @author 
 	 * create at 2013-7-26
 	 */
 	public static String[] getAttrDesByValue(String attrTypeCoding, String value){

@@ -467,7 +467,7 @@ public class UserinfoManager {
 		return tree;
 	}
 	
-	public List<Menutable> getMenusByLevels(Integer levelId) {// MDY
+	public List<Menutable> getMenusByLevels(Integer levelId) {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("levelid", levelId);
 		PropertiesUtils.putBusidCheck(params);

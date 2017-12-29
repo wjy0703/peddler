@@ -1,16 +1,40 @@
 package cn.com.peddler.app.dao.login;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang.StringUtils;
+
 import org.springframework.stereotype.Component;
 
 import cn.com.peddler.app.entity.login.Organizeinfo;
+import cn.com.peddler.app.util.PropertiesUtils;
 import cn.com.peddler.core.orm.Page;
 import cn.com.peddler.core.orm.hibernate.HibernateDao;
 
 @Component
 public class OrganizeinfoDao extends HibernateDao<Organizeinfo, Long>{
-
+	
+	public List<Organizeinfo> getOrganiByParent(Long parentId){
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("parentid", parentId);
+		PropertiesUtils.putBusidCheck(params);
+		StringBuffer hql=new StringBuffer();
+		hql.append("from Organizeinfo organi where organi.vtypes = '0' ");
+//		String hql = "from Organizeinfo organi where organi.parentid=? and organi.orgflag = '0' order by organi.id";
+		//所属企业
+		if(params.containsKey("busid")){
+//					hql = hql + " and busid = :busid";
+//			hql.append(" and  FIND_IN_SET(busid,'-1,:busid')");
+			hql.append(" and  busid in (0,:busid )");
+		}
+		//上级ID
+		if(params.containsKey("parentid")){
+//					hql = hql + " and parentid = :parentid";
+			hql.append(" and parentid = :parentid");
+		}
+		hql.append("  order by organi.id");
+		return this.find(hql.toString(), params);
+	}
 	public Page<Organizeinfo> queryOrganizeinfo(Page<Organizeinfo> page, Map<String, Object> params){
 //		String hql = "from Organizeinfo organizeinfo where 1=1";
 		StringBuffer hql=new StringBuffer();
