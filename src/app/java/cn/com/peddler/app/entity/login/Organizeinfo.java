@@ -4,8 +4,12 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -66,17 +70,30 @@ public class Organizeinfo extends AuditableEntity{
 	public void setVtypes(String vtypes) {
 		this.vtypes = vtypes;
 	}
-	
+	/*
 	private Long busid;//所属企业
-	/**所属企业*/
+	*//**所属企业*//*
 	@Column(columnDefinition=DEF_NUM10)
 	public Long getBusid() {
 		return this.busid;
 	}
-	/**所属企业*/
+	*//**所属企业*//*
 	public void setBusid(Long busid) {
 		this.busid = busid;
 	}
+	*/
+	/**所属企业*/
+	private Businessinfo businessinfo;
+	//一对一定义
+	@OneToOne(cascade=CascadeType.REFRESH,fetch = FetchType.LAZY)
+	@JoinColumn(name="busid", unique= false, nullable=true, insertable=true, updatable=true)
+	public Businessinfo getBusinessinfo() {
+		return businessinfo;
+	}
+	public void setBusinessinfo(Businessinfo businessinfo) {
+		this.businessinfo = businessinfo;
+	}
+	
 	private Long parentid;//上级ID
 	/**上级ID*/
 	@Column(columnDefinition=DEF_NUM10)

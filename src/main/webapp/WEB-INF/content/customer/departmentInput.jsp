@@ -12,7 +12,7 @@
 			<div class="pageFormContent" layoutH="55">
 				<div class="unit">
 					<label>上级机构：</label>
-					<input type="hidden" name="orgLookup.busid" value="${upOrgani.busid}" />
+					<input type="hidden" name="orgLookup.busid" value="${upOrgani.businessinfo.id}" />
 					<input type="hidden" name="orgLookup.id" value="${upOrgani.id}" />
 					<input type="text" name="orgLookup.name" size="30" readonly="readonly" value="${upOrgani.orgname }" />
 					<a href="${ctx }/organize/getTreeDept" lookupGroup="orgLookup" width="400" height="400">选择机构</a>

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import cn.com.peddler.app.entity.login.Businessinfo;
 import cn.com.peddler.app.entity.login.Organizeinfo;
 import cn.com.peddler.app.entity.security.Userinfo;
 import cn.com.peddler.app.service.baseinfo.OrganizeinfoManager;
@@ -109,7 +110,10 @@ public class OrganizeinfoController {
 	    String busid = request.getParameter("orgLookup.busid");//原来是在页面给的值  现在在后台获取父id 并保存
         if(parentId != null){
             organi.setParentid(Long.parseLong(parentId)); 
-            organi.setBusid(Long.parseLong(busid));
+            Businessinfo bus = new Businessinfo();
+            bus.setId(Long.parseLong(busid));
+            organi.setBusinessinfo(bus);
+//            organi.setBusid(Long.parseLong(busid));
         }
        organizeinfoManager.saveOrgani(organi);
 	   DwzResult success = new DwzResult("200","保存成功","rel_initTree","","closeCurrent","");

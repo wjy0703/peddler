@@ -25,7 +25,7 @@ public class OrganizeinfoDao extends HibernateDao<Organizeinfo, Long>{
 		if(params.containsKey("busid")){
 //					hql = hql + " and busid = :busid";
 //			hql.append(" and  FIND_IN_SET(busid,'-1,:busid')");
-			hql.append(" and  busid in (0,:busid )");
+			hql.append(" and  businessinfo.id =:busid ");
 		}
 		//上级ID
 		if(params.containsKey("parentid")){
@@ -82,7 +82,7 @@ public class OrganizeinfoDao extends HibernateDao<Organizeinfo, Long>{
 		//所属企业
 		if(params.containsKey("busid")){
 //			hql = hql + " and busid = :busid";
-			hql.append(" and busid = :busid");
+			hql.append(" and businessinfo.busid = :busid");
 		}
 		//上级ID
 		if(params.containsKey("parentid")){

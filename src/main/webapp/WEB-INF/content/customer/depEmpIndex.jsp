@@ -33,14 +33,14 @@
 					<thead>
 						<tr>
 							<th width="20px">机构名称</th>
-							<th width="40px">机构编码</th>
+							<th width="40px">所属公司</th>
 							<th width="40px">级别描述</th>
 							<th width="40px">是否在用</th>
 						</tr>
 					</thead>
 						<tr>
 							<td><div id="name">${organi.orgname }</div></td>
-							<td><div id="id">${organi.id }</div></td>
+							<td><div id="businame">${organi.businessinfo.businame }</div></td>
 							<td><div id="orgflag"><sen:vtoName coding="orgflags" value="${organi.orgflag}"/></div></td>
 							<td><div id="vtypes"><sen:vtoName coding="vtypes" value="${organi.vtypes}"/></div></td>
 						</tr>

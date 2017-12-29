@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.com.peddler.app.dao.JdbcDao;
 import cn.com.peddler.app.dao.login.OrganizeinfoDao;
 import cn.com.peddler.app.dao.login.UserinfoDao;
+import cn.com.peddler.app.entity.login.Businessinfo;
 import cn.com.peddler.app.entity.login.Organizeinfo;
 import cn.com.peddler.app.entity.security.Userinfo;
 import cn.com.peddler.app.service.security.OperatorDetails;
@@ -58,9 +59,11 @@ public class OrganizeinfoManager {
     	Organizeinfo upOrgani = new Organizeinfo();
 		if(parentId == 0){
 			OperatorDetails operator = (OperatorDetails)SpringSecurityUtils.getCurrentUser();
+			Businessinfo bus = new Businessinfo();
 			upOrgani.setId(new Long(0));
 			upOrgani.setOrgname("组织机构");
-			upOrgani.setBusid(operator.getBusid());
+			bus.setId(operator.getBusid());
+			upOrgani.setBusinessinfo(bus);
 		}else{
 			upOrgani = organizeinfoDao.get(parentId);
 		}
@@ -93,7 +96,7 @@ public class OrganizeinfoManager {
     private String buildOrgnizationNode(Long orgId){
     	Organizeinfo organization = organizeinfoDao.get(orgId);
 		StringBuffer node = new StringBuffer();
-		node.append("<li><a href=\"javascript:\" onclick=\"$.bringBack({id:'"+organization.getId()+"', name:'"+organization.getOrgname()+"',busid:'"+organization.getBusid()+"'})\">"+organization.getOrgname()+"</a>");
+		node.append("<li><a href=\"javascript:\" onclick=\"$.bringBack({id:'"+organization.getId()+"', name:'"+organization.getOrgname()+"',busid:'"+organization.getBusinessinfo().getId()+"'})\">"+organization.getOrgname()+"</a>");
 		List<Organizeinfo> organiList = getOrganiByParent(orgId);
 		if(organiList != null && organiList.size()>0 ){
 			node.append("<ul>");
