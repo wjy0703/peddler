@@ -109,6 +109,15 @@ public enum MetaDataTypeEnum {
 		public String toString() {
 			return "menutype";
 		}
+	},
+	/**
+	 * 是否在职，在职，离职
+	 */
+	ON_JOB {
+		@Override
+		public String toString() {
+			return "onjob";
+		}
 	}
 	
 	

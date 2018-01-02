@@ -1,6 +1,8 @@
 package cn.com.peddler.app.web.baseinfo;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,10 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
+import cn.com.peddler.app.entity.login.Organizeinfo;
 import cn.com.peddler.app.entity.security.Userinfo;
+import cn.com.peddler.app.service.baseinfo.OrganizeinfoManager;
 import cn.com.peddler.app.service.login.UserinfoManager;
 import cn.com.peddler.app.service.security.OperatorDetails;
 import cn.com.peddler.app.util.HibernateAwareBeanUtilsBean;
@@ -29,6 +35,9 @@ import cn.com.peddler.core.web.ServletUtils;
 @RequestMapping(value="/userinfo")
 public class UserinfoController {
 	private Logger logger = LoggerFactory.getLogger(UserinfoController.class);
+	
+	@Autowired
+	private OrganizeinfoManager organizeinfoManager;
 	
 	private UserinfoManager userinfoManager;
 	@Autowired
@@ -124,4 +133,100 @@ public class UserinfoController {
 		ServletUtils.renderJson(response, success);
 		return null;
 	}
+	
+
+	@RequestMapping(value = "/addemployee", method = RequestMethod.GET)
+	public ModelAndView addUser() {
+		return new ModelAndView("customer/employee-input", "userinfo",
+				new Userinfo());
+	}
+	
+	/**
+	 * 组织机构添加员工 MDY
+	 * @param Id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/addTreeUser/{Id}", method = RequestMethod.GET)
+    public String addTreeEmployee(@PathVariable Long Id, Model model) {
+		Userinfo userinfo = new Userinfo();
+	    Organizeinfo organi = organizeinfoManager.getOrganizeinfo(Id);
+	    userinfo.setOrganizeinfo(organi);
+	    userinfo.setBusinessinfo(organi.getBusinessinfo());
+	    String canLook = PropertiesUtils.putBusidLook();
+		model.addAttribute("canLook", canLook);
+	    model.addAttribute("userinfo", userinfo);
+        return "customer/userTreeInput";
+    }
+	
+	/**
+	 * 组织机构添加员工保存 MDY
+	 * @param employee
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/saveTreeUser", method = RequestMethod.POST)
+    public String saveTreeUser(@ModelAttribute("userinfo") Userinfo userinfo,
+            HttpServletRequest request, HttpServletResponse response) {
+        String code = "300";
+        String msg = "保存失败！";
+        
+        try {
+			userinfo.setPassword(EncodeUtils.getMd5PasswordEncoder("abc123",
+					userinfo.getAccount()));
+			userinfoManager.saveUserinfo(userinfo);
+			code = "200";
+			msg = "保存成功";
+		} catch (Exception e) {
+			logger.error("-----UserinfoController---------saveTreeUser------保存失败！----");
+		}
+		DwzResult success = new DwzResult(code, msg, "","", "", "");
+        ServletUtils.renderJson(response, success);
+
+        return null;
+    }
+
+	@RequestMapping(value = "/editemployee/{Id}", method = RequestMethod.GET)
+	public ModelAndView edit(@PathVariable Long Id) {
+		Userinfo userinfo = userinfoManager.getUserinfo(Id);
+		return new ModelAndView("customer/employee-input", "userinfo", userinfo);
+	}
+	
+	@RequestMapping(value = "/getRole")
+	public String getRole(HttpServletRequest request, Model model) {
+		OperatorDetails operator = (OperatorDetails)SpringSecurityUtils.getCurrentUser();
+		model.addAttribute("result",organizeinfoManager.buildOrganiByType());
+		model.addAttribute("operator",operator);
+		return "customer/treeLookup";
+	}
+	
+	@RequestMapping(value="/chUserAccount")
+	public String chUserAccount(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			String propertyName = request.getParameter("propertyName");
+			String newValue = URLDecoder.decode(request.getParameter(propertyName), "UTF-8");
+			String oldValue = URLDecoder.decode(request.getParameter("oldValue"), "UTF-8");
+			String errmes = URLDecoder.decode(request.getParameter("errmes"), "UTF-8");
+			response.setContentType("text/html;charset=utf-8");
+			//println("propertyName===>" + propertyName + ";newValue==>" + newValue + ";oldValue==>" +oldValue + ";errmes==>" +errmes);
+			if (userinfoManager.isUserAccountUnique( newValue, oldValue)) {
+				//ServletUtils.renderText(response, "true");
+			} else {
+				//ServletUtils.render(response, "false", "hello");
+				ServletUtils.renderText(response, errmes + "已经存在");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//因为直接输出内容而不经过jsp,因此返回null.
+		return null;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(EncodeUtils.getMd5PasswordEncoder("abc123",
+					"wjy"));
+	}
+
 }

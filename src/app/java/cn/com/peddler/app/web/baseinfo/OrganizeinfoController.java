@@ -172,12 +172,12 @@ public class OrganizeinfoController {
 	}
 	
 	@RequestMapping(value="/addOrganizeinfo", method=RequestMethod.GET)
-	public ModelAndView add(){
+	public ModelAndView addOrganizeinfo(){
 		return new ModelAndView("folder/organizeinfoInput", "organizeinfo", new Organizeinfo());
 	}
 	
 	@RequestMapping(value="/editOrganizeinfo/{Id}", method=RequestMethod.GET)
-	public ModelAndView edit(@PathVariable Long Id){
+	public ModelAndView editOrganizeinfo(@PathVariable Long Id){
 		Organizeinfo organizeinfo = organizeinfoManager.getOrganizeinfo(Id);
 		return new ModelAndView("folder/organizeinfoInput", "organizeinfo", organizeinfo);
 	}
@@ -206,4 +206,6 @@ public class OrganizeinfoController {
 		ServletUtils.renderJson(response, success);
 		return null;
 	}
+	
+	
 }

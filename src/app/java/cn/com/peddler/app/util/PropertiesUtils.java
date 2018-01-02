@@ -36,7 +36,6 @@ public class PropertiesUtils
   private static PropertiesPersister propertiesPersister = new DefaultPropertiesPersister();
   private static ResourceLoader resourceLoader = new DefaultResourceLoader();
   
-  private static OperatorDetails operator = (OperatorDetails)SpringSecurityUtils.getCurrentUser();
   
   public static Properties loadProperties(String[] locations)
     throws IOException
@@ -72,6 +71,7 @@ public class PropertiesUtils
    */
   public static void putBusidCheck(Map<String, Object> params)
   {
+	  OperatorDetails operator = (OperatorDetails)SpringSecurityUtils.getCurrentUser();
 	  params.put("busid", -1);
 	  params.put("orgid", -1);
 	  params.put("vsystype", "-1");
@@ -108,6 +108,7 @@ public class PropertiesUtils
    */
   public static String putBusidLook()
   {
+	  OperatorDetails operator = (OperatorDetails)SpringSecurityUtils.getCurrentUser();
 	  String canLook= "1";
 	  if(null != operator){
 		  String post = operator.getPositionCode();

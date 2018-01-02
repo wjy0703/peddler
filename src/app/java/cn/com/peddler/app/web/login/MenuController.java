@@ -133,7 +133,7 @@ public class MenuController {
 		menus4 = menutableManager.buildMenuByTopId(sMenu);
 		model.addAttribute("menus", menus);
 		model.addAttribute("sMenu", menus4);
-		return "baseinfo/menu";
+		return "customer/menu";
 	}
 	
 	/**

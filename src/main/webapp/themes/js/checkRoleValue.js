@@ -29,6 +29,29 @@ function vRoleName(oldvale,ppname,errmes)
 		});
 	}
 }
+
+/*验证问题名是否重复*/
+function vUserAccount(oldvale,ppname,errmes)
+{
+	var $box = navTab.getCurrentPanel();
+	var NAME = $("#"+ppname,$box).val();
+	var busacc = $("#busacc",$box).val();
+	var canLook = $("#canLook",$box).val();
+	if(''!=NAME)
+	{
+		var url = "userinfo/chUserAccount?oldValue="+encodeURI(encodeURI(oldvale))+"&propertyName="+ppname+"&errmes="+encodeURI(encodeURI(errmes))+"&"+ppname+"="+encodeURI(encodeURI(NAME));
+		var urlOld = convertURL(url);
+		$.get(urlOld,null,function(data,text)
+		{
+			if(data!='')
+			{
+				//alert(data);
+				alertMsg.error(data);
+				$("#"+ppname,$box).val("");
+			};
+		});
+	}
+}
 //给url地址增加时间戳，不读取缓存
 function convertURL(url) {
     var timstamp = (new Date()).valueOf();

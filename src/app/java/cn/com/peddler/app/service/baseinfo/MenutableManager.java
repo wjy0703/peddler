@@ -299,7 +299,7 @@ public class MenutableManager {
 		List<Menutable> menus2 = new LinkedList<Menutable>();
 		
 		Map<String,Object> params = new HashMap<String,Object>();
-		params.put("levelid", levelId);
+		params.put("levelid", Long.parseLong(levelId+""));
 		PropertiesUtils.putBusidCheck(params);
 		List<Menutable> menus = menutableDao.getMenusByLevel(params);
 

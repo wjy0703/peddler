@@ -58,6 +58,10 @@ public class MetaDataTypeConverter {
             
             return MetaDataTypeEnum.ORGFLAG.toString();
             
+        }else if(StringUtils.equals("onjob", coding)){                //是否在职，在职，离职
+            
+            return MetaDataTypeEnum.ON_JOB.toString();
+            
         }
     	
     	//50003 liveStateType

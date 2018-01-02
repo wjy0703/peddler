@@ -418,7 +418,10 @@ public class UserinfoManager {
 		return roleinfoDao.isPropertyUnique("rolename", newValue, oldValue);
 		
 	}
-
+	public boolean isUserAccountUnique(String newValue, String oldValue) {
+		return userinfoDao.isPropertyUnique("account", newValue, oldValue);
+		
+	}
 
 	public List<Authority> getAuthorityListByIds(List<Long> ids) {
 		return authorityDao.findByIds(ids);

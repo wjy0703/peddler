@@ -301,7 +301,7 @@ function cqClick(){
 </head>
 
 <body scroll="no">
-<a id="password111" href="${ctx }/account/password" target="dialog" title="请重设您的密码"  mask="true" width="400" onclick="clearTimeout(timer1);"></a>
+<a id="password111" href="${ctx }/userinfo/password" target="dialog" title="请重设您的密码"  mask="true" width="400" onclick="clearTimeout(timer1);"></a>
 	<input type="hidden" id="uploadedFlag" name="uploadedFlag" value="0" />
 	<div id="layout">
 		<div id="header">

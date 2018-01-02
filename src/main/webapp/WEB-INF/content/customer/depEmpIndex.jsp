@@ -15,14 +15,14 @@
 			
 				<div class="panelBar">
 					<ul class="toolBar">
-						<li><a class="add" href="organize/addTreeDep?id=${organi.id }" target="dialog" rel="TreeDept1" mask="true" width="400" title="添加机构"><span>添加机构</span></a></li>
-						 <bjdv:validateContent type="1" funcId="添加员工">
-						<li><a class="add" href="${ctx}/organize/addTreeEmployee/${organi.id }?sysTypeParam=${sysTypeParam}" target="dialog" rel="rel_addTreeEmployee" mask="true" width="400" title="添加员工"><span>添加员工</span></a></li>
+						<li><a class="add" href="organize/addTreeDep?id=${organi.id }"  target="dialog" rel="TreeDept1" mask="true" width="400" title="添加机构"><span>添加机构</span></a></li>
+						 <bjdv:validateContent type="1" funcId="组织机构-添加员工">
+						<li><a class="add" href="${ctx}/userinfo/addTreeUser/${organi.id }" target="navTab" rel="rel_addTreeUser" mask="true" width="400" title="添加员工"><span>添加员工</span></a></li>
 						</bjdv:validateContent>
 						<li><a class="edit" href="organize/editTreeDep?id=${organi.id }" target="dialog" mask="true" rel="TreeDept1" width="400" title="调整机构"><span>调整机构</span></a></li>
 						<li><a class="delete" href="#" onclick="deleteTree(${organi.id })"><span>删除</span></a></li>
 						<li><a title="确定这些员工要离职吗?" target="selectedTodo" rel="ids" warn="请至少选择一个员工"
-								 href="${ctx }/organize/deparmentLeavePost" class="delete" postType="string"><span>离职</span></a></li>
+								 href="${ctx }/userinfo/deparmentLeavePost" class="delete" postType="string"><span>离职</span></a></li>
 					</ul>
 				</div>
 			
@@ -56,6 +56,7 @@
 							<th width="100">姓别</th>
 							<th width="100">岗位</th>
 							<th width="100">公司</th>
+							<th width="100">状态</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -68,6 +69,7 @@
 							<td><sen:vtoName coding="sexType" value="${user.sex}"/></td>
 							<td><sen:vtoName coding="postType" value="${user.post}"/></td>
 							<td>${user.businessinfo.businame }</td>
+							<td><sen:vtoName coding="onjob" value="${user.vtypes}"/></td>
 						</tr>
 					</c:forEach>
 					</tbody>

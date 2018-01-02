@@ -93,9 +93,11 @@ public class RoleinfoDao extends HibernateDao<Roleinfo, Long>{
 	}
 	
 	public List<Roleinfo> findRole(Map<String, Object> params) {
-	    String hql = "from Roleinfo role where 1=1 and sts = '0'";
-	    
-        hql = hql + "order by role.id asc" ;
+	    String hql = "from Roleinfo role where 1=1 and vtypes = '0' ";
+	    if(params.containsKey("busid")){
+			hql = hql + " and busid = :busid ";
+		}
+        hql = hql + " order by role.id asc" ;
 	    return this.find(hql, params);
 	}
 }

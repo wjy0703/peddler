@@ -299,24 +299,25 @@ public class RoleController {
     }
 */    
 	
+	
 	@RequestMapping(value="/findrole")
 	public String findrole( @RequestParam(value="userId",required=false) String userId,
 	                HttpServletRequest request , Model model){
 		Userinfo u = new Userinfo();
+		List<Roleinfo> userRoles = new ArrayList<Roleinfo>();
 		if(!StringUtils.isBlank(userId)){
 			u = userinfoManager.getUserinfo(Long.valueOf(userId));
-		
-			Map<String,Object> params = new HashMap<String,Object>(1);
-			String sysTypeParam = request.getParameter("sysTypeParam");
-			if (StringUtils.isNotBlank(sysTypeParam)) {
-	            params.put("sysTypeParam", sysTypeParam);
-	        }
-			List<Roleinfo> userRoles = new ArrayList<Roleinfo>();
 			userRoles.add(u.getRoleinfo());
-			List<Roleinfo> list = authorityManager.getMergedUserRoleAndAllRole(userRoles,params);
-			model.addAttribute("result", list);
-			model.addAttribute("user", u);
 		}
+		Map<String,Object> params = new HashMap<String,Object>(1);
+		String busid = request.getParameter("busid");
+		if (StringUtils.isNotBlank(busid)) {
+            params.put("busid", Long.parseLong(busid));
+        }
+		List<Roleinfo> list = authorityManager.getMergedUserRoleAndAllRole(userRoles,params);
+		model.addAttribute("result", list);
+		model.addAttribute("user", u);
+		model.addAttribute("busid", busid);
 		return "customer/rolelookup";
 	}
 
