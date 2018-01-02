@@ -301,16 +301,13 @@ public class UserinfoManager {
 	
 	@Transactional(readOnly = true)
 	public Userinfo findUserByLoginName(String account) {
-//		Userinfo user = userinfoDao.findUniqueBy("account", account);
 		Userinfo user = new Userinfo();
+		
 		user = userinfoDao.findUniqueBy("account", account);
-//		logger.warn("user.getRoleinfo() ======:"+user.getRoleinfo());
-//		logger.warn("user.getBusinessinfo() ======:"+user.getBusinessinfo().getBusiname());
-//		logger.warn("user.getOrganizeinfo() ======:"+user.getOrganizeinfo().getOrgname());
-//		logger.warn("user.getVtypes() ======:"+user.getVtypes());
 		if(user==null || user.getRoleinfo() == null || !"0".equals(user.getVtypes())){
 			user = null;
 		}
+		
 //		Map<String, Object> conditions = new HashMap<String, Object>();
 //		conditions.put("sql", " and a.account='"+account+"' ");
 //		List<Map<String,Object>> userList = jdbcDao.searchBySqlTemplate("queryUserinfoList", conditions);

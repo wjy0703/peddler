@@ -28,6 +28,12 @@ data.put("KHH", attrCacheManager.getAttrName(MetaDataTypeEnum.ALL_BANK.toString(
 //设置自增主键起始值
 alter table menutable AUTO_INCREMENT = 100;
 
+//mysql物隔离级别
+SELECT @@global.tx_isolation;
+//将REPEATABLE-READ修改为READ-COMMITTED
+set global transaction isolation level read committed;
+set session transaction isolation level read committed;
+
 问题：
 1、退出系统日志保存失败
 2、个人修改密码，返回跳转页面失败，页面报JS错误					
