@@ -3,10 +3,12 @@ package cn.com.peddler.app.web.baseinfo;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +18,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
+import cn.com.peddler.app.entity.login.Businessinfo;
 import cn.com.peddler.app.entity.login.Organizeinfo;
 import cn.com.peddler.app.entity.security.Userinfo;
+import cn.com.peddler.app.service.baseinfo.BusinessinfoManager;
 import cn.com.peddler.app.service.baseinfo.OrganizeinfoManager;
 import cn.com.peddler.app.service.login.UserinfoManager;
 import cn.com.peddler.app.service.security.OperatorDetails;
 import cn.com.peddler.app.util.HibernateAwareBeanUtilsBean;
 import cn.com.peddler.app.util.PropertiesUtils;
+import cn.com.peddler.app.util.RequestPageUtils;
+import cn.com.peddler.core.orm.Page;
 import cn.com.peddler.core.security.springsecurity.SpringSecurityUtils;
 import cn.com.peddler.core.utils.EncodeUtils;
 import cn.com.peddler.core.web.DwzResult;
@@ -38,6 +43,9 @@ public class UserinfoController {
 	
 	@Autowired
 	private OrganizeinfoManager organizeinfoManager;
+	
+	@Autowired
+	private BusinessinfoManager businessinfoManager;
 	
 	private UserinfoManager userinfoManager;
 	@Autowired
@@ -72,10 +80,10 @@ public class UserinfoController {
         	 userinfoManager.saveUserinfo(userinfo);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            throw new RuntimeException("拷贝借款申请记录出现错误，请联系管理员");
+            throw new RuntimeException("拷贝用户记录出现错误，请联系管理员");
         } catch (InvocationTargetException e) {
             e.printStackTrace();
-            throw new RuntimeException("拷贝借款申请记录出现错误，请联系管理员");
+            throw new RuntimeException("拷贝用户记录出现错误，请联系管理员");
         }
 		DwzResult success = new DwzResult("200","保存成功","","","closeCurrent","");
 		ServletUtils.renderJson(response, success);
@@ -135,12 +143,6 @@ public class UserinfoController {
 	}
 	
 
-	@RequestMapping(value = "/addemployee", method = RequestMethod.GET)
-	public ModelAndView addUser() {
-		return new ModelAndView("customer/employee-input", "userinfo",
-				new Userinfo());
-	}
-	
 	/**
 	 * 组织机构添加员工 MDY
 	 * @param Id
@@ -160,7 +162,7 @@ public class UserinfoController {
     }
 	
 	/**
-	 * 组织机构添加员工保存 MDY
+	 * 组织机构添加员工保存 
 	 * @param employee
 	 * @param request
 	 * @param response
@@ -187,11 +189,6 @@ public class UserinfoController {
         return null;
     }
 
-	@RequestMapping(value = "/editemployee/{Id}", method = RequestMethod.GET)
-	public ModelAndView edit(@PathVariable Long Id) {
-		Userinfo userinfo = userinfoManager.getUserinfo(Id);
-		return new ModelAndView("customer/employee-input", "userinfo", userinfo);
-	}
 	
 	@RequestMapping(value = "/getRole")
 	public String getRole(HttpServletRequest request, Model model) {
@@ -224,9 +221,91 @@ public class UserinfoController {
 		return null;
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(EncodeUtils.getMd5PasswordEncoder("abc123",
-					"wjy"));
+	@RequestMapping(value="/listuser")
+	public String list(HttpServletRequest request, Model model){
+		// 处理分页的参数
+	    Page<Userinfo> page = new RequestPageUtils<Userinfo>()
+                .generatePage(request);
+		
+		Map<String, Object> params = ServletUtils.getParametersStartingWith2(request, "filter_");
+		userinfoManager.searchUserinfo(page, params);
+		String canLook = PropertiesUtils.putBusidLook();
+		model.addAttribute("canLook", canLook);
+		model.addAttribute("organiId", request.getParameter("filter_organi.id"));
+	    model.addAttribute("organiName", request.getParameter("filter_organi.name"));
+		model.addAttribute("page", page);
+		model.addAttribute("map", params);
+		return "customer/userinfoIndex";
+		
+	}
+	@RequestMapping(value="/saveUserinfo",method=RequestMethod.POST)
+	public String saveuser(@ModelAttribute("user") Userinfo user, HttpServletRequest request, HttpServletResponse response){
+		if(StringUtils.isEmpty(user.getPassword())){
+			user.setPassword(EncodeUtils.getMd5PasswordEncoder("abc123",
+					user.getAccount()));
+		}
+		String orgId = request.getParameter("orgLookup.id");//原来是在页面给的值  现在在后台获取父id 并保存
+	    String busid = request.getParameter("orgLookup.busid");
+	    
+//	    user.setBusinessinfo(businessinfoManager.getBusinessinfo(Long.parseLong(busid)));
+//	    user.setOrganizeinfo(organizeinfoManager.getOrganizeinfo(Long.parseLong(orgId)));
+	    
+	    Businessinfo bus = new Businessinfo();
+        bus.setId(Long.parseLong(busid));
+        user.setBusinessinfo(bus);
+        
+        Organizeinfo org = new Organizeinfo();
+        org.setId(Long.parseLong(orgId));
+        user.setOrganizeinfo(org);
+        
+		userinfoManager.saveUser(user);
+
+		DwzResult success = new DwzResult("200","保存成功","rel_listuser","","","");
+		ServletUtils.renderJson(response, success);
+		
+		return null;
+	}
+	
+	@RequestMapping(value="/adduser", method=RequestMethod.GET)
+	public String adduser(HttpServletRequest request, Model model){
+		String canLook = PropertiesUtils.putBusidLook();
+		model.addAttribute("canLook", canLook);
+		model.addAttribute("user", new Userinfo());
+		return "customer/userinfoInput";
+	}
+	
+	@RequestMapping(value="/edituser/{Id}", method=RequestMethod.GET)
+	public String edituser(@PathVariable Long Id, Model model){
+		Userinfo user = userinfoManager.getUserinfo(Id);
+		String canLook = PropertiesUtils.putBusidLook();
+		model.addAttribute("canLook", canLook);
+		model.addAttribute("user", user);
+		return "customer/userinfoInput";
+	}
+
+	@RequestMapping(value="/deluser/{Id}")
+	public String delUser(@PathVariable Long Id, HttpServletResponse response){
+		userinfoManager.deleteUserinfo(Id);
+		DwzResult success = new DwzResult("200","删除成功","rel_listuser","","","");
+		ServletUtils.renderJson(response, success);
+		return null;
+	}
+	
+	@RequestMapping(value="/batchdeluser")
+	public String batchDelUser(HttpServletRequest request, HttpServletResponse response){
+		String ids = request.getParameter("ids");
+		String[] Ids = ids.split(",");
+		boolean isSuccess = userinfoManager.batchDelUserinfo(Ids);
+		
+		DwzResult success = null;
+		if (isSuccess){
+			success = new DwzResult("200","删除成功","rel_listuser","","","");
+		}
+		else{
+			success = new DwzResult("300","删除失败","rel_listuser","","","");
+		}
+		ServletUtils.renderJson(response, success);
+		return null;
 	}
 
 }

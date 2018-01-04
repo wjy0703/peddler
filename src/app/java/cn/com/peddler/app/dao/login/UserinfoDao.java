@@ -37,10 +37,12 @@ public class UserinfoDao extends HibernateDao<Userinfo, Long>{
 //		String hql = "from Userinfo userinfo where 1=1";
 		StringBuffer hql=new StringBuffer();
 		hql.append("from Userinfo userinfo where 1=1");
+		
 		//账户
 		if(params.containsKey("account")){
 //			hql = hql + " and account = :account";
-			hql.append(" and account = :account");
+//			hql.append(" and account = :account");
+			hql.append(" and account like '%'||:account||'%'");
 		}
 		//密码
 		if(params.containsKey("password")){
@@ -52,15 +54,15 @@ public class UserinfoDao extends HibernateDao<Userinfo, Long>{
 //			hql = hql + " and rolesid = :rolesid";
 			hql.append(" and rolesid = :rolesid");
 		}
-		//所属机构
-		if(params.containsKey("orgid")){
-//			hql = hql + " and orgid = :orgid";
-			hql.append(" and orgid = :orgid");
+		if(params.containsKey("organi.id")){
+			String id = params.get("organi.id").toString();
+			hql.append(" and organizeinfo.id = "+Long.valueOf(id));
 		}
 		//姓名
 		if(params.containsKey("vname")){
 //			hql = hql + " and vname = :vname";
-			hql.append(" and vname = :vname");
+//			hql.append(" and vname = :vname");
+			hql.append(" and vname like '%'||:vname||'%'");
 		}
 		//性别
 		if(params.containsKey("sex")){
@@ -105,7 +107,13 @@ public class UserinfoDao extends HibernateDao<Userinfo, Long>{
 		//所属企业
 		if(params.containsKey("busid")){
 //			hql = hql + " and busid = :busid";
-			hql.append(" and busid = :busid");
+			hql.append(" and businessinfo.id = :busid");
+		}else{
+			PropertiesUtils.putBusidCheck(params);
+			if(params.containsKey("busid")){
+//				hql = hql + " and busid = :busid";
+				hql.append(" and businessinfo.id = :busid");
+			}
 		}
 		//岗位
 		if(params.containsKey("post")){
