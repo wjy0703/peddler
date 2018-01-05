@@ -18,17 +18,17 @@ public class BusinessinfoDao extends HibernateDao<Businessinfo, Long>{
 		//公司账户
 		if(params.containsKey("busiaccount")){
 //			hql = hql + " and busiaccount = :busiaccount";
-			hql.append(" and busiaccount = :busiaccount");
+			hql.append(" and busiaccount like '%'||:busiaccount||'%'");
 		}
 		//公司名
 		if(params.containsKey("businame")){
 //			hql = hql + " and businame = :businame";
-			hql.append(" and businame = :businame");
+			hql.append(" and businame like '%'||:businame||'%'");
 		}
 		//法人
 		if(params.containsKey("corporation")){
 //			hql = hql + " and corporation = :corporation";
-			hql.append(" and corporation = :corporation");
+			hql.append(" and corporation like '%'||:corporation||'%'");
 		}
 		//证件号码
 		if(params.containsKey("card")){

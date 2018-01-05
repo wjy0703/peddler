@@ -67,4 +67,14 @@ public class Reatpackage extends AuditableEntity{
 	public void setVtypes(String vtypes) {
 		this.vtypes = vtypes;
 	}
+	
+	private String flag;
+	@Column(columnDefinition=DEF_STR1)
+	public String getFlag() {
+		return flag;
+	}
+
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
 }

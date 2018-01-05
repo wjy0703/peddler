@@ -1,5 +1,7 @@
 package cn.com.peddler.app.service.baseinfo;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.com.peddler.app.dao.JdbcDao;
 import cn.com.peddler.app.dao.baseinfo.BusinessinfoDao;
+import cn.com.peddler.app.dao.reat.BuyreatinfoDao;
+import cn.com.peddler.app.dao.reat.ReatpackageDao;
 import cn.com.peddler.app.entity.login.Businessinfo;
+import cn.com.peddler.app.entity.login.Buyreatinfo;
+import cn.com.peddler.app.entity.login.Reatpackage;
+import cn.com.peddler.app.util.DateAndTimeUtil;
 import cn.com.peddler.core.orm.JdbcPage;
 import cn.com.peddler.core.orm.Page;
 
@@ -22,7 +29,11 @@ import cn.com.peddler.core.orm.Page;
 //默认将类中的所有函数纳入事务管理.
 @Transactional
 public class BusinessinfoManager {
-
+	@Autowired
+	private BuyreatinfoDao buyreatinfoDao;
+	@Autowired
+	private ReatpackageDao reatpackageDao;
+	
 	private BusinessinfoDao businessinfoDao;
 	@Autowired
 	public void setBusinessinfoDao(BusinessinfoDao businessinfoDao) {
@@ -46,7 +57,29 @@ public class BusinessinfoManager {
 	public void saveBusinessinfo(Businessinfo entity) {
 		businessinfoDao.save(entity);
 	}
+	
+	public void saveBusinessinfoAll(Businessinfo entity) {
+		Reatpackage reat = reatpackageDao.get(entity.getReatpackage().getId());
+		Date date = new Date();
+		entity.setStarttime(new Timestamp(date.getTime()));
+		entity.setOvertime(new Timestamp(DateAndTimeUtil.dateAddMonth(date,Integer.parseInt(reat.getCycke())).getTime()));
+		entity.setTctypes(reat.getCycke());
+		businessinfoDao.save(entity);
+		Buyreatinfo buy = new Buyreatinfo();
+		buy.setBusid(entity.getId());
+		buy.setReatid(reat.getId());
+		buy.setPaymoney(reat.getPrice());
+		buy.setReatname(reat.getReatname());
+		buy.setBuytime(new Timestamp(date.getTime()));
+		buy.setPrice(reat.getPrice());
+		buy.setCycke(reat.getCycke());
+		buyreatinfoDao.save(buy);
+	}
 
+	public boolean isBusiAccUnique(String newValue, String oldValue) {
+		return businessinfoDao.isPropertyUnique("busiaccount", newValue, oldValue);
+	}
+	
 	/**
 	 * 删除用户,如果尝试删除超级管理员将抛出异常.
 	 */

@@ -4,13 +4,18 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import cn.com.peddler.app.entity.security.Roleinfo;
 import cn.com.peddler.core.orm.hibernate.AuditableEntity;
 
 /**
@@ -98,7 +103,7 @@ public class Businessinfo extends AuditableEntity{
 	}
 	private Timestamp starttime;//生效时间
 	/**生效时间*/
-	@Column(insertable = false)
+	@Column(insertable = true,updatable=true)
 	public Timestamp getStarttime() {
 		return this.starttime;
 	}
@@ -108,12 +113,24 @@ public class Businessinfo extends AuditableEntity{
 	}
 	private Timestamp overtime;//到期时间
 	/**到期时间*/
-	@Column(insertable = false)
+	@Column(insertable = true,updatable=true)
 	public Timestamp getOvertime() {
 		return this.overtime;
 	}
 	/**到期时间*/
 	public void setOvertime(Timestamp overtime) {
 		this.overtime = overtime;
+	}
+	
+	/**角色*/
+	private Reatpackage reatpackage;
+	//一对一定义
+	@OneToOne(cascade=CascadeType.REFRESH,fetch = FetchType.LAZY)
+	@JoinColumn(name="reatid", unique= false, nullable=true, insertable=true, updatable=true)
+	public Reatpackage getReatpackage() {
+		return reatpackage;
+	}
+	public void setReatpackage(Reatpackage reatpackage) {
+		this.reatpackage = reatpackage;
 	}
 }

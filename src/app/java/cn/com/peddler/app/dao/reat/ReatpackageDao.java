@@ -1,7 +1,8 @@
 package cn.com.peddler.app.dao.reat;
 
+import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang.StringUtils;
+
 import org.springframework.stereotype.Component;
 
 import cn.com.peddler.app.entity.login.Reatpackage;
@@ -60,5 +61,16 @@ public class ReatpackageDao extends HibernateDao<Reatpackage, Long>{
 			hql.append(" order by ").append(page.getOrderBy()).append(" ").append(page.getOrder());
 		}
 		return this.findPage(page, hql.toString(), params);
+	}
+	
+	public List<Reatpackage> findReat(Map<String, Object> params) {
+		StringBuffer hql=new StringBuffer();
+		hql.append("from Reatpackage reatpackage where 1=1 and vtypes = '0' ");
+		//套餐名称
+		if(params.containsKey("reatname")){
+			hql.append(" and reatname like '%'||:reatname||'%'");
+		}
+		hql.append(" order by reatpackage.id asc ");
+	    return this.find(hql.toString(), params);
 	}
 }

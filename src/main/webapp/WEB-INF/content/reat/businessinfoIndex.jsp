@@ -12,60 +12,40 @@
 <div class="pageHeader">
 	<form rel="pagerForm" onsubmit="return navTabSearch(this);" action="${ctx }/businessinfo/listBusinessinfo" method="post">
 	<div class="searchBar">
-		<ul class="searchContent">
-			<li>
+		<table class="searchContent">
+			<tr>
+				<td>
 				<label>公司账户:</label>
 				<input type="text" name="filter_busiaccount" value="${map.busiaccount}"/>
-			</li>
-			<li>
+			</td>
+			<td>
 				<label>公司名:</label>
 				<input type="text" name="filter_businame" value="${map.businame}"/>
-			</li>
-			<li>
+			</td>
+			<td>
 				<label>法人:</label>
 				<input type="text" name="filter_corporation" value="${map.corporation}"/>
-			</li>
-			<li>
-				<label>证件号码:</label>
-				<input type="text" name="filter_card" value="${map.card}"/>
-			</li>
-			<li>
-				<label>联系方式:</label>
-				<input type="text" name="filter_phone" value="${map.phone}"/>
-			</li>
-			<li>
-				<label>创建时间:</label>
-				<input type="text" name="filter_createtime" value="${map.createtime}"/>
-			</li>
-			<li>
-				<label>修改时间:</label>
-				<input type="text" name="filter_modifytime" value="${map.modifytime}"/>
-			</li>
-			<li>
-				<label>创建人:</label>
-				<input type="text" name="filter_createuser" value="${map.createuser}"/>
-			</li>
-			<li>
-				<label>修改人:</label>
-				<input type="text" name="filter_modifyuser" value="${map.modifyuser}"/>
-			</li>
-			<li>
-				<label>属性（在用、欠费、停用）:</label>
-				<input type="text" name="filter_vtypes" value="${map.vtypes}"/>
-			</li>
-			<li>
-				<label>套餐类型:</label>
-				<input type="text" name="filter_tctypes" value="${map.tctypes}"/>
-			</li>
-			<li>
+			</td>
+			<td>
+				<label>属性:</label>
+				<sen:select name="filter_vtypes" coding="vtypes" clazz="combox" title="全部" value="${map.vtypes}" />
+			</td>
+			</tr>
+			<tr>
+			<td>
+				<label>套餐周期:</label>
+				<sen:select name="filter_tctypes" coding="cyckes" clazz="combox" title="全部" value="${map.tctypes}" />
+			</td>
+			<td>
 				<label>生效时间:</label>
 				<input type="text" name="filter_starttime" value="${map.starttime}"/>
-			</li>
-			<li>
+			</td>
+			<td>
 				<label>到期时间:</label>
 				<input type="text" name="filter_overtime" value="${map.overtime}"/>
-			</li>
-		</ul>
+			</td>
+			</tr>
+		</table>
 		<div class="subBar">
 			<ul>
 				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">检索</button></div></div></li>
@@ -94,14 +74,10 @@
 				<th width="80" orderField="corporation" class="asc">法人</th>
 				<th width="80" orderField="card" class="asc">证件号码</th>
 				<th width="80" orderField="phone" class="asc">联系方式</th>
-				<th width="80" orderField="createtime" class="asc">创建时间</th>
-				<th width="80" orderField="modifytime" class="asc">修改时间</th>
-				<th width="80" orderField="createuser" class="asc">创建人</th>
-				<th width="80" orderField="modifyuser" class="asc">修改人</th>
-				<th width="80" orderField="vtypes" class="asc">属性（在用、欠费、停用）</th>
-				<th width="80" orderField="tctypes" class="asc">套餐类型</th>
-				<th width="80" orderField="starttime" class="asc">生效时间</th>
-				<th width="80" orderField="overtime" class="asc">到期时间</th>
+				<th width="80" orderField="vtypes" class="asc">属性</th>
+				<th width="80" orderField="tctypes" class="asc">套餐周期</th>
+				<th width="80" orderField="starttime" class="asc">生效日期</th>
+				<th width="80" orderField="overtime" class="asc">到期日期</th>
 				<th width="70">操作</th>
 			</tr>
 		</thead>
@@ -114,14 +90,10 @@
 				<td>${user.corporation}</td>
 				<td>${user.card}</td>
 				<td>${user.phone}</td>
-				<td>${user.createtime}</td>
-				<td>${user.modifytime}</td>
-				<td>${user.createuser}</td>
-				<td>${user.modifyuser}</td>
-				<td>${user.vtypes}</td>
-				<td>${user.tctypes}</td>
-				<td>${user.starttime}</td>
-				<td>${user.overtime}</td>
+				<td><sen:vtoName coding="vtypes" value="${user.vtypes}"/></td>
+				<td><sen:vtoName coding="cyckes" value="${user.tctypes}"/></td>
+				<td><fmt:formatDate value='${user.starttime}' pattern='yyyy-MM-dd' /></td>
+				<td><fmt:formatDate value='${user.overtime}' pattern='yyyy-MM-dd' /></td>
 				<td>
 					<a title="删除" target="ajaxTodo" href="${ctx }/businessinfo/delBusinessinfo/${user.id}" class="btnDel">删除</a>
 					<a title="编辑" target="navTab" href="${ctx }/businessinfo/editBusinessinfo/${user.id}" class="btnEdit">编辑</a>

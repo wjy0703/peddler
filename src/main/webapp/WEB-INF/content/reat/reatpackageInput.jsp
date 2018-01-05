@@ -19,7 +19,7 @@
 			</p>
 			<p>
 				<label>属性：</label>
-				<sen:select clazz="required combox" name="vtypes" coding="vtypes" value="${reatpackage.vtypes}" title="请选择"/>
+				<sen:select clazz="required combox" name="vtypes" coding="vtypes" value="${reatpackage.vtypes}" title="请选择" defaultName="在用"/>
 			</p>
 		</div>
 		<div class="formBar">

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.com.peddler.app.dao.JdbcDao;
 import cn.com.peddler.app.dao.reat.ReatpackageDao;
 import cn.com.peddler.app.entity.login.Reatpackage;
+import cn.com.peddler.app.entity.security.Roleinfo;
 import cn.com.peddler.core.orm.JdbcPage;
 import cn.com.peddler.core.orm.Page;
 
@@ -170,4 +171,16 @@ public class ReatpackageManager {
 		
 		return jdbcDao.searchPagesByMergeSqlTemplate(queryName, conditions, page);
 	}
+	
+	@Transactional(readOnly = true)
+    public List<Reatpackage> getReatForLook(Long reatid,Map<String, Object> params) {
+        List<Reatpackage> allRoles = reatpackageDao.findReat(params);
+        for(Reatpackage r1: allRoles){
+            if(r1.getId() == reatid){
+                r1.setFlag("Y");
+                break;
+            }
+        }
+        return allRoles;
+    }
 }
