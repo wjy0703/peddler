@@ -62,6 +62,10 @@ public class MetaDataTypeConverter {
             
             return MetaDataTypeEnum.ON_JOB.toString();
             
+        }else if(StringUtils.equals("cyckes", coding)){                //周期，一个月，半年，一年，两年
+            
+            return MetaDataTypeEnum.CYCKES.toString();
+            
         }
     	
     	//50003 liveStateType

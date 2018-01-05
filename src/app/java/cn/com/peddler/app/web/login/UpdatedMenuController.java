@@ -90,7 +90,7 @@ public class UpdatedMenuController {
 		OperatorDetails operator = SpringSecurityUtils.getCurrentUser();
 		List<UpdatedMenu> menus = updatedMenuManager.getSecondMenu(operator.getUserId(), Id);
 		model.addAttribute("menus",menus);
-		return "baseinfo/updatedMenu";
+		return "customer/updatedMenu";
 	}
 	
 	/**

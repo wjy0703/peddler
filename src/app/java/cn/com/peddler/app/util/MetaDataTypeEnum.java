@@ -119,6 +119,15 @@ public enum MetaDataTypeEnum {
 			return "onjob";
 		}
 	}
-	
+	,
+	/**
+	 * 周期，一个月，半年，一年，两年
+	 */
+	CYCKES {
+		@Override
+		public String toString() {
+			return "cyckes";
+		}
+	}
 	
 }
