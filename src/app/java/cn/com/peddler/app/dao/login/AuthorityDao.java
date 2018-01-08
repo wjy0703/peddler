@@ -18,13 +18,18 @@ public class AuthorityDao extends HibernateDao<Authority, Long>{
 	}
 	
 	public List<Authority> queryAuthorities(Map<String,Object> params){
-        if (params == null ) {
-            return this.queryAuthorities();
-        }
+//        if (params == null ) {
+//            return this.queryAuthorities();
+//        }
         String hql = "from Authority authority where 1=1 and authority.vtype = '0' ";
-        PropertiesUtils.putBusidCheck(params);
+//        PropertiesUtils.putBusidCheck(params);
         if (params.containsKey("vsystype")) {
             hql = hql + " and authority.vsystype = :vsystype ";
+        }else{
+        	 PropertiesUtils.putBusidCheck(params);
+        	 if (params.containsKey("vsystype")) {
+                 hql = hql + " and authority.vsystype = :vsystype ";
+             }
         }
         hql = hql + " order by authority.id asc ";
         return this.find(hql, params);

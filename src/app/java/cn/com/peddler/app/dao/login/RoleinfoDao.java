@@ -97,6 +97,9 @@ public class RoleinfoDao extends HibernateDao<Roleinfo, Long>{
 	    if(params.containsKey("busid")){
 			hql = hql + " and busid = :busid ";
 		}
+	    if(params.containsKey("rolename")){
+			hql = hql + " and rolename = :rolename ";
+		}
         hql = hql + " order by role.id asc" ;
 	    return this.find(hql, params);
 	}

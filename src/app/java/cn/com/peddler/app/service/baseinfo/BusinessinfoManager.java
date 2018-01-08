@@ -13,14 +13,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.com.peddler.app.dao.JdbcDao;
 import cn.com.peddler.app.dao.baseinfo.BusinessinfoDao;
+import cn.com.peddler.app.dao.login.AuthorityDao;
+import cn.com.peddler.app.dao.login.MenutableDao;
+import cn.com.peddler.app.dao.login.RoleinfoDao;
+import cn.com.peddler.app.dao.login.UserinfoDao;
 import cn.com.peddler.app.dao.reat.BuyreatinfoDao;
 import cn.com.peddler.app.dao.reat.ReatpackageDao;
 import cn.com.peddler.app.entity.login.Businessinfo;
 import cn.com.peddler.app.entity.login.Buyreatinfo;
 import cn.com.peddler.app.entity.login.Reatpackage;
+import cn.com.peddler.app.entity.security.Roleinfo;
+import cn.com.peddler.app.entity.security.Userinfo;
 import cn.com.peddler.app.util.DateAndTimeUtil;
 import cn.com.peddler.core.orm.JdbcPage;
 import cn.com.peddler.core.orm.Page;
+import cn.com.peddler.core.utils.EncodeUtils;
 
 
 
@@ -33,6 +40,14 @@ public class BusinessinfoManager {
 	private BuyreatinfoDao buyreatinfoDao;
 	@Autowired
 	private ReatpackageDao reatpackageDao;
+	@Autowired
+	private UserinfoDao userinfoDao;
+	@Autowired
+	private RoleinfoDao roleinfoDao;
+	@Autowired
+	private AuthorityDao authorityDao;
+	@Autowired
+    private MenutableDao menutableDao;
 	
 	private BusinessinfoDao businessinfoDao;
 	@Autowired
@@ -56,6 +71,7 @@ public class BusinessinfoManager {
 
 	public void saveBusinessinfo(Businessinfo entity) {
 		businessinfoDao.save(entity);
+		saveUserinfo(entity);
 	}
 	
 	public void saveBusinessinfoAll(Businessinfo entity) {
@@ -74,8 +90,49 @@ public class BusinessinfoManager {
 		buy.setPrice(reat.getPrice());
 		buy.setCycke(reat.getCycke());
 		buyreatinfoDao.save(buy);
+		
+		saveUserinfo(entity);
 	}
-
+	/**
+	 * 初始化账号和角色
+	 * @param bus
+	 */
+	public void saveUserinfo(Businessinfo bus) {
+		String account = bus.getBusiaccount()+"admin";
+		String rolename = bus.getBusiaccount()+"-超级管理员";
+		//初始化角色，如果不存在，就将系统属性为业务的菜单和按钮分配给创建的新管理角色
+		Map<String, Object> params = new HashMap<String, Object>();
+		Roleinfo role;
+		boolean haveRole = roleinfoDao.isPropertyUnique("rolename", rolename, "");
+		if(haveRole){
+			params.put("vsystype", "1");
+			role = new Roleinfo();
+			role.setBusid(bus.getId());
+			role.setRolename(rolename);
+			role.setVtypes("0");
+			role.setAuthorityList(authorityDao.queryAuthorities(params));
+			role.setMenuList(menutableDao.queryMenutable(params));
+			roleinfoDao.save(role);
+		}else{
+			params.put("rolename", rolename);
+			List<Roleinfo> findRole = roleinfoDao.findRole(params);
+			role = findRole.get(0);
+		}
+		
+		//初始化账号
+		boolean haveUser = userinfoDao.isPropertyUnique("account", account, "");
+		if(haveUser){
+			Userinfo entity = new Userinfo();
+			entity.setAccount(account);
+			entity.setVname("超级管理员");
+			entity.setVtypes("0");
+			entity.setPost("1");
+			entity.setBusinessinfo(bus);
+			entity.setPassword(EncodeUtils.getMd5PasswordEncoder("abc123",account));
+			entity.setRoleinfo(role);
+			userinfoDao.save(entity);
+		}
+	}
 	public boolean isBusiAccUnique(String newValue, String oldValue) {
 		return businessinfoDao.isPropertyUnique("busiaccount", newValue, oldValue);
 	}

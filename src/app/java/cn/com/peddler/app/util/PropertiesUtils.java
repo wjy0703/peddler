@@ -72,8 +72,8 @@ public class PropertiesUtils
   public static void putBusidCheck(Map<String, Object> params)
   {
 	  OperatorDetails operator = (OperatorDetails)SpringSecurityUtils.getCurrentUser();
-	  params.put("busid", -1);
-	  params.put("orgid", -1);
+	  params.put("busid", -1L);
+	  params.put("orgid", -1L);
 	  params.put("vsystype", "-1");
 	  if(null != operator){
 		  String post = operator.getPositionCode();
