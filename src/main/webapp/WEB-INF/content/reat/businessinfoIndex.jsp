@@ -97,6 +97,9 @@
 				<td>
 					<a title="删除" target="ajaxTodo" href="${ctx }/businessinfo/delBusinessinfo/${user.id}" class="btnDel">删除</a>
 					<a title="编辑" target="navTab" href="${ctx }/businessinfo/editBusinessinfo/${user.id}" class="btnEdit">编辑</a>
+					<a title="历史" target="dialog" href="${ctx }/businessinfo/buyreatinfo/${user.id}" class="btnView" 
+					title="套餐购买历史" mask="true" width="600" height="420" >历史</a>
+				
 				</td>
 			</tr>
 			</c:forEach>

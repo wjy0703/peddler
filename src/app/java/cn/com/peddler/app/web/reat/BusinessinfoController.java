@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cn.com.peddler.app.entity.login.Businessinfo;
+import cn.com.peddler.app.entity.login.Buyreatinfo;
 import cn.com.peddler.app.entity.login.Reatpackage;
 import cn.com.peddler.app.entity.security.Userinfo;
 import cn.com.peddler.app.service.baseinfo.BusinessinfoManager;
@@ -72,10 +73,10 @@ public class BusinessinfoController {
 	        	 businessinfoManager.saveBusinessinfo(bus);
 	        } catch (IllegalAccessException e) {
 	            e.printStackTrace();
-	            throw new RuntimeException("拷贝用户记录出现错误，请联系管理员");
+	            throw new RuntimeException("拷贝企业记录出现错误，请联系管理员");
 	        } catch (InvocationTargetException e) {
 	            e.printStackTrace();
-	            throw new RuntimeException("拷贝用户记录出现错误，请联系管理员");
+	            throw new RuntimeException("拷贝企业记录出现错误，请联系管理员");
 	        }
 		}else{
 			businessinfoManager.saveBusinessinfoAll(businessinfo);
@@ -162,5 +163,17 @@ public class BusinessinfoController {
 		model.addAttribute("result", list);
 		model.addAttribute("reatid", reatid);
 		return "reat/reatlookup";
+	}
+	
+	
+	@RequestMapping(value="/buyreatinfo/{Id}", method=RequestMethod.GET)
+	public String buyreatinfo(@PathVariable Long Id, Model model){
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("busid", Id);
+		List<Buyreatinfo> buyreat = businessinfoManager.getBuyreatinfo(params);
+		model.addAttribute("buyreat",buyreat);
+		Businessinfo businessinfo = businessinfoManager.getBusinessinfo(Id);
+		model.addAttribute("businessinfo",businessinfo);
+		return "reat/buyreatinfoLook";
 	}
 }

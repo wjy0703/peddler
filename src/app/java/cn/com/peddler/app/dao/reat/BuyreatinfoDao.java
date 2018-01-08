@@ -1,7 +1,8 @@
 package cn.com.peddler.app.dao.reat;
 
+import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang.StringUtils;
+
 import org.springframework.stereotype.Component;
 
 import cn.com.peddler.app.entity.login.Buyreatinfo;
@@ -90,5 +91,16 @@ public class BuyreatinfoDao extends HibernateDao<Buyreatinfo, Long>{
 			hql.append(" order by ").append(page.getOrderBy()).append(" ").append(page.getOrder());
 		}
 		return this.findPage(page, hql.toString(), params);
+	}
+	
+	public List<Buyreatinfo> getBuyreatinfo(Map<String, Object> params){
+		StringBuffer hql=new StringBuffer();
+		hql.append("from Buyreatinfo buyreatinfo where 1=1");
+		//所属企业
+		if(params.containsKey("busid")){
+//			hql = hql + " and busid = :busid";
+			hql.append(" and busid = :busid");
+		}
+		return this.find(hql.toString(), params);
 	}
 }

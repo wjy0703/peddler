@@ -64,6 +64,12 @@ public class BusinessinfoManager {
 	public Page<Businessinfo> searchBusinessinfo(final Page<Businessinfo> page, final Map<String,Object> filters) {
 		return businessinfoDao.queryBusinessinfo(page, filters);
 	}
+	
+	@Transactional(readOnly = true)
+	public List<Buyreatinfo> getBuyreatinfo(Map<String,Object> conditions) {
+		return buyreatinfoDao.getBuyreatinfo(conditions);
+	}
+	
 	@Transactional(readOnly = true)
 	public Businessinfo getBusinessinfo(Long id) {
 		return businessinfoDao.get(id);
@@ -127,6 +133,7 @@ public class BusinessinfoManager {
 			entity.setVname("超级管理员");
 			entity.setVtypes("0");
 			entity.setPost("1");
+			entity.setSex("0");
 			entity.setBusinessinfo(bus);
 			entity.setPassword(EncodeUtils.getMd5PasswordEncoder("abc123",account));
 			entity.setRoleinfo(role);
