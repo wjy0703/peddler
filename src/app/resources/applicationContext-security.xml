@@ -20,9 +20,9 @@
 		<s:intercept-url pattern="/service/**" filters="none" />
 		<s:intercept-url pattern="/login" filters="none" />
 		<s:intercept-url pattern="/loginError" filters="none" />
-
 		<!-- <s:intercept-url pattern="/**" access="permitAll" /> -->
 		<s:intercept-url pattern="/*" access="isAuthenticated()" />
+		
 		<s:form-login login-page="/login" default-target-url="/"
 			authentication-failure-url="/login?error=1" />
 		<s:logout logout-success-url="/" />
@@ -63,6 +63,12 @@
 		我们的所有控制将在这三个类中实现，解释详见具体配置 -->
 	<bean id="myFilter"
 		class="cn.com.peddler.app.service.security.MyFilterSecurityInterceptor">
+		<property name="exceptUrls">  
+             <list>  
+                 <value>/intercept/**</value> <!-- 设置不拦截URL -->
+                 <value>/WEB-INF/content/intercept/**</value> <!-- 设置不拦截URL跳转的页面 -->
+             </list>  
+         </property>  
 		<property name="authenticationManager" ref="authenticationManager" /><!-- 
 			登陆的认证 -->
 		<property name="accessDecisionManager" ref="myAccessDecisionManagerBean" /><!-- 
