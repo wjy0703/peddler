@@ -37,37 +37,5 @@ public class AddressesLoader extends CacheLoader<Long,List<Cityinfo>> {
 		return MapVsBean.mapsToObjects(cityMap,Cityinfo.class);
 	}
 	
-	private Map<String, Object> fromCityinfoEntity(Cityinfo cityinfo){
-    	Map<String, Object> conditions = new HashMap<String, Object>();
-    	conditions.put("id", cityinfo.getId());
-    	conditions.put("cname", cityinfo.getCname());
-    	conditions.put("coding", cityinfo.getCoding());
-    	conditions.put("deptlevel", cityinfo.getDeptlevel());
-    	conditions.put("vname", cityinfo.getVname());
-    	conditions.put("pinyin", cityinfo.getPinyin());
-    	conditions.put("sortno", cityinfo.getSortno());
-    	conditions.put("vtypes", cityinfo.getVtypes());
-    	conditions.put("parentid", cityinfo.getParentid());
-    	conditions.put("createtime", cityinfo.getCreatetime());
-    	conditions.put("modifytime", cityinfo.getModifytime());
-    	conditions.put("createuser", cityinfo.getCreateuser());
-    	conditions.put("modifyuser", cityinfo.getModifyuser());
-    	return conditions;
-    }
 	
-	private Cityinfo getCityinfoFromMap(Map<String, Object> map){
-		Cityinfo cityinfo=new Cityinfo();
-    	cityinfo.setId(Long.parseLong(map.get("id")+""));
-		cityinfo.setCname(map.get("cname")+"");
-		cityinfo.setCoding(map.get("coding")+"");
-		cityinfo.setDeptlevel(Long.parseLong(map.get("deptlevel")+""));
-		cityinfo.setVname(map.get("vname")+"");
-		cityinfo.setPinyin(map.get("pinyin")+"");
-		cityinfo.setSortno(Long.parseLong(map.get("sortno")+""));
-		cityinfo.setVtypes(map.get("vtypes")+"");
-		cityinfo.setParentid(Long.parseLong(map.get("parentid")+""));
-		cityinfo.setCreateuser(map.get("createuser")+"");
-		cityinfo.setModifyuser(map.get("modifyuser")+"");
-    	return cityinfo;
-    }
 }

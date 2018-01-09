@@ -1,7 +1,11 @@
 package cn.com.peddler.app.entity.login;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -92,15 +96,32 @@ public class Cityinfo extends AuditableEntity{
 	public void setVtypes(String vtypes) {
 		this.vtypes = vtypes;
 	}
+	/*
 	private Long parentid;//上级地区
-	/**上级地区*/
+	*//**上级地区*//*
 	@Column(columnDefinition=DEF_NUM10)
 	public Long getParentid() {
 		return this.parentid;
 	}
-	/**上级地区*/
+	*//**上级地区*//*
 	public void setParentid(Long parentid) {
 		this.parentid = parentid;
 	}
+	*/
+	/**上级地区*/
+	private Cityinfo parent;
+	
+	/**上级地区*/
+	@ManyToOne(cascade=CascadeType.REFRESH, fetch = FetchType.LAZY)
+	@JoinColumn(name = "parentid")
+	public Cityinfo getParent() {
+		return parent;
+	}
+	
+	/**上级地区*/
+	public void setParent(Cityinfo parent) {
+		this.parent = parent;
+	}
+	
 	
 }
